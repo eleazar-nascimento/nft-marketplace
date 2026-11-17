@@ -91,6 +91,7 @@ export function ScenarioToolbar() {
   const handleExpireSession = async () => {
     setBusy(true)
     try {
+      setOpen(false)
       await authApi.expireSession()
       await refreshSession()
     } finally {

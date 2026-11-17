@@ -82,7 +82,7 @@ store.subscribe((domainEvent) => {
   }
 })
 
-const socketLink = ws.link(/\/socket\.io\//)
+const socketLink = ws.link(/^wss?:\/\//)
 
 function parseTokenFromUrl(url: URL): string | null {
   return url.searchParams.get('token')

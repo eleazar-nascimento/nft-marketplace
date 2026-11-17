@@ -3,7 +3,7 @@ import { userFixtures } from '../fixtures/users'
 import { hashPassword } from '../lib/crypto'
 import type { MockState } from './schema'
 
-export const SCHEMA_VERSION = 2
+export const SCHEMA_VERSION = 3
 
 const SEED_DATE = '2026-10-01T12:00:00.000Z'
 

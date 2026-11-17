@@ -110,7 +110,7 @@ function buildFixtures(): NftFixture[] {
   return baseNfts.map(([name, category, collection], index) => {
     const id = `nft_${String(index + 1).padStart(3, '0')}`
     const creator = creatorFixtures[index % creatorFixtures.length]!
-    const editionCount = index % 5 === 0 ? 1 : index % 3 === 0 ? 3 : 2
+    const editionCount = index === 5 ? 2 : index % 5 === 0 ? 1 : index % 3 === 0 ? 3 : 2
     const basePrice = 0.05 + Math.round(random() * 400) / 100
     const editions: NftEditionFixture[] = Array.from({ length: editionCount }, (_, editionIndex) => {
       const supply = editionIndex === 0 ? 20 + Math.floor(random() * 30) : editionIndex === 1 ? 8 : 2
