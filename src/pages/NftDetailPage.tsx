@@ -365,8 +365,8 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                     aria-hidden="true"
                   />
                   <span>Favoritar</span>
-                  <span data-testid="detail-favorite-count" className="text-xs">
-                    ({nft.likes})
+                  <span className="text-xs">
+                    (<span data-testid="detail-favorite-count">{nft.likes}</span>)
                   </span>
                 </button>
               </div>
