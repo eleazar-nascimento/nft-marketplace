@@ -364,13 +364,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
       <footer className="mt-20 text-text-primary">
         <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-          <div className="bg-bg-secondary p-6 sm:p-[32px]">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
-              <div className="flex flex-col gap-[12px] lg:col-span-2">
-                <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+          <div className="bg-bg-secondary p-6 sm:p-[32px] lg:min-h-[250px]">
+            <div className="flex h-full w-full flex-col gap-8 lg:flex-row lg:items-stretch lg:justify-between lg:gap-0">
+              <div className="flex flex-col items-start gap-[12px] lg:flex-1 lg:pr-6">
+                <div className="flex h-[74px] w-[74px] shrink-0 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                   W
                 </div>
-                <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+                <h2 className="text-[17px] font-bold leading-[20px] text-text-primary whitespace-nowrap">
                   Segurança da carteira
                 </h2>
                 <p className="text-[14px] leading-[22px] text-text-secondary">
@@ -378,11 +378,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-[12px] lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
-                <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+              <div className="hidden lg:block lg:w-px lg:shrink-0 lg:self-stretch lg:bg-accent/50" />
+
+              <div className="flex flex-col items-start gap-[12px] lg:flex-1 lg:px-6">
+                <div className="flex h-[74px] w-[74px] shrink-0 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                   C
                 </div>
-                <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+                <h2 className="text-[17px] font-bold leading-[20px] text-text-primary whitespace-nowrap">
                   Criadores em destaque
                 </h2>
                 <p className="text-[14px] leading-[22px] text-text-secondary">
@@ -390,11 +392,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-[12px] lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
-                <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+              <div className="hidden lg:block lg:w-px lg:shrink-0 lg:self-stretch lg:bg-accent/50" />
+
+              <div className="flex flex-col items-start gap-[12px] lg:flex-1 lg:px-6">
+                <div className="flex h-[74px] w-[74px] shrink-0 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                   D
                 </div>
-                <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+                <h2 className="text-[17px] font-bold leading-[20px] text-text-primary whitespace-nowrap">
                   Alertas de lançamentos
                 </h2>
                 <p className="text-[14px] leading-[22px] text-text-secondary">
@@ -402,38 +406,42 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-[12px] lg:col-span-4 lg:border-l lg:border-accent/40 lg:pl-6">
-                <h2 className="text-[18px] font-bold leading-[22px] text-text-primary">
-                  Antecipe-se ao próximo lançamento
-                </h2>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault()
-                    if (newsletterEmail.trim()) {
-                      setNewsletterSent(true)
-                      setNewsletterEmail('')
-                    }
-                  }}
-                  className="flex h-[40px] w-full overflow-hidden rounded-[6px] bg-surface-dark shadow-[0px_0px_10px_rgba(10,6,4,0.45)]"
-                >
-                  <label htmlFor="footer-newsletter-email" className="sr-only">
-                    Seu e-mail para receber novidades
-                  </label>
-                  <input
-                    id="footer-newsletter-email"
-                    type="email"
-                    value={newsletterEmail}
-                    onChange={(event) => setNewsletterEmail(event.target.value)}
-                    placeholder="digite seu e-mail..."
-                    className="flex-1 bg-transparent px-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none"
-                  />
-                  <button
-                    type="submit"
-                    className="h-[40px] w-[85px] shrink-0 bg-accent text-[18px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+              <div className="hidden lg:block lg:w-px lg:shrink-0 lg:self-stretch lg:bg-accent/50" />
+
+              <div className="flex flex-col items-start justify-between gap-[12px] lg:w-[340px] lg:shrink-0 lg:pl-6">
+                <div className="flex w-full flex-col items-start gap-[16px]">
+                  <h2 className="text-[18px] font-bold leading-[22px] text-text-primary">
+                    Antecipe-se ao próximo lançamento
+                  </h2>
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault()
+                      if (newsletterEmail.trim()) {
+                        setNewsletterSent(true)
+                        setNewsletterEmail('')
+                      }
+                    }}
+                    className="flex h-[40px] w-full overflow-hidden rounded-[6px] bg-surface-dark shadow-[0px_0px_10px_rgba(10,6,4,0.45)]"
                   >
-                    Enviar
-                  </button>
-                </form>
+                    <label htmlFor="footer-newsletter-email" className="sr-only">
+                      Seu e-mail para receber novidades
+                    </label>
+                    <input
+                      id="footer-newsletter-email"
+                      type="email"
+                      value={newsletterEmail}
+                      onChange={(event) => setNewsletterEmail(event.target.value)}
+                      placeholder="digite seu e-mail..."
+                      className="flex-1 bg-transparent px-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      className="h-[40px] w-[85px] shrink-0 bg-accent text-[18px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                    >
+                      Enviar
+                    </button>
+                  </form>
+                </div>
                 <p className="text-[13px] leading-[22px] text-text-secondary">
                   {newsletterSent
                     ? 'Inscrição confirmada! Você receberá os próximos alertas da Kurio.'
@@ -443,24 +451,26 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
 
-          <div className="flex flex-col justify-between gap-4 bg-surface-dark px-6 py-6 sm:px-[32px] lg:h-[88px] lg:flex-row lg:items-center">
-            <span className="text-[14px] font-bold tracking-[1.4px] text-text-primary">KURIO</span>
-            <p className="text-[14px] leading-[22px] text-text-primary">
-              Feito para colecionadores,
-              <br />
-              criadores e cultura
-            </p>
-            <a
-              href="mailto:contato@email.com"
-              className="text-[14px] leading-[22px] text-text-primary hover:text-accent-bright"
-            >
-              contato@email.com
-            </a>
-            <span className="text-[14px] leading-[22px] text-text-primary">+55 11 4002 8922</span>
+          <div className="bg-surface-dark px-6 py-6 sm:px-[32px] lg:flex lg:h-[88px] lg:items-center lg:py-0">
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_228px] lg:items-center lg:gap-[92px]">
+              <span className="text-[14px] font-bold tracking-[1.4px] text-text-primary">KURIO</span>
+              <p className="text-[14px] leading-[22px] text-text-primary">
+                Feito para colecionadores,
+                <br />
+                criadores e cultura
+              </p>
+              <a
+                href="mailto:contato@email.com"
+                className="text-[14px] leading-[22px] text-text-primary hover:text-accent-bright"
+              >
+                contato@email.com
+              </a>
+              <span className="text-[14px] leading-[22px] text-text-primary">+55 11 4002 8922</span>
+            </div>
           </div>
 
           <div className="bg-bg-secondary p-6 sm:p-[32px]">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_228px] lg:gap-[92px]">
               <div>
                 <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Meu perfil</h2>
                 <ul className="mt-3 space-y-1 text-[14px] leading-[30px] text-text-primary">
@@ -627,11 +637,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </div>
 
                 <div className="flex flex-col gap-[12px]">
-                  <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">
+                  <h2 className="text-[18px] font-bold leading-[16px] text-text-primary whitespace-nowrap">
                     Carteiras compatíveis
                   </h2>
                   <div className="flex h-[26px] items-center justify-center rounded-[6px] border border-border-soft bg-surface-dark px-2">
-                    <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright">
+                    <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright whitespace-nowrap">
                       METAMASK • WALLETCONNECT • COINBASE
                     </span>
                   </div>
