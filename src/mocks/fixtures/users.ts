@@ -29,7 +29,7 @@ export const userFixtures: UserFixture[] = [
     password: 'Senha@123',
     bio: 'Colecionadora de arte generativa e fotografia digital.',
     website: 'https://ana.nft.dev',
-    avatarUrl: '/images/avatars/avatar-05.webp',
+    avatarUrl: '/images/avatars/avatar-05.svg',
     favorites: ['nft_001', 'nft_004'],
     wallets: [
       {

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="bg07" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10002B" />
+      <stop offset="55%" stop-color="#3C096C" />
+      <stop offset="100%" stop-color="#7B2CBF" />
+    </linearGradient>
+    <radialGradient id="orb07" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C77DFF" stop-opacity="0.95" />
+      <stop offset="65%" stop-color="#7B2CBF" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#10002B" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg07)" />
+  <circle cx="402" cy="268" r="220" fill="url(#orb07)" />
+  <circle cx="198" cy="332" r="150" fill="#7B2CBF" fill-opacity="0.35" />
+  <path d="M0 420 Q 180 360, 340 410 T 600 380 L 600 600 L 0 600 Z" fill="#10002B" fill-opacity="0.55" />
+  <path d="M0 480 Q 240 390, 420 470 T 600 460 L 600 600 L 0 600 Z" fill="#10002B" fill-opacity="0.82" />
+  <circle cx="300" cy="270" r="65" fill="none" stroke="#C77DFF" stroke-width="4" stroke-opacity="0.7" />
+  <polygon points="300,190 385,320 215,320" fill="#C77DFF" fill-opacity="0.22" stroke="#C77DFF" stroke-width="3" />
+  <circle cx="294" cy="204" r="4" fill="#FFFFFF" />
+  <circle cx="426" cy="96" r="3" fill="#FFFFFF" fill-opacity="0.8" />
+  <circle cx="456" cy="118" r="2.5" fill="#FFFFFF" fill-opacity="0.7" />
+</svg>

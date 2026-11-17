@@ -35,7 +35,7 @@ export const NFT_IMAGE_COUNT = 16
 export function nftImage(index: number, name: string, position = 0): NftImage {
   const number = String((index % NFT_IMAGE_COUNT) + 1).padStart(2, '0')
   return {
-    url: `/images/nfts/nft-${number}.webp`,
+    url: `/images/nfts/nft-${number}.svg`,
     alt: position === 0 ? `Arte do NFT ${name}` : `Arte do NFT ${name}, imagem ${position + 1}`,
     width: 600,
     height: 600,

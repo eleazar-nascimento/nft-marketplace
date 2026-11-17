@@ -1,0 +1,93 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-bg-primary: #2b2b2b;
+  --color-bg-secondary: #3b3b3b;
+  --color-bg-elevated: #464646;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #c7c7c5;
+  --color-text-muted: #b5b5b3;
+  --color-accent: #8332f6;
+  --color-accent-hover: #6f22df;
+  --color-accent-bright: #a259ff;
+  --color-border-subtle: #4e4e4e;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border-subtle);
+  }
+
+  html {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    color-scheme: dark;
+    overflow-x: clip;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    overflow-x: clip;
+    margin: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-bright);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #3b3b3b;
+}
+
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer::after {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
