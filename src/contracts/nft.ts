@@ -4,36 +4,47 @@ import { networkSchema } from './common'
 
 export const nftCategories = [
   'art',
-  'collectibles',
-  'music',
   'photography',
+  'music',
   'video',
-  'utility',
-  'sport',
+  'collectibles',
   'virtual-worlds',
+  'sport',
+  'utility',
 ] as const
 
 export type NftCategory = (typeof nftCategories)[number]
 
 export const nftCategoryLabels: Record<NftCategory, string> = {
-  art: 'Arte',
-  collectibles: 'Colecionáveis',
-  music: 'Música',
+  art: 'Arte digital',
   photography: 'Fotografia',
-  video: 'Vídeo',
+  music: 'Música',
+  video: 'Arte 3D',
+  collectibles: 'Colecionáveis',
+  'virtual-worlds': 'Generativa',
+  sport: 'Jogos',
   utility: 'Utilidade',
-  sport: 'Esporte',
-  'virtual-worlds': 'Mundos virtuais',
+}
+
+export const nftCategoryCounts: Record<NftCategory, number> = {
+  art: 33,
+  photography: 12,
+  music: 65,
+  video: 39,
+  collectibles: 23,
+  'virtual-worlds': 17,
+  sport: 19,
+  utility: 18,
 }
 
 export const nftSorts = ['recent', 'price_asc', 'price_desc', 'popular', 'name_asc'] as const
 export type NftSort = (typeof nftSorts)[number]
 
 export const nftSortLabels: Record<NftSort, string> = {
-  recent: 'Mais recentes',
+  recent: 'Listados recentemente',
   price_asc: 'Menor preço',
   price_desc: 'Maior preço',
-  popular: 'Mais populares',
+  popular: 'Em alta',
   name_asc: 'Nome (A–Z)',
 }
 
