@@ -1,20 +1,22 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
-  --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --color-bg-primary: #2b2b2b;
-  --color-bg-secondary: #3b3b3b;
-  --color-bg-elevated: #464646;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #c7c7c5;
-  --color-text-muted: #b5b5b3;
-  --color-accent: #8332f6;
-  --color-accent-hover: #6f22df;
-  --color-accent-bright: #a259ff;
-  --color-border-subtle: #4e4e4e;
+  --color-bg-primary: #140d0a;
+  --color-bg-secondary: #241612;
+  --color-bg-elevated: #2f1d15;
+  --color-surface-dark: #38220f;
+  --color-text-primary: #f5f1eb;
+  --color-text-secondary: #cfb28c;
+  --color-text-muted: #b39463;
+  --color-accent: #d28a4c;
+  --color-accent-hover: #e09859;
+  --color-accent-bright: #e89b55;
+  --color-coral: #f0805f;
+  --color-border-subtle: #3f2319;
+  --color-border-soft: #55321f;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
@@ -30,7 +32,7 @@
   html {
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
-    font-family: var(--font-sans);
+    font-family: var(--font-mono);
     color-scheme: dark;
     overflow-x: clip;
   }
@@ -39,6 +41,7 @@
     min-height: 100vh;
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
+    font-family: var(--font-mono);
     overflow-x: clip;
     margin: 0;
   }
@@ -61,7 +64,7 @@
 .skeleton-shimmer {
   position: relative;
   overflow: hidden;
-  background-color: #3b3b3b;
+  background-color: #241612;
 }
 
 .skeleton-shimmer::after {
@@ -70,9 +73,9 @@
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(210, 138, 76, 0) 0%,
+    rgba(210, 138, 76, 0.12) 50%,
+    rgba(210, 138, 76, 0) 100%
   );
   animation: shimmer 1.6s infinite;
 }

@@ -4,21 +4,21 @@ import { forwardRef, type ButtonHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-[20px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-bright disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none',
+  'inline-flex items-center justify-center gap-2 rounded-[6px] font-mono font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-bright disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none',
   {
     variants: {
       variant: {
-        default: 'bg-accent text-white hover:bg-accent-hover',
-        secondary: 'bg-bg-secondary text-white border border-border-subtle hover:bg-bg-elevated',
-        outline: 'border-2 border-accent-bright bg-transparent text-white hover:bg-accent/20',
-        ghost: 'bg-transparent text-white hover:bg-bg-secondary',
+        default: 'bg-accent text-bg-primary hover:bg-accent-hover',
+        secondary: 'bg-bg-secondary text-text-primary border border-border-subtle hover:bg-bg-elevated',
+        outline: 'border border-accent bg-transparent text-accent-bright hover:bg-accent/15',
+        ghost: 'bg-transparent text-text-primary hover:bg-bg-secondary',
         destructive: 'bg-red-700 text-white hover:bg-red-800',
       },
       size: {
-        default: 'h-12 px-6 text-base',
-        sm: 'h-10 px-4 text-sm rounded-2xl',
-        lg: 'h-[60px] px-8 text-base',
-        icon: 'h-11 w-11 rounded-2xl',
+        default: 'h-[40px] px-5 text-sm',
+        sm: 'h-[35px] px-3.5 text-sm rounded-[6px]',
+        lg: 'h-[45px] px-6 text-base rounded-[6px]',
+        icon: 'h-[35px] w-[35px] rounded-[6px]',
       },
     },
     defaultVariants: {
