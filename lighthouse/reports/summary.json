@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17T14:13:59.443Z",
+  "generatedAt": "2026-11-17T18:45:06.419Z",
   "environment": {
     "nodeVersion": "v22.19.0",
     "platform": "darwin 25.5.0 (arm64)",
@@ -22,15 +22,15 @@
         {
           "run": 1,
           "scores": {
-            "performance": 94,
+            "performance": 92,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 2721,
-            "cls": 0.0271,
-            "tbtMs": 159
+            "lcpMs": 2860,
+            "cls": 0,
+            "tbtMs": 206
           }
         },
         {
@@ -42,37 +42,37 @@
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 2735,
-            "cls": 0.0271,
-            "tbtMs": 110
+            "lcpMs": 2814,
+            "cls": 0,
+            "tbtMs": 131
           }
         },
         {
           "run": 3,
           "scores": {
-            "performance": 95,
+            "performance": 94,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 2747,
-            "cls": 0.0271,
-            "tbtMs": 110
+            "lcpMs": 2812,
+            "cls": 0,
+            "tbtMs": 144
           }
         }
       ],
       "median": {
         "scores": {
-          "performance": 95,
+          "performance": 94,
           "accessibility": 100,
           "best-practices": 100,
           "seo": 100
         },
         "metrics": {
-          "lcpMs": 2735,
-          "cls": 0.0271,
-          "tbtMs": 110
+          "lcpMs": 2814,
+          "cls": 0,
+          "tbtMs": 144
         }
       }
     },
@@ -91,8 +91,8 @@
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 655,
-            "cls": 0.0014,
+            "lcpMs": 737,
+            "cls": 0.0002,
             "tbtMs": 0
           }
         },
@@ -105,8 +105,8 @@
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 655,
-            "cls": 0.0014,
+            "lcpMs": 764,
+            "cls": 0.0002,
             "tbtMs": 0
           }
         },
@@ -119,8 +119,8 @@
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 656,
-            "cls": 0.0014,
+            "lcpMs": 732,
+            "cls": 0.0002,
             "tbtMs": 0
           }
         }
@@ -133,8 +133,8 @@
           "seo": 100
         },
         "metrics": {
-          "lcpMs": 655,
-          "cls": 0.0014,
+          "lcpMs": 737,
+          "cls": 0.0002,
           "tbtMs": 0
         }
       }
@@ -154,9 +154,9 @@
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 2742,
-            "cls": 0.0104,
-            "tbtMs": 97
+            "lcpMs": 2804,
+            "cls": 0,
+            "tbtMs": 121
           }
         },
         {
@@ -168,23 +168,23 @@
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 2744,
-            "cls": 0.0104,
-            "tbtMs": 96
+            "lcpMs": 2818,
+            "cls": 0.0045,
+            "tbtMs": 122
           }
         },
         {
           "run": 3,
           "scores": {
-            "performance": 96,
+            "performance": 95,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 2593,
-            "cls": 0.0104,
-            "tbtMs": 98
+            "lcpMs": 2802,
+            "cls": 0.0045,
+            "tbtMs": 122
           }
         }
       ],
@@ -196,9 +196,9 @@
           "seo": 100
         },
         "metrics": {
-          "lcpMs": 2742,
-          "cls": 0.0104,
-          "tbtMs": 97
+          "lcpMs": 2804,
+          "cls": 0.0045,
+          "tbtMs": 122
         }
       }
     },
@@ -211,56 +211,56 @@
         {
           "run": 1,
           "scores": {
-            "performance": 100,
+            "performance": 91,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 710,
-            "cls": 0.0019,
+            "lcpMs": 695,
+            "cls": 0.1908,
             "tbtMs": 0
           }
         },
         {
           "run": 2,
           "scores": {
-            "performance": 100,
+            "performance": 91,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
             "lcpMs": 710,
-            "cls": 0.0019,
+            "cls": 0.1908,
             "tbtMs": 0
           }
         },
         {
           "run": 3,
           "scores": {
-            "performance": 100,
+            "performance": 91,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "lcpMs": 717,
-            "cls": 0.0019,
+            "lcpMs": 711,
+            "cls": 0.1908,
             "tbtMs": 0
           }
         }
       ],
       "median": {
         "scores": {
-          "performance": 100,
+          "performance": 91,
           "accessibility": 100,
           "best-practices": 100,
           "seo": 100
         },
         "metrics": {
           "lcpMs": 710,
-          "cls": 0.0019,
+          "cls": 0.1908,
           "tbtMs": 0
         }
       }
