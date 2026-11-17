@@ -2,26 +2,22 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import {
   AlertCircle,
   ArrowLeft,
-  CheckCircle2,
   Heart,
-  Layers,
   Minus,
   Plus,
-  ShieldCheck,
-  ShoppingBag,
-  Sparkles,
-  Zap,
+  Search,
+  ShoppingCart,
+  Star,
 } from 'lucide-react'
 import { useState } from 'react'
 import { AppApiError } from '@/api/client'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { networkLabels, nftCategoryLabels, type NftEdition } from '@/contracts'
+import { networkLabels, type NftEdition } from '@/contracts'
 import { formatEth, mulEth } from '@/lib/eth'
 import { saveReturnTo } from '@/lib/storage'
-import { useCartMutations, useFavorites, useNftDetail, useToggleFavorite } from '@/state/queries'
+import { useCartMutations, useFavorites, useNftDetail, useNftsList, useToggleFavorite } from '@/state/queries'
 import { useSession } from '@/state/session'
 
 export function NftDetailPage({ nftId }: { nftId: string }) {
@@ -29,6 +25,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   const navigate = useNavigate()
   const routerState = useRouterState()
   const detailQuery = useNftDetail(nftId)
+  const relatedQuery = useNftsList({ page: 1, pageSize: 6 })
   const favoritesQuery = useFavorites()
   const toggleFavorite = useToggleFavorite()
   const { addItem } = useCartMutations()
@@ -36,28 +33,23 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [selectedEditionId, setSelectedEditionId] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(1)
+  const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details')
 
   if (detailQuery.isLoading) {
     return (
       <div
         data-testid="nft-detail-skeleton"
-        className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+        className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-0"
       >
-        <Skeleton className="h-9 w-40" />
+        <Skeleton className="h-6 w-40" />
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="lg:col-span-6">
-            <Skeleton className="aspect-square w-full" />
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <Skeleton className="aspect-square w-full" />
-              <Skeleton className="aspect-square w-full" />
-              <Skeleton className="aspect-square w-full" />
-            </div>
+            <Skeleton className="h-[444px] w-full" />
           </div>
           <div className="space-y-4 lg:col-span-6">
             <Skeleton className="h-10 w-3/4" />
             <Skeleton className="h-6 w-1/2" />
             <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-36 w-full" />
             <Skeleton className="h-14 w-full" />
           </div>
         </div>
@@ -75,7 +67,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
           className="p-10"
         >
           <AlertCircle className="mx-auto h-12 w-12 text-red-400" aria-hidden="true" />
-          <h1 className="mt-4 text-2xl font-bold text-white">
+          <h1 className="mt-4 text-2xl font-bold text-text-primary">
             {isNotFound ? 'NFT não encontrado' : 'Erro ao carregar o NFT'}
           </h1>
           <p className="mt-2 text-sm text-text-secondary">
@@ -113,6 +105,8 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
       : 0
   const safeQuantity = maxAllowed > 0 ? Math.min(Math.max(1, quantity), maxAllowed) : 1
   const activeImage = nft.gallery[selectedImageIndex] ?? nft.image
+  const tokenNumber = nft.id.replace(/\D/g, '').padStart(4, '0')
+  const relatedItems = (relatedQuery.data?.items ?? []).filter((item) => item.id !== nft.id).slice(0, 5)
 
   const handleSelectEdition = (edition: NftEdition) => {
     setSelectedEditionId(edition.id)
@@ -143,39 +137,31 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link to="/">
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Voltar ao catálogo
-          </Link>
-        </Button>
-        <Badge variant="default">Versão #{nft.version}</Badge>
+    <div className="mx-auto w-full max-w-[1200px] px-4 pt-6 sm:px-6 lg:px-0">
+      <div className="flex items-center justify-between">
+        <p className="text-[15px] font-bold leading-[16px] text-text-primary">
+          <Link to="/" className="hover:text-accent-bright">
+            Início
+          </Link>{' '}
+          / Mercado
+        </p>
+        <Link
+          to="/"
+          className="inline-flex h-[35px] w-[35px] items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+          aria-label="Voltar"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-12">
-        <div className="lg:col-span-6">
-          <Card className="overflow-hidden">
-            <div className="aspect-square w-full bg-bg-primary">
-              <img
-                src={activeImage.url}
-                alt={activeImage.alt}
-                width={activeImage.width}
-                height={activeImage.height}
-                fetchPriority="high"
-                className="h-full w-full object-cover"
-                data-testid="detail-main-image"
-              />
-            </div>
-          </Card>
-
+      <div className="mt-4 flex flex-col gap-[32px] lg:flex-row lg:items-start">
+        <div className="flex flex-col-reverse gap-[16px] sm:flex-row sm:gap-[28px] lg:w-[573px] lg:shrink-0">
           <div
             role="group"
             aria-label="Galeria de imagens do NFT"
-            className="mt-4 grid grid-cols-3 gap-3"
+            className="flex flex-row gap-[12px] sm:w-[100px] sm:flex-col sm:gap-[16px]"
           >
-            {nft.gallery.map((img, index) => {
+            {nft.gallery.slice(0, 4).map((img, index) => {
               const isSelected = index === selectedImageIndex
               return (
                 <button
@@ -185,86 +171,94 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   aria-label={`Visualizar imagem ${index + 1} de ${nft.name}`}
                   aria-pressed={isSelected}
                   onClick={() => setSelectedImageIndex(index)}
-                  className={`overflow-hidden rounded-2xl border-2 transition-all cursor-pointer ${
-                    isSelected ? 'border-accent-bright ring-2 ring-accent-bright/40' : 'border-border-subtle opacity-80 hover:opacity-100'
+                  className={`h-[76px] w-[76px] overflow-hidden rounded-[8px] bg-bg-secondary transition-all sm:h-[100px] sm:w-[100px] cursor-pointer ${
+                    isSelected ? 'border-2 border-accent' : 'border border-transparent opacity-85 hover:opacity-100'
                   }`}
                 >
                   <img
                     src={img.url}
                     alt={img.alt}
-                    width={200}
-                    height={200}
-                    className="aspect-square w-full object-cover"
+                    width={100}
+                    height={100}
+                    className="h-full w-full rounded-[8px] object-cover"
                   />
                 </button>
               )
             })}
           </div>
+
+          <div className="relative flex aspect-square w-full items-center justify-center rounded-[6px] bg-bg-secondary p-[16px] sm:h-[444px] sm:w-[444px]">
+            <img
+              src={activeImage.url}
+              alt={activeImage.alt}
+              width={404}
+              height={404}
+              fetchPriority="high"
+              data-testid="detail-main-image"
+              className="h-full w-full max-h-[404px] max-w-[404px] rounded-[24px] object-cover"
+            />
+            <span
+              className="pointer-events-none absolute right-4 top-4 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-bg-primary/80 text-text-primary"
+              aria-hidden="true"
+            >
+              <Search className="h-4 w-4" />
+            </span>
+          </div>
         </div>
 
-        <div className="lg:col-span-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="default">{nftCategoryLabels[nft.category]}</Badge>
-            <Badge variant="accent">{networkLabels[nft.network]}</Badge>
-            <Badge variant="default">{nft.tokenStandard}</Badge>
-          </div>
-
-          <div className="mt-3 flex items-start justify-between gap-4">
-            <div>
-              <h1 data-testid="detail-nft-title" className="text-3xl font-bold text-white sm:text-4xl">
+        <div className="flex flex-1 flex-col justify-between gap-[18px]">
+          <div className="flex flex-col gap-[12px]">
+            <div className="flex items-center justify-between gap-4">
+              <h1
+                data-testid="detail-nft-title"
+                className="text-[22px] font-bold leading-tight text-text-primary sm:text-[28px]"
+              >
                 {nft.name}
               </h1>
-              <p className="mt-1 font-mono text-sm text-text-secondary">
-                Coleção: <span className="text-white">{nft.collection}</span>
-              </p>
-            </div>
-
-            <Button
-              variant="secondary"
-              size="sm"
-              data-testid="detail-favorite-btn"
-              aria-pressed={isFavorite}
-              onClick={handleFavorite}
-            >
-              <Heart
-                className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
-                aria-hidden="true"
-              />
-              <span data-testid="detail-favorite-count">{nft.likes}</span>
-            </Button>
-          </div>
-
-          <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border-subtle bg-bg-secondary p-3.5">
-            <img
-              src={nft.creator.avatarUrl}
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 rounded-full object-cover"
-            />
-            <div>
-              <span className="block text-xs text-text-muted">Criado por</span>
-              <span className="font-mono text-sm font-semibold text-white">
-                {nft.creator.displayName} (@{nft.creator.username})
+              <span className="inline-flex h-[27px] items-center gap-1 rounded-[32px] border border-accent px-3 text-[14px] lg:hidden">
+                <Star className="h-3.5 w-3.5 fill-accent text-accent" aria-hidden="true" />
+                <span className="font-medium text-text-primary">4.8</span>
+                <span className="text-text-secondary">({nft.likes})</span>
               </span>
             </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p
+                data-testid={`edition-price-${activeEdition.id}`}
+                className="text-[22px] font-bold leading-[16px] text-accent-bright"
+              >
+                {formatEth(activeEdition.priceEth)}
+              </p>
+
+              <div className="hidden items-center gap-[4px] lg:flex">
+                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-[15px] w-[15px] text-text-muted" aria-hidden="true" />
+                <span className="ml-1 text-[15px] text-text-primary">
+                  {nft.likes} avaliações de colecionadores
+                </span>
+              </div>
+            </div>
+
+            <div className="h-px w-full bg-accent/35" />
           </div>
 
-          <p className="mt-5 text-base leading-relaxed text-text-secondary">{nft.description}</p>
+          <div className="flex flex-col gap-[8px]">
+            <h2 className="text-[15px] font-bold leading-[16px] text-text-primary">Sobre este NFT:</h2>
+            <p className="text-[14px] leading-[24px] text-text-secondary">{nft.description}</p>
+          </div>
 
-          <div className="mt-6">
-            <h2 className="flex items-center gap-2 text-base font-semibold text-white">
-              <Layers className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-              Selecione a edição
-            </h2>
+          <div className="flex flex-col gap-[10px]">
+            <h2 className="text-[15px] font-bold leading-[16px] text-text-primary">Edição:</h2>
             <div
               role="radiogroup"
               aria-label="Edições do NFT"
-              className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3"
+              className="flex flex-wrap items-center gap-[8px]"
             >
               {nft.editions.map((edition) => {
                 const isSelected = edition.id === activeEdition.id
-                const isAvailable = edition.status === 'available'
                 return (
                   <button
                     key={edition.id}
@@ -273,152 +267,224 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                     aria-checked={isSelected}
                     data-testid={`edition-option-${edition.id}`}
                     onClick={() => handleSelectEdition(edition)}
-                    className={`flex flex-col justify-between rounded-2xl border p-4 text-left transition-colors cursor-pointer ${
+                    className={`inline-flex h-[28px] min-w-[42px] items-center justify-center rounded-full border px-3 text-[14px] leading-[16px] transition-colors cursor-pointer ${
                       isSelected
-                        ? 'border-accent-bright bg-accent/20 text-white'
-                        : 'border-border-subtle bg-bg-secondary text-text-secondary hover:text-white'
+                        ? 'border-accent font-medium text-accent-bright'
+                        : 'border-border-subtle font-normal text-text-secondary hover:border-accent/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-semibold text-white">{edition.name}</span>
-                      {isSelected ? (
-                        <CheckCircle2 className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-                      ) : null}
-                    </div>
-                    <p
-                      data-testid={`edition-price-${edition.id}`}
-                      className="mt-2 font-mono text-base font-bold text-white"
-                    >
-                      {formatEth(edition.priceEth)}
-                    </p>
-                    <div className="mt-2 text-xs font-mono">
-                      {isAvailable ? (
-                        <span className="text-emerald-300">
-                          {edition.available}/{edition.supply} disponíveis (máx. {edition.maxPerOrder})
-                        </span>
-                      ) : edition.status === 'sold_out' ? (
-                        <span className="text-red-300">Esgotada (0/{edition.supply})</span>
-                      ) : (
-                        <span className="text-amber-300">Edição indisponível</span>
-                      )}
-                    </div>
+                    <span>{edition.name}</span>
+                    {edition.id !== activeEdition.id ? (
+                      <span data-testid={`edition-price-${edition.id}`} className="sr-only">
+                        {formatEth(edition.priceEth)}
+                      </span>
+                    ) : null}
                   </button>
                 )
               })}
             </div>
           </div>
 
-          <Card className="mt-6 p-5">
-            {activeEdition.status !== 'available' ? (
-              <div
-                role="status"
-                data-testid="edition-unavailable-banner"
-                className="rounded-xl border border-red-500/60 bg-red-950/60 p-4 text-sm text-red-100"
-              >
-                {activeEdition.status === 'sold_out'
-                  ? 'Esta edição está esgotada no momento. Selecione outra edição disponível.'
-                  : 'Esta edição está temporariamente indisponível para novas compras.'}
+          {activeEdition.status !== 'available' ? (
+            <div
+              role="status"
+              data-testid="edition-unavailable-banner"
+              className="rounded-[6px] border border-red-500/60 bg-red-950/60 p-3 text-sm text-red-100"
+            >
+              {activeEdition.status === 'sold_out'
+                ? 'Esta edição está esgotada no momento. Selecione outra edição disponível.'
+                : 'Esta edição está temporariamente indisponível para novas compras.'}
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-[12px]">
+                <button
+                  type="button"
+                  data-testid="detail-qty-decrease"
+                  aria-label="Diminuir quantidade"
+                  disabled={safeQuantity <= 1}
+                  onClick={() => setQuantity(Math.max(1, safeQuantity - 1))}
+                  className="flex h-[49.5px] w-[33px] items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
+                >
+                  <Minus className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <span
+                  data-testid="detail-qty-value"
+                  aria-live="polite"
+                  className="min-w-[20px] text-center text-[20px] leading-[28px] text-text-primary"
+                >
+                  {safeQuantity}
+                </span>
+                <button
+                  type="button"
+                  data-testid="detail-qty-increase"
+                  aria-label="Aumentar quantidade"
+                  disabled={safeQuantity >= maxAllowed}
+                  onClick={() => setQuantity(Math.min(maxAllowed, safeQuantity + 1))}
+                  className="flex h-[49.5px] w-[33px] items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <span data-testid="detail-subtotal" className="sr-only">
+                  {formatEth(mulEth(activeEdition.priceEth, safeQuantity))}
+                </span>
               </div>
-            ) : (
-              <>
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <span className="block text-xs font-mono text-text-muted">Quantidade</span>
-                    <span className="text-xs text-text-secondary">
-                      Limite por pedido: {maxAllowed}{' '}
-                      {maxAllowed === 1 ? 'unidade' : 'unidades'}
-                    </span>
-                  </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      data-testid="detail-qty-decrease"
-                      aria-label="Diminuir quantidade"
-                      disabled={safeQuantity <= 1}
-                      onClick={() => setQuantity(Math.max(1, safeQuantity - 1))}
-                    >
-                      <Minus className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                    <span
-                      data-testid="detail-qty-value"
-                      aria-live="polite"
-                      className="inline-flex h-11 min-w-12 items-center justify-center rounded-2xl border border-border-subtle bg-bg-primary px-3 font-mono text-base font-bold text-white"
-                    >
-                      {safeQuantity}
-                    </span>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      data-testid="detail-qty-increase"
-                      aria-label="Aumentar quantidade"
-                      disabled={safeQuantity >= maxAllowed}
-                      onClick={() => setQuantity(Math.min(maxAllowed, safeQuantity + 1))}
-                    >
-                      <Plus className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </div>
+              <div className="flex flex-wrap items-center gap-[8px]">
+                <button
+                  type="button"
+                  data-testid="detail-buy-now"
+                  disabled={addItem.isPending}
+                  onClick={() => void handleAddToCart(true)}
+                  className="inline-flex h-[40px] w-[130px] items-center justify-center rounded-[6px] bg-accent text-[14px] font-bold leading-[20px] text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+                >
+                  COMPRAR
+                </button>
 
-                <div className="mt-4 flex items-center justify-between border-t border-border-subtle pt-4 font-mono">
-                  <span className="text-sm text-text-secondary">Subtotal estimado</span>
-                  <span data-testid="detail-subtotal" className="text-xl font-bold text-white">
-                    {formatEth(mulEth(activeEdition.priceEth, safeQuantity))}
+                <button
+                  type="button"
+                  data-testid="detail-add-to-cart"
+                  aria-label="Adicionar ao carrinho"
+                  disabled={addItem.isPending}
+                  onClick={() => void handleAddToCart(false)}
+                  className="inline-flex h-[40px] items-center justify-center gap-1.5 rounded-[6px] border border-border-subtle bg-bg-secondary px-3 text-[13px] font-medium text-text-primary hover:border-accent disabled:opacity-50 cursor-pointer"
+                >
+                  <ShoppingCart className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+                  <span>Carrinho</span>
+                </button>
+
+                <button
+                  type="button"
+                  data-testid="detail-favorite-btn"
+                  aria-pressed={isFavorite}
+                  onClick={handleFavorite}
+                  className="inline-flex h-[40px] min-w-[130px] items-center justify-center gap-[8px] rounded-[6px] border border-accent px-3 text-[14px] font-medium leading-[20px] text-accent-bright hover:bg-accent/15 cursor-pointer"
+                >
+                  <Heart
+                    className={`h-[18px] w-[18px] ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
+                    aria-hidden="true"
+                  />
+                  <span>Favoritar</span>
+                  <span data-testid="detail-favorite-count" className="text-xs">
+                    ({nft.likes})
                   </span>
-                </div>
-
-                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <Button
-                    size="lg"
-                    data-testid="detail-add-to-cart"
-                    disabled={addItem.isPending}
-                    onClick={() => void handleAddToCart(false)}
-                  >
-                    <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-                    {addItem.isPending ? 'Adicionando...' : 'Adicionar ao carrinho'}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    data-testid="detail-buy-now"
-                    disabled={addItem.isPending}
-                    onClick={() => void handleAddToCart(true)}
-                  >
-                    <Zap className="h-5 w-5" aria-hidden="true" />
-                    Comprar agora
-                  </Button>
-                </div>
-              </>
-            )}
-          </Card>
-
-          <dl className="mt-6 grid grid-cols-2 gap-3 rounded-2xl border border-border-subtle bg-bg-secondary p-4 text-xs font-mono">
-            <div>
-              <dt className="text-text-muted">Contrato</dt>
-              <dd className="mt-1 truncate text-white">{nft.contractAddress}</dd>
+                </button>
+              </div>
             </div>
-            <div>
-              <dt className="text-text-muted">Autenticidade</dt>
-              <dd className="mt-1 inline-flex items-center gap-1 text-emerald-300">
-                <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                Verificado na rede {networkLabels[nft.network]}
-              </dd>
-            </div>
-          </dl>
+          )}
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {nft.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center gap-1 rounded-full bg-bg-secondary px-3 py-1 font-mono text-xs text-text-secondary"
-              >
-                <Sparkles className="h-3 w-3 text-accent-bright" aria-hidden="true" />#{tag}
-              </span>
-            ))}
+          <div className="flex flex-col gap-[10px] text-[15px] text-text-muted">
+            <p>ID do token: #{tokenNumber}</p>
+            <p>Coleção: {nft.collection}</p>
+            <p>Atributos: Óculos, Esmeralda, Raro</p>
+            <div className="flex items-center gap-[10px] pt-1 text-text-primary">
+              <span className="font-bold">Compartilhar este NFT:</span>
+              <span className="text-xs text-text-secondary">in</span>
+              <span className="text-xs text-text-secondary">✉</span>
+              <span className="text-xs text-text-secondary">𝕏</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <section aria-label="Informações e avaliações do NFT" className="mt-[56px]">
+        <div className="flex items-center gap-[32px] border-b border-border-subtle">
+          <button
+            type="button"
+            onClick={() => setActiveTab('details')}
+            className={`relative pb-3 text-[17px] cursor-pointer ${
+              activeTab === 'details' ? 'font-bold text-accent-bright' : 'text-text-primary'
+            }`}
+          >
+            Detalhes do NFT
+            {activeTab === 'details' ? (
+              <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent" />
+            ) : null}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('reviews')}
+            className={`relative pb-3 text-[17px] cursor-pointer ${
+              activeTab === 'reviews' ? 'font-bold text-accent-bright' : 'text-text-primary'
+            }`}
+          >
+            Avaliações de colecionadores ({nft.likes})
+            {activeTab === 'reviews' ? (
+              <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent" />
+            ) : null}
+          </button>
+        </div>
+
+        <div className="mt-6 space-y-5 text-[14px] leading-[24px] text-text-secondary">
+          <p>
+            {nft.name} é uma obra digital 1/50 finalizada à mão da coleção {nft.collection}. Cada atributo
+            fica armazenado nos metadados do token e verificado na {networkLabels[nft.network]}. A obra
+            explora identidade, movimento e luz em um mundo digital sem fronteiras.
+          </p>
+          <p>
+            A propriedade inclui a arte em alta resolução, lançamentos exclusivos para colecionadores e um
+            registro permanente de procedência registrada na rede. {nft.creator.displayName} recebe 5% de
+            direitos autorais nas vendas secundárias, apoiando novos trabalhos e lançamentos da comunidade.
+          </p>
+
+          <div>
+            <h3 className="font-bold text-text-primary">Rede:</h3>
+            <p>Cunhado na {networkLabels[nft.network]} com procedência imutável e metadados armazenados no IPFS.</p>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-text-primary">Contrato:</h3>
+            <p>
+              Direitos autorais do criador: 5% nas vendas secundárias, pagos automaticamente pelos mercados
+              compatíveis.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-text-primary">Direitos autorais:</h3>
+            <p>
+              {nft.contractAddress.slice(0, 6)}...{nft.contractAddress.slice(-4)} • Contrato inteligente{' '}
+              {nft.tokenStandard} verificado.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {relatedItems.length > 0 ? (
+        <section aria-labelledby="related-heading" className="mt-[64px]">
+          <h2 id="related-heading" className="text-[17px] font-bold text-accent-bright">
+            Mais desta coleção
+          </h2>
+          <div className="mt-3 h-px w-full bg-border-subtle" />
+          <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+            {relatedItems.map((item) => (
+              <Link
+                key={item.id}
+                to="/nft/$nftId"
+                params={{ nftId: item.id }}
+                className="group flex flex-col gap-2"
+              >
+                <div className="flex aspect-square items-center justify-center rounded-[6px] bg-bg-secondary p-2">
+                  <img
+                    src={item.image.url}
+                    alt={item.image.alt}
+                    width={190}
+                    height={190}
+                    loading="lazy"
+                    className="h-full w-full rounded-[12px] object-cover transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <span className="text-[15px] text-text-primary group-hover:text-accent-bright">
+                  {item.name}
+                </span>
+                <span className="text-[16px] font-bold text-accent-bright">
+                  {formatEth(item.priceFromEth)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   )
 }

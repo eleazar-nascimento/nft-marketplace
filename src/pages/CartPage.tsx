@@ -1,7 +1,7 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import {
   AlertTriangle,
-  ArrowRight,
+  ArrowLeft,
   Minus,
   Plus,
   RefreshCw,
@@ -14,19 +14,18 @@ import { useState, type FormEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { networkLabels, networks, type Network } from '@/contracts'
 import { compareEth, formatEth, isZeroEth, mulEth } from '@/lib/eth'
 import { saveReturnTo } from '@/lib/storage'
-import { useCart, useCartMutations, useQuote } from '@/state/queries'
+import { useCart, useCartMutations, useNftsList, useQuote } from '@/state/queries'
 import { useSession } from '@/state/session'
 
 export function CartPage() {
   const { status } = useSession()
   const navigate = useNavigate()
   const cartQuery = useCart()
+  const relatedQuery = useNftsList({ page: 1, pageSize: 5 })
   const { updateItem, removeItem, applyCoupon, removeCoupon, acknowledge } = useCartMutations()
 
   const [network, setNetwork] = useState<Network>('ethereum')
@@ -39,12 +38,12 @@ export function CartPage() {
 
   if (cartQuery.isLoading) {
     return (
-      <div data-testid="cart-page-skeleton" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <Skeleton className="h-10 w-64" />
+      <div data-testid="cart-page-skeleton" className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-0">
+        <Skeleton className="h-8 w-64" />
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-4 lg:col-span-8">
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-[70px] w-full" />
+            <Skeleton className="h-[70px] w-full" />
           </div>
           <div className="lg:col-span-4">
             <Skeleton data-testid="cart-summary-skeleton" className="h-80 w-full" />
@@ -59,7 +58,7 @@ export function CartPage() {
       <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
         <Card data-testid="cart-empty-state" className="p-10">
           <ShoppingBag className="mx-auto h-12 w-12 text-accent-bright" aria-hidden="true" />
-          <h1 className="mt-4 text-2xl font-bold text-white">Seu carrinho está vazio</h1>
+          <h1 className="mt-4 text-2xl font-bold text-text-primary">Seu carrinho está vazio</h1>
           <p className="mt-2 text-sm text-text-secondary">
             Explore o catálogo para adicionar edições digitais exclusivas à sua coleção.
           </p>
@@ -104,31 +103,44 @@ export function CartPage() {
       line.quantity > Math.min(line.available, line.maxPerOrder),
   )
   const hasQuoteIssues = Boolean(quote && quote.issues.length > 0) || hasLineChanges
+  const relatedItems = (relatedQuery.data?.items ?? []).slice(0, 5)
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Carrinho de NFTs</h1>
-          <p className="mt-1 text-sm text-text-secondary">
-            Revise quantidades, aplique cupons e confira a cotação atualizada antes do pagamento.
-          </p>
+    <div className="mx-auto w-full max-w-[1200px] px-4 pt-6 sm:px-6 lg:px-0">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="inline-flex h-[35px] w-[35px] items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+            aria-label="Voltar"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <div>
+            <p className="hidden text-[15px] font-bold leading-[16px] text-text-primary lg:block">
+              <Link to="/" className="hover:text-accent-bright">
+                Início
+              </Link>{' '}
+              / Mercado / Carrinho
+            </p>
+            <h1 className="text-[20px] font-bold text-text-primary lg:sr-only">Carrinho de NFTs</h1>
+          </div>
         </div>
-        <Badge variant="default" data-testid="cart-items-badge">
+        <span data-testid="cart-items-badge" className="text-xs text-text-secondary">
           {cart.itemCount} {cart.itemCount === 1 ? 'item' : 'itens'}
-        </Badge>
+        </span>
       </div>
 
       {hasQuoteIssues ? (
         <div
           role="alert"
           data-testid="cart-issues-banner"
-          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-amber-500/70 bg-amber-950/80 p-4 text-amber-100"
+          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[6px] border border-amber-500/70 bg-amber-950/80 p-4 text-amber-100"
         >
           <div className="flex items-start gap-3">
             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />
             <div className="text-sm">
-              <p className="font-semibold">Alteração de preço ou disponibilidade detectada</p>
+              <p className="font-bold">Alteração de preço ou disponibilidade detectada</p>
               <p className="mt-0.5 text-amber-200">
                 Um ou mais itens sofreram mudanças desde que foram adicionados. Confirme a atualização para
                 prosseguir com segurança.
@@ -147,258 +159,313 @@ export function CartPage() {
         </div>
       ) : null}
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
-        <div className="space-y-4 lg:col-span-8">
-          {cart.lines.map((line) => {
-            const maxAllowed =
-              line.status === 'available' ? Math.min(line.available, line.maxPerOrder) : 0
-            const priceChanged = compareEth(line.unitPriceEth, line.addedUnitPriceEth) !== 0
-            const isSoldOut = maxAllowed === 0
+      <div className="mt-6 flex flex-col items-start justify-between gap-[40px] lg:flex-row">
+        <div className="w-full lg:w-[782px]">
+          <div className="hidden items-center justify-between border-b border-accent/35 pb-3 pr-[24px] text-[16px] text-text-primary sm:flex">
+            <span className="w-[250px] font-bold">NFTs</span>
+            <span className="w-[90px] font-medium">Preço</span>
+            <span className="w-[95px] font-bold text-center">Edições</span>
+            <span className="w-[100px] font-medium">Total</span>
+            <span className="w-[24px]" />
+          </div>
 
-            return (
-              <Card
-                key={line.id}
-                data-testid={`cart-line-${line.nftId}`}
-                className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="flex items-center gap-4">
-                  <Link
-                    to="/nft/$nftId"
-                    params={{ nftId: line.nftId }}
-                    className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-bg-primary"
-                  >
-                    <img
-                      src={line.image.url}
-                      alt={line.image.alt}
-                      width={96}
-                      height={96}
-                      className="h-full w-full object-cover"
-                    />
-                  </Link>
+          <div className="mt-3 flex flex-col gap-[12px]">
+            {cart.lines.map((line) => {
+              const maxAllowed =
+                line.status === 'available' ? Math.min(line.available, line.maxPerOrder) : 0
+              const priceChanged = compareEth(line.unitPriceEth, line.addedUnitPriceEth) !== 0
+              const isSoldOut = maxAllowed === 0
+              const tokenNumber = line.nftId.replace(/\D/g, '').padStart(4, '0')
 
-                  <div>
+              return (
+                <div
+                  key={line.id}
+                  data-testid={`cart-line-${line.nftId}`}
+                  className="flex flex-col justify-between gap-4 rounded-[14px] bg-bg-secondary p-3 pr-4 sm:h-[70px] sm:flex-row sm:items-center sm:rounded-none sm:p-0 sm:pr-[24px]"
+                >
+                  <div className="flex items-center gap-[16px] sm:w-[250px]">
                     <Link
                       to="/nft/$nftId"
                       params={{ nftId: line.nftId }}
-                      className="text-lg font-bold text-white hover:text-accent-bright"
+                      className="h-[70px] w-[70px] shrink-0 overflow-hidden rounded-[6px]"
                     >
-                      {line.name}
+                      <img
+                        src={line.image.url}
+                        alt={line.image.alt}
+                        width={70}
+                        height={70}
+                        className="h-full w-full object-cover"
+                      />
                     </Link>
-                    <p className="font-mono text-xs text-text-secondary">
-                      Edição: <span className="text-white">{line.editionName}</span> · por {line.creatorName}
-                    </p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-2 font-mono text-xs">
-                      <span data-testid={`cart-line-unit-price-${line.nftId}`} className="text-white">
-                        {formatEth(line.unitPriceEth)} / un.
-                      </span>
-                      {priceChanged ? (
-                        <Badge variant="warning" data-testid={`cart-line-price-changed-${line.nftId}`}>
-                          Era {formatEth(line.addedUnitPriceEth)}
-                        </Badge>
-                      ) : null}
-                      {isSoldOut ? (
-                        <Badge variant="danger" data-testid={`cart-line-soldout-${line.nftId}`}>
-                          Esgotado
-                        </Badge>
-                      ) : (
-                        <span className="text-text-muted">(máx. {maxAllowed})</span>
-                      )}
+
+                    <div className="flex flex-col gap-[6px]">
+                      <Link
+                        to="/nft/$nftId"
+                        params={{ nftId: line.nftId }}
+                        className="text-[16px] font-bold leading-[16px] text-text-primary hover:text-accent-bright"
+                      >
+                        {line.name}
+                      </Link>
+                      <p className="text-[14px] leading-[16px] text-text-muted">ID do token: #{tokenNumber}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {priceChanged ? (
+                          <Badge variant="warning" data-testid={`cart-line-price-changed-${line.nftId}`}>
+                            Era {formatEth(line.addedUnitPriceEth)}
+                          </Badge>
+                        ) : null}
+                        {isSoldOut ? (
+                          <Badge variant="danger" data-testid={`cart-line-soldout-${line.nftId}`}>
+                            Esgotado
+                          </Badge>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      data-testid={`cart-qty-decrease-${line.nftId}`}
-                      aria-label={`Diminuir quantidade de ${line.name}`}
-                      disabled={line.quantity <= 1 || updateItem.isPending}
-                      onClick={() =>
-                        updateItem.mutate({ lineId: line.id, quantity: Math.max(1, line.quantity - 1) })
-                      }
-                    >
-                      <Minus className="h-4 w-4" aria-hidden="true" />
-                    </Button>
+                  <div className="flex items-center justify-between gap-4 sm:flex-1">
                     <span
-                      data-testid={`cart-qty-value-${line.nftId}`}
-                      className="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-border-subtle bg-bg-primary px-3 font-mono text-sm font-bold text-white"
+                      data-testid={`cart-line-unit-price-${line.nftId}`}
+                      className="text-[16px] font-bold leading-[16px] text-text-secondary sm:w-[90px]"
                     >
-                      {line.quantity}
+                      {formatEth(line.unitPriceEth)}
                     </span>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      data-testid={`cart-qty-increase-${line.nftId}`}
-                      aria-label={`Aumentar quantidade de ${line.name}`}
-                      disabled={line.quantity >= maxAllowed || updateItem.isPending}
-                      onClick={() =>
-                        updateItem.mutate({ lineId: line.id, quantity: line.quantity + 1 })
-                      }
-                    >
-                      <Plus className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                  </div>
 
-                  <div className="text-right font-mono">
-                    <span className="block text-xs text-text-muted">Total do item</span>
+                    <div className="flex items-center justify-center gap-[12px] sm:w-[95px]">
+                      <button
+                        type="button"
+                        data-testid={`cart-qty-decrease-${line.nftId}`}
+                        aria-label={`Diminuir quantidade de ${line.name}`}
+                        disabled={line.quantity <= 1 || updateItem.isPending}
+                        onClick={() =>
+                          updateItem.mutate({ lineId: line.id, quantity: Math.max(1, line.quantity - 1) })
+                        }
+                        className="flex h-[30px] w-[20px] items-center justify-center rounded-[20px] border border-bg-primary bg-accent text-bg-primary disabled:opacity-40 cursor-pointer"
+                      >
+                        <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+                      </button>
+                      <span
+                        data-testid={`cart-qty-value-${line.nftId}`}
+                        className="text-[17px] leading-[24px] text-text-primary"
+                      >
+                        {line.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        data-testid={`cart-qty-increase-${line.nftId}`}
+                        aria-label={`Aumentar quantidade de ${line.name}`}
+                        disabled={line.quantity >= maxAllowed || updateItem.isPending}
+                        onClick={() =>
+                          updateItem.mutate({ lineId: line.id, quantity: line.quantity + 1 })
+                        }
+                        className="flex h-[30px] w-[20px] items-center justify-center rounded-[20px] border border-bg-primary bg-accent text-bg-primary disabled:opacity-40 cursor-pointer"
+                      >
+                        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                      </button>
+                    </div>
+
                     <span
                       data-testid={`cart-line-total-${line.nftId}`}
-                      className="text-base font-bold text-white"
+                      className="text-[16px] font-bold leading-[16px] text-accent-bright sm:w-[100px]"
                     >
                       {formatEth(mulEth(line.unitPriceEth, line.quantity))}
                     </span>
-                  </div>
 
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    data-testid={`cart-remove-${line.nftId}`}
-                    aria-label={`Remover ${line.name} do carrinho`}
-                    disabled={removeItem.isPending}
-                    onClick={() => removeItem.mutate(line.id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-400" aria-hidden="true" />
-                  </Button>
+                    <button
+                      type="button"
+                      data-testid={`cart-remove-${line.nftId}`}
+                      aria-label={`Remover ${line.name} do carrinho`}
+                      disabled={removeItem.isPending}
+                      onClick={() => removeItem.mutate(line.id)}
+                      className="inline-flex h-[24px] w-[24px] items-center justify-center text-text-secondary hover:text-red-400 cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
-              </Card>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
 
-        <div className="lg:col-span-4">
-          <Card className="sticky top-24 p-6">
-            <h2 className="text-xl font-bold text-white">Resumo de Valores</h2>
+        <div className="w-full rounded-t-[32px] bg-bg-secondary p-6 lg:w-[332px] lg:rounded-none lg:bg-transparent lg:p-0">
+          <div className="flex flex-col gap-[12px]">
+            <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Resumo da carteira</h2>
+            <div className="h-px w-full bg-accent/35" />
+          </div>
 
-            <div className="mt-4">
-              <Label htmlFor="cart-network-select">Rede para estimativa de taxas</Label>
-              <select
-                id="cart-network-select"
-                data-testid="cart-network-select"
-                value={network}
-                onChange={(event) => setNetwork(event.target.value as Network)}
-                className="mt-1.5 h-11 w-full rounded-2xl border border-border-subtle bg-bg-primary px-3 text-sm text-white"
+          <div className="mt-4">
+            <label htmlFor="cart-network-select" className="sr-only">
+              Rede para estimativa de taxas
+            </label>
+            <select
+              id="cart-network-select"
+              data-testid="cart-network-select"
+              value={network}
+              onChange={(event) => setNetwork(event.target.value as Network)}
+              className="h-[34px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-xs text-text-secondary"
+            >
+              {networks.map((net) => (
+                <option key={net} value={net}>
+                  Rede: {networkLabels[net]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mt-[20px]">
+            {cart.couponCode ? (
+              <div
+                data-testid="active-coupon-pill"
+                className="flex items-center justify-between rounded-[3px] border border-accent bg-bg-secondary px-3 py-2 text-xs text-text-primary"
               >
-                {networks.map((net) => (
-                  <option key={net} value={net}>
-                    {networkLabels[net]}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mt-5 border-t border-border-subtle pt-4">
-              {cart.couponCode ? (
-                <div
-                  data-testid="active-coupon-pill"
-                  className="flex items-center justify-between rounded-2xl border border-emerald-500/60 bg-emerald-950/60 px-3.5 py-2.5 text-sm text-emerald-100"
-                >
-                  <div className="flex items-center gap-2 font-mono">
-                    <Tag className="h-4 w-4 text-emerald-300" aria-hidden="true" />
-                    <span>Cupom: {cart.couponCode}</span>
-                  </div>
-                  <button
-                    type="button"
-                    data-testid="remove-coupon-btn"
-                    aria-label={`Remover cupom ${cart.couponCode}`}
-                    onClick={() => removeCoupon.mutate()}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-200 hover:text-white cursor-pointer"
-                  >
-                    <X className="h-4 w-4" aria-hidden="true" />
-                    Remover
-                  </button>
+                <div className="flex items-center gap-2">
+                  <Tag className="h-3.5 w-3.5 text-accent-bright" aria-hidden="true" />
+                  <span>Cupom: {cart.couponCode}</span>
                 </div>
-              ) : (
-                <form onSubmit={(event) => void handleApplyCoupon(event)} noValidate>
-                  <Label htmlFor="cart-coupon-input">Cupom de desconto</Label>
-                  <div className="mt-1.5 flex gap-2">
-                    <Input
-                      id="cart-coupon-input"
-                      data-testid="cart-coupon-input"
-                      placeholder="Ex: NFT10"
-                      value={couponInput}
-                      aria-invalid={Boolean(couponError)}
-                      aria-describedby={couponError ? 'cart-coupon-error' : undefined}
-                      onChange={(event) => setCouponInput(event.target.value)}
-                      className="h-11 bg-bg-primary font-mono uppercase"
-                    />
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      size="sm"
-                      data-testid="apply-coupon-btn"
-                      disabled={applyCoupon.isPending}
-                      className="h-11 shrink-0"
-                    >
-                      Aplicar
-                    </Button>
-                  </div>
-                  {couponError ? (
-                    <p
-                      id="cart-coupon-error"
-                      role="alert"
-                      data-testid="cart-coupon-error"
-                      className="mt-1.5 text-xs text-red-400"
-                    >
-                      {couponError}
-                    </p>
-                  ) : null}
-                </form>
-              )}
-            </div>
-
-            {quoteQuery.isLoading || !quote ? (
-              <div data-testid="cart-summary-skeleton" className="mt-5 space-y-3 border-t border-border-subtle pt-4">
-                <Skeleton className="h-5 w-full" />
-                <Skeleton className="h-5 w-full" />
-                <Skeleton className="h-5 w-full" />
-                <Skeleton className="h-8 w-full" />
+                <button
+                  type="button"
+                  data-testid="remove-coupon-btn"
+                  aria-label={`Remover cupom ${cart.couponCode}`}
+                  onClick={() => removeCoupon.mutate()}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-accent-bright hover:text-text-primary cursor-pointer"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  Remover
+                </button>
               </div>
             ) : (
-              <dl className="mt-5 space-y-3 border-t border-border-subtle pt-4 font-mono text-sm">
-                <div className="flex items-center justify-between">
-                  <dt className="text-text-secondary">Subtotal</dt>
-                  <dd data-testid="quote-subtotal" className="font-semibold text-white">
-                    {formatEth(quote.subtotalEth)}
-                  </dd>
+              <form onSubmit={(event) => void handleApplyCoupon(event)} noValidate className="flex flex-col gap-[8px]">
+                <label
+                  htmlFor="cart-coupon-input"
+                  className="text-[14px] font-bold leading-[16px] text-text-primary"
+                >
+                  Código promocional
+                </label>
+                <div className="flex h-[40px] w-full overflow-hidden rounded-[3px] border border-accent">
+                  <input
+                    id="cart-coupon-input"
+                    data-testid="cart-coupon-input"
+                    placeholder="Digite o código promocional..."
+                    value={couponInput}
+                    aria-invalid={Boolean(couponError)}
+                    aria-describedby={couponError ? 'cart-coupon-error' : undefined}
+                    onChange={(event) => setCouponInput(event.target.value)}
+                    className="flex-1 bg-transparent pl-[8px] pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    data-testid="apply-coupon-btn"
+                    disabled={applyCoupon.isPending}
+                    className="h-[40px] w-[102px] shrink-0 bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                  >
+                    Aplicar
+                  </button>
                 </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-text-secondary">
-                    Desconto {quote.coupon ? `(${quote.coupon.code} -${quote.coupon.percentOff}%)` : ''}
-                  </dt>
-                  <dd data-testid="quote-discount" className="font-semibold text-emerald-300">
-                    {isZeroEth(quote.discountEth) ? '0 ETH' : `- ${formatEth(quote.discountEth)}`}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-text-secondary">Taxa de rede ({networkLabels[quote.network]})</dt>
-                  <dd data-testid="quote-network-fee" className="font-semibold text-white">
-                    {formatEth(quote.networkFeeEth)}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between border-t border-border-subtle pt-3 text-base">
-                  <dt className="font-bold text-white">Total</dt>
-                  <dd data-testid="quote-total" className="text-lg font-bold text-accent-bright">
-                    {formatEth(quote.totalEth)}
-                  </dd>
-                </div>
-              </dl>
+                {couponError ? (
+                  <p
+                    id="cart-coupon-error"
+                    role="alert"
+                    data-testid="cart-coupon-error"
+                    className="text-xs text-red-400"
+                  >
+                    {couponError}
+                  </p>
+                ) : null}
+              </form>
             )}
+          </div>
 
-            <Button
-              size="lg"
+          {quoteQuery.isLoading || !quote ? (
+            <div data-testid="cart-summary-skeleton" className="mt-6 space-y-3">
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </div>
+          ) : (
+            <div className="mt-[24px] flex flex-col gap-[12px]">
+              <div className="flex items-start justify-between text-text-primary">
+                <span className="text-[15px]">Subtotal</span>
+                <span data-testid="quote-subtotal" className="text-[18px] leading-[16px]">
+                  {formatEth(quote.subtotalEth)}
+                </span>
+              </div>
+              <div className="flex items-start justify-between text-[15px] text-text-primary">
+                <span>Desconto do lançamento</span>
+                <span data-testid="quote-discount">
+                  {isZeroEth(quote.discountEth) ? '(-) 00.00' : `(-) ${formatEth(quote.discountEth)}`}
+                </span>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <div className="flex w-full items-center justify-between text-text-primary">
+                  <span className="text-[15px]">Taxa de rede</span>
+                  <span data-testid="quote-network-fee" className="text-[18px] leading-[16px]">
+                    {formatEth(quote.networkFeeEth)}
+                  </span>
+                </div>
+                <span className="text-[12px] leading-[16px] text-accent-bright">Taxa estimada</span>
+              </div>
+              <div className="mt-2 flex items-start justify-between font-bold">
+                <span className="text-[16px] text-text-primary">Total</span>
+                <span data-testid="quote-total" className="text-[18px] text-accent-bright">
+                  {formatEth(quote.totalEth)}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-[24px] flex flex-col items-center gap-[12px]">
+            <button
+              type="button"
               data-testid="proceed-to-checkout-btn"
               disabled={!quote || quote.lines.length === 0}
               onClick={handleProceedToCheckout}
-              className="mt-6 w-full"
+              className="flex h-[40px] w-full items-center justify-center rounded-[3px] bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
             >
-              <span>Ir para o pagamento</span>
-              <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </Button>
-          </Card>
+              Conectar e finalizar
+            </button>
+            <Link to="/" className="text-[15px] text-accent-bright hover:underline">
+              Continuar explorando
+            </Link>
+          </div>
         </div>
       </div>
+
+      {relatedItems.length > 0 ? (
+        <section aria-labelledby="also-viewed-heading" className="mt-[64px]">
+          <h2 id="also-viewed-heading" className="text-[17px] font-bold text-accent-bright">
+            Colecionadores também viram
+          </h2>
+          <div className="mt-3 h-px w-full bg-border-subtle" />
+          <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+            {relatedItems.map((item) => (
+              <Link
+                key={item.id}
+                to="/nft/$nftId"
+                params={{ nftId: item.id }}
+                className="group flex flex-col gap-2"
+              >
+                <div className="flex aspect-square items-center justify-center rounded-[6px] bg-bg-secondary p-2">
+                  <img
+                    src={item.image.url}
+                    alt={item.image.alt}
+                    width={190}
+                    height={190}
+                    loading="lazy"
+                    className="h-full w-full rounded-[12px] object-cover transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <span className="text-[15px] text-text-primary group-hover:text-accent-bright">
+                  {item.name}
+                </span>
+                <span className="text-[16px] font-bold text-accent-bright">
+                  {formatEth(item.priceFromEth)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   )
 }

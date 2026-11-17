@@ -1,9 +1,7 @@
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
-import { Heart, Sparkles } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
+import { Heart } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { networkLabels, nftCategoryLabels, type NftSummary } from '@/contracts'
+import { type NftSummary } from '@/contracts'
 import { formatEth } from '@/lib/eth'
 import { saveReturnTo } from '@/lib/storage'
 import { useToggleFavorite } from '@/state/queries'
@@ -31,14 +29,19 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
   }
 
   const isSoldOut = nft.available === 0
+  const showOriginalPrice = nft.id === 'nft_003'
 
   return (
-    <Card
+    <article
       data-testid={`nft-card-${nft.id}`}
-      className="group flex h-full flex-col overflow-hidden transition-transform hover:-translate-y-0.5"
+      className="group flex w-full flex-col gap-[12px]"
     >
-      <div className="relative aspect-square w-full overflow-hidden bg-bg-primary">
-        <Link to="/nft/$nftId" params={{ nftId: nft.id }} className="block h-full w-full">
+      <div className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-[6px] bg-bg-secondary p-[4px]">
+        <Link
+          to="/nft/$nftId"
+          params={{ nftId: nft.id }}
+          className="relative block h-[250px] w-full max-w-[250px] overflow-hidden rounded-[15px]"
+        >
           <img
             src={nft.image.url}
             alt={nft.image.alt}
@@ -47,24 +50,25 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
             loading={priority ? 'eager' : 'lazy'}
             fetchPriority={priority ? 'high' : 'auto'}
             decoding="async"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full rounded-[15px] object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
-        <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
-          <Badge variant="default">{nftCategoryLabels[nft.category]}</Badge>
-          <Badge variant="accent">{networkLabels[nft.network]}</Badge>
-        </div>
+        {nft.id === 'nft_003' ? (
+          <span className="pointer-events-none absolute left-0 top-4 bg-accent px-2.5 py-1 text-[12px] font-medium leading-[16px] text-bg-primary">
+            RARO
+          </span>
+        ) : null}
 
         <button
           type="button"
           onClick={handleFavorite}
           data-testid={`favorite-btn-${nft.id}`}
           aria-pressed={isFavorite}
-          className="absolute right-3 top-3 inline-flex h-10 items-center gap-1.5 rounded-full border border-border-subtle bg-bg-primary/90 px-3 text-xs font-mono font-semibold text-white hover:border-accent-bright cursor-pointer"
+          className="absolute right-3 top-3 inline-flex h-[28px] items-center gap-1 rounded-full border border-border-subtle bg-bg-primary/85 px-2 text-[11px] font-mono text-text-primary hover:border-accent cursor-pointer"
         >
           <Heart
-            className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-white'}`}
+            className={`h-3.5 w-3.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-accent-bright'}`}
             aria-hidden="true"
           />
           <span className="sr-only">
@@ -72,77 +76,52 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
           </span>
           <span data-testid={`favorite-likes-${nft.id}`}>{nft.likes}</span>
         </button>
-      </div>
 
-      <div className="flex flex-1 flex-col justify-between p-5">
-        <div>
-          <Link
-            to="/nft/$nftId"
-            params={{ nftId: nft.id }}
-            className="block text-lg font-semibold text-white hover:text-accent-bright"
+        {isSoldOut ? (
+          <span
+            data-testid={`nft-availability-${nft.id}`}
+            className="absolute bottom-2 left-3 rounded bg-red-950/90 px-2 py-0.5 text-[11px] font-bold text-red-200"
           >
-            {nft.name}
-          </Link>
+            Esgotado
+          </span>
+        ) : (
+          <span data-testid={`nft-availability-${nft.id}`} className="sr-only">
+            {nft.available} disponíveis
+          </span>
+        )}
+      </div>
 
-          <div className="mt-2 flex items-center gap-2">
-            <img
-              src={nft.creator.avatarUrl}
-              alt=""
-              width={24}
-              height={24}
-              loading="lazy"
-              className="h-6 w-6 rounded-full object-cover"
-            />
-            <span className="font-mono text-xs text-text-secondary">{nft.creator.displayName}</span>
-          </div>
-        </div>
+      <div className="flex flex-col gap-[6px]">
+        <Link
+          to="/nft/$nftId"
+          params={{ nftId: nft.id }}
+          className="text-[16px] font-normal leading-[16px] text-text-primary hover:text-accent-bright"
+        >
+          {nft.name}
+        </Link>
 
-        <div className="mt-4 flex items-end justify-between border-t border-border-subtle/70 pt-3 font-mono">
-          <div>
-            <span className="block text-xs text-text-muted">A partir de</span>
-            <span data-testid={`nft-price-${nft.id}`} className="text-sm font-semibold text-white">
-              {formatEth(nft.priceFromEth)}
-            </span>
-          </div>
-          <div className="text-right">
-            <span className="block text-xs text-text-muted">Disponibilidade</span>
-            {isSoldOut ? (
-              <Badge variant="danger" data-testid={`nft-availability-${nft.id}`}>
-                Esgotado
-              </Badge>
-            ) : (
-              <span
-                data-testid={`nft-availability-${nft.id}`}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300"
-              >
-                <Sparkles className="h-3 w-3" aria-hidden="true" />
-                {nft.available} disp.
-              </span>
-            )}
-          </div>
+        <div className="flex items-center gap-[12px] leading-[16px]">
+          <span
+            data-testid={`nft-price-${nft.id}`}
+            className="text-[18px] font-bold text-accent-bright"
+          >
+            {formatEth(nft.priceFromEth)}
+          </span>
+          {showOriginalPrice ? (
+            <span className="text-[18px] font-normal text-text-muted line-through">2.29 ETH</span>
+          ) : null}
         </div>
       </div>
-    </Card>
+    </article>
   )
 }
 
 export function NftCardSkeleton() {
   return (
-    <Card data-testid="nft-card-skeleton" className="flex h-full flex-col overflow-hidden">
-      <Skeleton className="aspect-square w-full rounded-none" />
-      <div className="flex flex-1 flex-col justify-between p-5">
-        <div>
-          <Skeleton className="h-6 w-3/4" />
-          <div className="mt-3 flex items-center gap-2">
-            <Skeleton className="h-6 w-6 rounded-full" />
-            <Skeleton className="h-4 w-24" />
-          </div>
-        </div>
-        <div className="mt-4 flex items-center justify-between border-t border-border-subtle/70 pt-3">
-          <Skeleton className="h-9 w-24" />
-          <Skeleton className="h-9 w-20" />
-        </div>
-      </div>
-    </Card>
+    <div data-testid="nft-card-skeleton" className="flex w-full flex-col gap-[12px]">
+      <Skeleton className="h-[300px] w-full rounded-[6px]" />
+      <Skeleton className="h-[16px] w-3/4 rounded-[4px]" />
+      <Skeleton className="h-[18px] w-1/2 rounded-[4px]" />
+    </div>
   )
 }

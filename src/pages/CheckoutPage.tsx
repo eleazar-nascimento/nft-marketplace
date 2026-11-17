@@ -2,22 +2,19 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import {
   AlertCircle,
   AlertTriangle,
+  ArrowLeft,
   CheckCircle2,
   Clock,
   Loader2,
   Plug,
   RefreshCw,
-  ShieldCheck,
   Unplug,
-  Wallet as WalletIcon,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { AppApiError } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   collectorSchema,
@@ -66,6 +63,10 @@ export function CheckoutPage() {
     phone: savedDraft?.collector.phone ?? '+55 11 98765-4321',
     country: savedDraft?.collector.country ?? 'Brasil',
   }))
+  const [usernameField, setUsernameField] = useState(user?.username ?? 'ana_souza')
+  const [secondaryEns, setSecondaryEns] = useState('nova.kurio.eth')
+  const [collectorNote, setCollectorNote] = useState('')
+  const [useAnotherWallet, setUseAnotherWallet] = useState(false)
   const [selectedWalletId, setSelectedWalletId] = useState<string>(savedDraft?.walletId ?? '')
   const [selectedNetwork, setSelectedNetwork] = useState<Network>(savedDraft?.network ?? 'ethereum')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
@@ -224,8 +225,8 @@ export function CheckoutPage() {
 
   if (cartQuery.isLoading || walletsQuery.isLoading) {
     return (
-      <div data-testid="checkout-skeleton" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <Skeleton className="h-10 w-64" />
+      <div data-testid="checkout-skeleton" className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-0">
+        <Skeleton className="h-8 w-64" />
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-4 lg:col-span-7">
             <Skeleton className="h-64 w-full" />
@@ -243,7 +244,7 @@ export function CheckoutPage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
         <Card className="p-10">
-          <h1 className="text-2xl font-bold text-white">Nenhum item para checkout</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Nenhum item para checkout</h1>
           <p className="mt-2 text-sm text-text-secondary">
             Seu carrinho está vazio. Adicione um NFT antes de prosseguir para o pagamento.
           </p>
@@ -256,13 +257,27 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-[1200px] px-4 pt-6 sm:px-6 lg:px-0">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Pagamento e Revisão</h1>
-          <p className="mt-1 text-sm text-text-secondary">
-            Informe os dados do colecionador, conecte sua carteira na rede desejada e confirme a cotação.
-          </p>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/cart"
+            className="inline-flex h-[35px] w-[35px] items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+            aria-label="Voltar ao carrinho"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <div>
+            <p className="hidden text-[15px] font-bold leading-[16px] text-text-primary lg:block">
+              <Link to="/" className="hover:text-accent-bright">
+                Início
+              </Link>{' '}
+              / Mercado / Pagamento
+            </p>
+            <h1 className="text-[20px] font-bold text-text-primary lg:sr-only">
+              Pagamento com carteira
+            </h1>
+          </div>
         </div>
         <Badge variant="default" data-testid="checkout-idempotency-badge">
           Chave: {idempotencyKey.slice(0, 14)}
@@ -274,13 +289,13 @@ export function CheckoutPage() {
           role="status"
           aria-live="polite"
           data-testid="order-pending-card"
-          className="mt-6 border-accent-bright bg-bg-secondary p-6"
+          className="mt-6 border-accent bg-bg-secondary p-6"
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               <Loader2 className="mt-0.5 h-6 w-6 animate-spin text-accent-bright" aria-hidden="true" />
               <div>
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-lg font-bold text-text-primary">
                   Processando pedido <span className="font-mono">{activeOrder.id}</span>
                 </h2>
                 <p className="mt-1 text-sm text-text-secondary">
@@ -306,7 +321,7 @@ export function CheckoutPage() {
             <div className="flex items-start gap-3">
               <AlertCircle className="mt-0.5 h-6 w-6 shrink-0 text-red-400" aria-hidden="true" />
               <div>
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-lg font-bold text-text-primary">
                   Pagamento recusado ({activeOrder.id})
                 </h2>
                 <p className="mt-1 text-sm text-red-200">
@@ -331,12 +346,12 @@ export function CheckoutPage() {
         <div
           role="alert"
           data-testid="checkout-stale-quote-banner"
-          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-amber-500/80 bg-amber-950/80 p-4 text-amber-100"
+          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[6px] border border-amber-500/80 bg-amber-950/80 p-4 text-amber-100"
         >
           <div className="flex items-start gap-3">
             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />
             <div className="text-sm">
-              <p className="font-semibold">Cotação desatualizada — nova confirmação necessária</p>
+              <p className="font-bold">Cotação desatualizada — nova confirmação necessária</p>
               <p className="mt-0.5 text-amber-200">
                 {staleQuoteNotice ??
                   'Preço ou disponibilidade mudou enquanto você estava no checkout. Revise e confirme os valores atualizados.'}
@@ -358,361 +373,481 @@ export function CheckoutPage() {
       <form
         onSubmit={(event) => void handleSubmitOrder(event)}
         noValidate
-        className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12"
+        className="mt-8 flex flex-col items-start justify-between gap-[32px] lg:flex-row"
       >
-        <div className="space-y-6 lg:col-span-7">
-          <Card className="p-6">
-            <h2 className="text-xl font-bold text-white">1. Dados do Colecionador</h2>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <Label htmlFor="collector-fullName">Nome completo</Label>
-                <Input
-                  id="collector-fullName"
-                  data-testid="collector-fullName"
-                  value={collector.fullName}
-                  aria-invalid={Boolean(fieldErrors.fullName)}
-                  aria-describedby={fieldErrors.fullName ? 'err-collector-fullName' : undefined}
-                  onChange={(event) => {
-                    setCollector((prev) => ({ ...prev, fullName: event.target.value }))
-                    setIdempotencyKey(createIdempotencyKey())
-                  }}
-                  className="mt-1.5 bg-bg-primary"
-                />
-                {fieldErrors.fullName ? (
-                  <p id="err-collector-fullName" role="alert" className="mt-1 text-xs text-red-400">
-                    {fieldErrors.fullName}
-                  </p>
-                ) : null}
-              </div>
+        <div className="flex w-full flex-1 flex-col gap-[20px]">
+          <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+            Perfil do colecionador
+          </h2>
 
-              <div>
-                <Label htmlFor="collector-email">E-mail para recibo</Label>
-                <Input
-                  id="collector-email"
-                  data-testid="collector-email"
-                  type="email"
-                  value={collector.email}
-                  aria-invalid={Boolean(fieldErrors.email)}
-                  aria-describedby={fieldErrors.email ? 'err-collector-email' : undefined}
-                  onChange={(event) => {
-                    setCollector((prev) => ({ ...prev, email: event.target.value }))
-                    setIdempotencyKey(createIdempotencyKey())
-                  }}
-                  className="mt-1.5 bg-bg-primary"
-                />
-                {fieldErrors.email ? (
-                  <p id="err-collector-email" role="alert" className="mt-1 text-xs text-red-400">
-                    {fieldErrors.email}
-                  </p>
-                ) : null}
-              </div>
-
-              <div>
-                <Label htmlFor="collector-phone">Telefone</Label>
-                <Input
-                  id="collector-phone"
-                  data-testid="collector-phone"
-                  value={collector.phone}
-                  aria-invalid={Boolean(fieldErrors.phone)}
-                  aria-describedby={fieldErrors.phone ? 'err-collector-phone' : undefined}
-                  onChange={(event) => {
-                    setCollector((prev) => ({ ...prev, phone: event.target.value }))
-                    setIdempotencyKey(createIdempotencyKey())
-                  }}
-                  className="mt-1.5 bg-bg-primary"
-                />
-                {fieldErrors.phone ? (
-                  <p id="err-collector-phone" role="alert" className="mt-1 text-xs text-red-400">
-                    {fieldErrors.phone}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="sm:col-span-2">
-                <Label htmlFor="collector-country">País / Região</Label>
-                <Input
-                  id="collector-country"
-                  data-testid="collector-country"
-                  value={collector.country}
-                  aria-invalid={Boolean(fieldErrors.country)}
-                  aria-describedby={fieldErrors.country ? 'err-collector-country' : undefined}
-                  onChange={(event) => {
-                    setCollector((prev) => ({ ...prev, country: event.target.value }))
-                    setIdempotencyKey(createIdempotencyKey())
-                  }}
-                  className="mt-1.5 bg-bg-primary"
-                />
-                {fieldErrors.country ? (
-                  <p id="err-collector-country" role="alert" className="mt-1 text-xs text-red-400">
-                    {fieldErrors.country}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-xl font-bold text-white">2. Carteira e Rede</h2>
-              <Link
-                to="/wallets"
-                className="text-xs font-semibold text-accent-bright underline underline-offset-4 hover:text-white"
-              >
-                Gerenciar carteiras
-              </Link>
-            </div>
-
-            {wallets.length === 0 ? (
-              <div
-                data-testid="checkout-no-wallets"
-                className="mt-4 rounded-2xl border border-border-subtle bg-bg-primary p-5 text-sm text-text-secondary"
-              >
-                <p>Você ainda não possui nenhuma carteira cadastrada para assinatura do pagamento.</p>
-                <Button asChild size="sm" className="mt-3">
-                  <Link to="/wallets">Cadastrar carteira agora</Link>
-                </Button>
-              </div>
-            ) : (
-              <div className="mt-4 space-y-4">
-                <div role="radiogroup" aria-label="Selecione a carteira" className="grid grid-cols-1 gap-3">
-                  {wallets.map((wallet) => {
-                    const isSelected = wallet.id === effectiveWalletId
-                    return (
-                      <button
-                        key={wallet.id}
-                        type="button"
-                        role="radio"
-                        aria-checked={isSelected}
-                        data-testid={`checkout-wallet-${wallet.kind}`}
-                        onClick={() => {
-                          setSelectedWalletId(wallet.id)
-                          if (!wallet.networks.includes(selectedNetwork)) {
-                            setSelectedNetwork(wallet.networks[0] ?? 'ethereum')
-                          }
-                          setIdempotencyKey(createIdempotencyKey())
-                        }}
-                        className={`flex items-center justify-between rounded-2xl border p-4 text-left transition-colors cursor-pointer ${
-                          isSelected
-                            ? 'border-accent-bright bg-accent/20 text-white'
-                            : 'border-border-subtle bg-bg-primary text-text-secondary hover:text-white'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <WalletIcon className="h-5 w-5 text-accent-bright" aria-hidden="true" />
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-white">{wallet.label}</span>
-                              <Badge variant="default">
-                                {wallet.kind === 'primary' ? 'Principal' : 'Secundária'}
-                              </Badge>
-                            </div>
-                            <p className="mt-0.5 font-mono text-xs text-text-secondary">
-                              {walletProviderLabels[wallet.provider]} · {wallet.address.slice(0, 10)}...
-                              {wallet.address.slice(-6)}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {wallet.networks.map((net) => (
-                            <Badge key={net} variant="accent">
-                              {networkLabels[net]}
-                            </Badge>
-                          ))}
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-
-                <div>
-                  <Label htmlFor="checkout-network-select">Rede da transação</Label>
-                  <select
-                    id="checkout-network-select"
-                    data-testid="checkout-network-select"
-                    value={selectedNetwork}
-                    onChange={(event) => {
-                      setSelectedNetwork(event.target.value as Network)
-                      setIdempotencyKey(createIdempotencyKey())
-                    }}
-                    className="mt-1.5 h-11 w-full rounded-2xl border border-border-subtle bg-bg-primary px-3 text-sm text-white"
-                  >
-                    {networks.map((net) => {
-                      const supported = selectedWallet?.networks.includes(net) ?? true
-                      return (
-                        <option key={net} value={net} disabled={!supported}>
-                          {networkLabels[net]} {!supported ? '(não habilitada nesta carteira)' : ''}
-                        </option>
-                      )
-                    })}
-                  </select>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border-subtle bg-bg-primary p-4">
-                  <div className="flex items-center gap-2 text-sm">
-                    {isWalletConnectedOnNetwork ? (
-                      <>
-                        <CheckCircle2 className="h-5 w-5 text-emerald-400" aria-hidden="true" />
-                        <span data-testid="wallet-connection-status" className="text-emerald-200">
-                          Carteira conectada na rede {networkLabels[selectedNetwork]}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <AlertCircle className="h-5 w-5 text-amber-400" aria-hidden="true" />
-                        <span data-testid="wallet-connection-status" className="text-text-secondary">
-                          Carteira desconectada na rede {networkLabels[selectedNetwork]}
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {isWalletConnectedOnNetwork ? (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        data-testid="checkout-disconnect-wallet-btn"
-                        disabled={disconnectWallet.isPending}
-                        onClick={() => disconnectWallet.mutate()}
-                      >
-                        <Unplug className="h-4 w-4" aria-hidden="true" />
-                        Desconectar
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        data-testid="checkout-connect-wallet-btn"
-                        disabled={connectWallet.isPending || !selectedWallet}
-                        onClick={() => void handleConnectWallet()}
-                      >
-                        <Plug className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-                        {connectWallet.isPending ? 'Conectando...' : 'Conectar carteira'}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </Card>
-        </div>
-
-        <div className="lg:col-span-5">
-          <Card className="sticky top-24 p-6">
-            <h2 className="text-xl font-bold text-white">3. Revisão do Pedido</h2>
-
-            {quoteQuery.isLoading || !quote ? (
-              <div className="mt-4 space-y-3">
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-24 w-full" />
-              </div>
-            ) : (
-              <>
-                <ul className="mt-4 divide-y divide-border-subtle">
-                  {quote.lines.map((line) => (
-                    <li
-                      key={line.lineId}
-                      data-testid={`checkout-line-${line.nftId}`}
-                      className="flex items-center justify-between gap-3 py-3 text-sm"
-                    >
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={line.image.url}
-                          alt={line.image.alt}
-                          width={48}
-                          height={48}
-                          className="h-12 w-12 rounded-xl object-cover"
-                        />
-                        <div>
-                          <p className="font-semibold text-white">{line.name}</p>
-                          <p className="font-mono text-xs text-text-secondary">
-                            {line.editionName} × {line.quantity}
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        data-testid={`checkout-line-total-${line.nftId}`}
-                        className="font-mono font-semibold text-white"
-                      >
-                        {formatEth(line.lineTotalEth)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <dl className="mt-4 space-y-2.5 border-t border-border-subtle pt-4 font-mono text-sm">
-                  <div className="flex justify-between">
-                    <dt className="text-text-secondary">Subtotal</dt>
-                    <dd data-testid="checkout-subtotal" className="text-white">
-                      {formatEth(quote.subtotalEth)}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-text-secondary">Desconto</dt>
-                    <dd data-testid="checkout-discount" className="text-emerald-300">
-                      {isZeroEth(quote.discountEth) ? '0 ETH' : `- ${formatEth(quote.discountEth)}`}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-text-secondary">
-                      Taxa de rede ({networkLabels[quote.network]})
-                    </dt>
-                    <dd data-testid="checkout-network-fee" className="text-white">
-                      {formatEth(quote.networkFeeEth)}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between border-t border-border-subtle pt-3 text-base">
-                    <dt className="font-bold text-white">Total a pagar</dt>
-                    <dd data-testid="checkout-total" className="text-lg font-bold text-accent-bright">
-                      {formatEth(quote.totalEth)}
-                    </dd>
-                  </div>
-                </dl>
-              </>
-            )}
-
-            <div className="mt-5 rounded-2xl border border-border-subtle bg-bg-primary p-3.5">
-              <div className="flex items-start gap-2.5">
-                <input
-                  id="checkout-review-checkbox"
-                  data-testid="checkout-review-checkbox"
-                  type="checkbox"
-                  checked={reviewConfirmed}
-                  onChange={(event) => {
-                    setReviewConfirmed(event.target.checked)
-                    setFieldErrors((prev) => {
-                      const next = { ...prev }
-                      delete next.reviewConfirmed
-                      return next
-                    })
-                  }}
-                  className="mt-1 h-4 w-4 accent-accent-bright cursor-pointer"
-                />
-                <Label htmlFor="checkout-review-checkbox" className="cursor-pointer text-xs leading-relaxed">
-                  Revisei os itens, a carteira selecionada, a rede e a cotação final em ETH para envio do
-                  pedido.
-                </Label>
-              </div>
-              {fieldErrors.reviewConfirmed ? (
-                <p role="alert" className="mt-1.5 text-xs text-red-400">
-                  {fieldErrors.reviewConfirmed}
+          <div className="grid grid-cols-1 gap-x-[24px] gap-y-[16px] sm:grid-cols-2">
+            <div className="flex flex-col">
+              <label htmlFor="collector-fullName" className="flex items-center text-[15px] text-text-primary">
+                <span>Nome de exibição</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <input
+                id="collector-fullName"
+                data-testid="collector-fullName"
+                value={collector.fullName}
+                aria-invalid={Boolean(fieldErrors.fullName)}
+                aria-describedby={fieldErrors.fullName ? 'err-collector-fullName' : undefined}
+                onChange={(event) => {
+                  setCollector((prev) => ({ ...prev, fullName: event.target.value }))
+                  setIdempotencyKey(createIdempotencyKey())
+                }}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              />
+              {fieldErrors.fullName ? (
+                <p id="err-collector-fullName" role="alert" className="mt-1 text-xs text-red-400">
+                  {fieldErrors.fullName}
                 </p>
               ) : null}
             </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="checkout-username-input" className="flex items-center text-[15px] text-text-primary">
+                <span>Nome de usuário</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <input
+                id="checkout-username-input"
+                value={usernameField}
+                onChange={(event) => setUsernameField(event.target.value)}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="checkout-network-select" className="flex items-center text-[15px] text-text-primary">
+                <span>Rede</span>
+                <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <select
+                id="checkout-network-select"
+                data-testid="checkout-network-select"
+                value={selectedNetwork}
+                onChange={(event) => {
+                  setSelectedNetwork(event.target.value as Network)
+                  setIdempotencyKey(createIdempotencyKey())
+                }}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
+              >
+                {networks.map((net) => {
+                  const supported = selectedWallet?.networks.includes(net) ?? true
+                  return (
+                    <option key={net} value={net} disabled={!supported}>
+                      {networkLabels[net]} {!supported ? '(não habilitada)' : ''}
+                    </option>
+                  )
+                })}
+              </select>
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="collector-country" className="flex items-center text-[15px] text-text-primary">
+                <span>Nome do perfil</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <input
+                id="collector-country"
+                data-testid="collector-country"
+                value={collector.country}
+                aria-invalid={Boolean(fieldErrors.country)}
+                aria-describedby={fieldErrors.country ? 'err-collector-country' : undefined}
+                onChange={(event) => {
+                  setCollector((prev) => ({ ...prev, country: event.target.value }))
+                  setIdempotencyKey(createIdempotencyKey())
+                }}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              />
+              {fieldErrors.country ? (
+                <p id="err-collector-country" role="alert" className="mt-1 text-xs text-red-400">
+                  {fieldErrors.country}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="checkout-wallet-address-view" className="flex items-center text-[15px] text-text-primary">
+                <span>Endereço da carteira</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <input
+                id="checkout-wallet-address-view"
+                readOnly
+                value={selectedWallet?.address ?? ''}
+                placeholder="Endereço 0x da carteira"
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-muted focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col justify-end">
+              <label htmlFor="checkout-secondary-ens" className="sr-only">
+                ENS ou carteira secundária
+              </label>
+              <input
+                id="checkout-secondary-ens"
+                value={secondaryEns}
+                onChange={(event) => setSecondaryEns(event.target.value)}
+                placeholder="ENS ou carteira secundária (opcional)"
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-muted placeholder:text-text-muted focus:border-accent focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="checkout-wallet-select-dropdown" className="flex items-center text-[15px] text-text-primary">
+                <span>Tipo de carteira</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <select
+                id="checkout-wallet-select-dropdown"
+                value={effectiveWalletId}
+                onChange={(event) => {
+                  const nextId = event.target.value
+                  setSelectedWalletId(nextId)
+                  const nextWallet = wallets.find((w) => w.id === nextId)
+                  if (nextWallet && !nextWallet.networks.includes(selectedNetwork)) {
+                    setSelectedNetwork(nextWallet.networks[0] ?? 'ethereum')
+                  }
+                  setIdempotencyKey(createIdempotencyKey())
+                }}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
+              >
+                {wallets.map((w) => (
+                  <option key={w.id} value={w.id}>
+                    {walletProviderLabels[w.provider]} ({w.label})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="collector-phone" className="flex items-center text-[15px] text-text-primary">
+                <span>Código de indicação</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <input
+                id="collector-phone"
+                data-testid="collector-phone"
+                value={collector.phone}
+                aria-invalid={Boolean(fieldErrors.phone)}
+                aria-describedby={fieldErrors.phone ? 'err-collector-phone' : undefined}
+                onChange={(event) => {
+                  setCollector((prev) => ({ ...prev, phone: event.target.value }))
+                  setIdempotencyKey(createIdempotencyKey())
+                }}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              />
+              {fieldErrors.phone ? (
+                <p id="err-collector-phone" role="alert" className="mt-1 text-xs text-red-400">
+                  {fieldErrors.phone}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="collector-email" className="flex items-center text-[15px] text-text-primary">
+                <span>E-mail</span>
+                <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <input
+                id="collector-email"
+                data-testid="collector-email"
+                type="email"
+                value={collector.email}
+                aria-invalid={Boolean(fieldErrors.email)}
+                aria-describedby={fieldErrors.email ? 'err-collector-email' : undefined}
+                onChange={(event) => {
+                  setCollector((prev) => ({ ...prev, email: event.target.value }))
+                  setIdempotencyKey(createIdempotencyKey())
+                }}
+                className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              />
+              {fieldErrors.email ? (
+                <p id="err-collector-email" role="alert" className="mt-1 text-xs text-red-400">
+                  {fieldErrors.email}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="checkout-ens-select" className="flex items-center text-[15px] text-text-primary">
+                <span>Nome ENS</span>
+                <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+              </label>
+              <select
+                id="checkout-ens-select"
+                defaultValue=".eth"
+                className="h-[40px] w-[78px] rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-[15px] text-text-primary focus:border-accent focus:outline-none"
+              >
+                <option value=".eth">.eth</option>
+                <option value=".xyz">.xyz</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setUseAnotherWallet((prev) => !prev)}
+            className="inline-flex items-center gap-[8px] text-left text-[15px] text-text-primary cursor-pointer"
+          >
+            <span
+              className={`inline-flex h-[15px] w-[15px] items-center justify-center rounded-full border border-accent ${
+                useAnotherWallet ? 'bg-accent' : 'bg-transparent'
+              }`}
+            />
+            <span>Usar outra carteira?</span>
+          </button>
+
+          <div className="flex flex-col gap-[12px] sm:w-[350px]">
+            <label htmlFor="checkout-collector-note" className="text-[15px] text-text-primary">
+              Observação do colecionador (opcional)
+            </label>
+            <textarea
+              id="checkout-collector-note"
+              value={collectorNote}
+              onChange={(event) => setCollectorNote(event.target.value)}
+              className="h-[152px] w-full rounded-[3px] border border-border-subtle bg-transparent p-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-[3px] border border-border-subtle bg-bg-secondary p-4">
+            <div className="flex items-center gap-2 text-sm">
+              {isWalletConnectedOnNetwork ? (
+                <>
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+                  <span data-testid="wallet-connection-status" className="text-text-primary">
+                    Carteira conectada na rede {networkLabels[selectedNetwork]}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+                  <span data-testid="wallet-connection-status" className="text-text-secondary">
+                    Carteira desconectada na rede {networkLabels[selectedNetwork]}
+                  </span>
+                </>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              {isWalletConnectedOnNetwork ? (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  data-testid="checkout-disconnect-wallet-btn"
+                  disabled={disconnectWallet.isPending}
+                  onClick={() => disconnectWallet.mutate()}
+                >
+                  <Unplug className="h-4 w-4" aria-hidden="true" />
+                  Desconectar
+                </Button>
+              ) : (
+                <Button
+                  variant="default"
+                  size="sm"
+                  data-testid="checkout-connect-wallet-btn"
+                  disabled={connectWallet.isPending || !selectedWallet}
+                  onClick={() => void handleConnectWallet()}
+                >
+                  <Plug className="h-4 w-4" aria-hidden="true" />
+                  {connectWallet.isPending ? 'Conectando...' : 'Conectar carteira'}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex w-full flex-col gap-[16px] lg:w-[405px] lg:shrink-0">
+          <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">Seus NFTs</h2>
+
+          {quoteQuery.isLoading || !quote ? (
+            <div className="space-y-3">
+              <Skeleton className="h-[70px] w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between border-b border-accent/35 pb-3 text-[16px] text-text-primary">
+                <span className="font-bold">NFTs</span>
+                <span className="font-medium">Subtotal</span>
+              </div>
+
+              <ul className="flex flex-col gap-[12px]">
+                {quote.lines.map((line) => {
+                  const tokenNumber = line.nftId.replace(/\D/g, '').padStart(4, '0')
+                  return (
+                    <li
+                      key={line.lineId}
+                      data-testid={`checkout-line-${line.nftId}`}
+                      className="flex h-[70px] items-center justify-between bg-bg-secondary pl-[4px] pr-[16px]"
+                    >
+                      <div className="flex items-center gap-[8px]">
+                        <img
+                          src={line.image.url}
+                          alt={line.image.alt}
+                          width={66}
+                          height={66}
+                          className="h-[66px] w-[66px] rounded-[8px] object-cover"
+                        />
+                        <div className="flex flex-col gap-[6px]">
+                          <p className="text-[16px] font-bold leading-[16px] text-text-primary">
+                            {line.name}
+                          </p>
+                          <p className="text-[14px] leading-[16px] text-text-muted">
+                            ID do token: #{tokenNumber}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-[12px]">
+                        <span className="text-[14px] text-text-secondary">(x {line.quantity})</span>
+                        <span
+                          data-testid={`checkout-line-total-${line.nftId}`}
+                          className="text-[18px] font-bold text-accent-bright"
+                        >
+                          {formatEth(line.lineTotalEth)}
+                        </span>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+
+              <div className="flex flex-col items-center gap-[12px] pt-2">
+                <p className="text-center text-[14px] text-text-primary">
+                  Tem um código promocional?{' '}
+                  <Link to="/cart" className="text-accent-bright hover:underline">
+                    Aplique aqui
+                  </Link>
+                </p>
+
+                <div className="flex w-full items-center justify-between text-text-primary">
+                  <span className="text-[15px]">Subtotal</span>
+                  <span data-testid="checkout-subtotal" className="text-[18px]">
+                    {formatEth(quote.subtotalEth)}
+                  </span>
+                </div>
+
+                <div className="flex w-full items-center justify-between text-[15px] text-text-primary">
+                  <span>Desconto do lançamento</span>
+                  <span data-testid="checkout-discount">
+                    {isZeroEth(quote.discountEth) ? '(-) 00.00' : `(-) ${formatEth(quote.discountEth)}`}
+                  </span>
+                </div>
+
+                <div className="flex w-full items-center justify-between text-text-primary">
+                  <span className="text-[15px]">Taxa de rede</span>
+                  <span data-testid="checkout-network-fee" className="text-[18px]">
+                    {formatEth(quote.networkFeeEth)}
+                  </span>
+                </div>
+
+                <p className="w-full text-center text-[12px] text-accent-bright">Taxa estimada</p>
+
+                <div className="h-px w-full bg-accent/35" />
+
+                <div className="flex w-full max-w-[321px] items-center justify-between font-bold">
+                  <span className="text-[16px] text-text-primary">Total</span>
+                  <span data-testid="checkout-total" className="text-[18px] text-accent-bright">
+                    {formatEth(quote.totalEth)}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="mt-2 flex flex-col gap-[16px]">
+            <h3 className="text-center text-[17px] font-bold leading-[16px] text-text-primary">
+              Carteira e rede
+            </h3>
+
+            <div role="radiogroup" aria-label="Selecione a carteira" className="flex flex-col gap-[12px]">
+              <div className="flex h-[45px] items-center gap-[10px] rounded-[3px] border border-border-subtle px-[12px]">
+                <span className="h-[16px] w-[16px] rounded-full border border-accent" />
+                <div className="flex h-[26px] items-center justify-center rounded-[6px] border border-border-soft bg-surface-dark px-2.5">
+                  <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright">
+                    METAMASK • WALLETCONNECT • COINBASE
+                  </span>
+                </div>
+              </div>
+
+              {wallets.map((wallet) => {
+                const isSelected = wallet.id === effectiveWalletId
+                return (
+                  <button
+                    key={wallet.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    data-testid={`checkout-wallet-${wallet.kind}`}
+                    onClick={() => {
+                      setSelectedWalletId(wallet.id)
+                      if (!wallet.networks.includes(selectedNetwork)) {
+                        setSelectedNetwork(wallet.networks[0] ?? 'ethereum')
+                      }
+                      setIdempotencyKey(createIdempotencyKey())
+                    }}
+                    className={`flex h-[45px] items-center justify-between rounded-[3px] border px-[12px] text-left transition-colors cursor-pointer ${
+                      isSelected ? 'border-accent' : 'border-border-subtle hover:border-accent/60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-[10px]">
+                      <span
+                        className={`flex h-[16px] w-[16px] items-center justify-center rounded-full border border-accent ${
+                          isSelected ? 'bg-accent' : 'bg-transparent'
+                        }`}
+                      />
+                      <span className="text-[15px] text-text-primary">
+                        {walletProviderLabels[wallet.provider]} ({wallet.label})
+                      </span>
+                    </div>
+                    <span className="text-xs text-text-secondary">
+                      {wallet.address.slice(0, 6)}…{wallet.address.slice(-4)}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="flex items-start gap-2.5 rounded-[3px] border border-border-subtle bg-bg-secondary p-3">
+              <input
+                id="checkout-review-checkbox"
+                data-testid="checkout-review-checkbox"
+                type="checkbox"
+                checked={reviewConfirmed}
+                onChange={(event) => {
+                  setReviewConfirmed(event.target.checked)
+                  setFieldErrors((prev) => {
+                    const next = { ...prev }
+                    delete next.reviewConfirmed
+                    return next
+                  })
+                }}
+                className="mt-0.5 h-4 w-4 accent-accent cursor-pointer"
+              />
+              <label htmlFor="checkout-review-checkbox" className="cursor-pointer text-xs text-text-secondary">
+                Revisei os itens, a carteira selecionada, a rede e a cotação final em ETH.
+              </label>
+            </div>
+            {fieldErrors.reviewConfirmed ? (
+              <p role="alert" className="text-xs text-red-400">
+                {fieldErrors.reviewConfirmed}
+              </p>
+            ) : null}
 
             {submitError ? (
               <div
                 role="alert"
                 data-testid="checkout-submit-error"
-                className="mt-4 rounded-2xl border border-red-500/80 bg-red-950/70 p-3.5 text-xs text-red-100"
+                className="rounded-[3px] border border-red-500/80 bg-red-950/70 p-3 text-xs text-red-100"
               >
-                <p className="font-semibold">{submitError}</p>
+                <p className="font-bold">{submitError}</p>
               </div>
             ) : null}
 
-            <Button
+            <button
               type="submit"
-              size="lg"
               data-testid="checkout-submit-btn"
               disabled={
                 createOrder.isPending ||
@@ -721,18 +856,17 @@ export function CheckoutPage() {
                 !quote ||
                 quote.lines.length === 0
               }
-              className="mt-5 w-full"
+              className="flex h-[45px] w-full items-center justify-center rounded-[8px] bg-accent px-[16px] py-[12px] text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
             >
-              <ShieldCheck className="h-5 w-5" aria-hidden="true" />
               {createOrder.isPending
                 ? 'Enviando pedido...'
                 : activeOrder?.status === 'pending'
                   ? 'Aguardando liquidação...'
                   : submitError
-                    ? 'Tentar novamente com segurança'
-                    : 'Confirmar e enviar pedido'}
-            </Button>
-          </Card>
+                    ? 'Confirmar compra'
+                    : 'Confirmar compra'}
+            </button>
+          </div>
         </div>
       </form>
     </div>

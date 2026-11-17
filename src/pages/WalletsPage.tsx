@@ -1,11 +1,20 @@
-import { CheckCircle2, Plug, Save, Unplug, Wallet as WalletIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle2,
+  Download,
+  Heart,
+  LogOut,
+  MapPin,
+  Plug,
+  ShoppingBag,
+  Unplug,
+  User as UserIcon,
+} from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { AppApiError } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   networkLabels,
@@ -19,21 +28,34 @@ import {
   type WalletProvider,
 } from '@/contracts'
 import { useWalletMutations, useWallets } from '@/state/queries'
+import { useSession } from '@/state/session'
 
-interface WalletFormCardProps {
+interface WalletFormSectionProps {
   kind: WalletKind
   existing: Wallet | undefined
   isConnected: boolean
   connectedNetwork: Network | null
 }
 
-function WalletFormCard({ kind, existing, isConnected, connectedNetwork }: WalletFormCardProps) {
+function WalletFormSection({
+  kind,
+  existing,
+  isConnected,
+  connectedNetwork,
+}: WalletFormSectionProps) {
+  const { user } = useSession()
   const { upsertWallet, connectWallet, disconnectWallet } = useWalletMutations()
 
   const defaultLabel = kind === 'primary' ? 'Carteira principal' : 'Carteira secundária'
+  const [displayName, setDisplayName] = useState(user?.name ?? 'Ana Souza')
   const [label, setLabel] = useState(existing?.label ?? defaultLabel)
   const [provider, setProvider] = useState<WalletProvider>(existing?.provider ?? 'metamask')
   const [address, setAddress] = useState(existing?.address ?? '')
+  const [secondaryRef, setSecondaryRef] = useState('')
+  const [profileTag, setProfileTag] = useState(user?.username ?? 'ana_souza')
+  const [referralCode, setReferralCode] = useState('KURIO2026')
+  const [emailField, setEmailField] = useState(user?.email ?? 'ana@nft.dev')
+  const [ensName, setEnsName] = useState('kurio')
   const [selectedNetworks, setSelectedNetworks] = useState<Network[]>(
     existing?.networks ?? ['ethereum'],
   )
@@ -88,44 +110,66 @@ function WalletFormCard({ kind, existing, isConnected, connectedNetwork }: Walle
       : '0x4b7e91d0c3a2f8e5162738495a6b7c8d9e0f1a2b'
 
   return (
-    <Card data-testid={`wallet-card-${kind}`} className="p-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2.5">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-accent/20 text-accent-bright">
-            <WalletIcon className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <div>
-            <h2 className="text-xl font-bold text-white">
-              {kind === 'primary' ? 'Carteira Principal' : 'Carteira Secundária'}
-            </h2>
-            <p className="text-xs text-text-secondary">
-              {existing ? `Cadastrada (${existing.id})` : 'Ainda não cadastrada'}
-            </p>
+    <div data-testid={`wallet-card-${kind}`} className="flex flex-col gap-[24px]">
+      <div className="flex flex-col gap-[8px]">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+            {kind === 'primary' ? 'Carteira principal' : 'Carteira secundária'}
+          </h2>
+          <div className="flex items-center gap-3">
+            {isConnected && connectedNetwork ? (
+              <Badge variant="success" data-testid={`wallet-connected-badge-${kind}`}>
+                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Conectada (
+                {networkLabels[connectedNetwork]})
+              </Badge>
+            ) : null}
+            <button
+              type="button"
+              data-testid={`wallet-fill-sample-${kind}`}
+              onClick={() => setAddress(sampleAddress)}
+              className="text-[16px] font-medium leading-[16px] text-accent-bright hover:underline cursor-pointer"
+            >
+              Adicionar
+            </button>
           </div>
         </div>
-
-        {isConnected && connectedNetwork ? (
-          <Badge variant="success" data-testid={`wallet-connected-badge-${kind}`}>
-            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Conectada (
-            {networkLabels[connectedNetwork]})
-          </Badge>
-        ) : (
-          <Badge variant="default">{existing ? 'Cadastrada' : 'Nova'}</Badge>
-        )}
+        <p className="text-[14px] leading-[15px] text-text-secondary">
+          {kind === 'primary'
+            ? 'Estas carteiras ficam disponíveis no pagamento e para receber NFTs comprados.'
+            : existing
+              ? `Carteira secundária cadastrada (${existing.address.slice(0, 10)}…).`
+              : 'Você ainda não adicionou uma carteira secundária.'}
+        </p>
       </div>
 
-      <form onSubmit={(event) => void handleSubmit(event)} noValidate className="mt-5 space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <Label htmlFor={`wallet-label-${kind}`}>Identificação da carteira</Label>
-            <Input
+      <form onSubmit={(event) => void handleSubmit(event)} noValidate className="flex flex-col gap-[20px]">
+        <div className="grid grid-cols-1 gap-x-[28px] gap-y-[18px] sm:grid-cols-2">
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-display-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Nome de exibição</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <input
+              id={`wallet-display-${kind}`}
+              value={displayName}
+              onChange={(event) => setDisplayName(event.target.value)}
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-label-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Apelido da carteira</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <input
               id={`wallet-label-${kind}`}
               data-testid={`wallet-label-${kind}`}
               value={label}
               aria-invalid={Boolean(fieldErrors.label)}
               aria-describedby={fieldErrors.label ? `wallet-label-err-${kind}` : undefined}
               onChange={(event) => setLabel(event.target.value)}
-              className="mt-1.5 bg-bg-primary"
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             {fieldErrors.label ? (
               <p
@@ -139,14 +183,107 @@ function WalletFormCard({ kind, existing, isConnected, connectedNetwork }: Walle
             ) : null}
           </div>
 
-          <div>
-            <Label htmlFor={`wallet-provider-${kind}`}>Provedor</Label>
+          <div className="flex flex-col">
+            <span className="flex items-center text-[15px] text-text-primary">
+              <span>Rede</span>
+              <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+            </span>
+            <div className="flex h-[40px] items-center gap-2 rounded-[3px] border border-border-subtle px-3">
+              {networks.map((net) => {
+                const checked = selectedNetworks.includes(net)
+                return (
+                  <button
+                    key={net}
+                    type="button"
+                    data-testid={`wallet-network-${kind}-${net}`}
+                    aria-pressed={checked}
+                    onClick={() => toggleNetwork(net)}
+                    className={`rounded-[3px] px-2 py-0.5 text-xs transition-colors cursor-pointer ${
+                      checked
+                        ? 'bg-accent font-bold text-bg-primary'
+                        : 'text-text-muted hover:text-text-primary'
+                    }`}
+                  >
+                    {networkLabels[net]}
+                  </button>
+                )
+              })}
+            </div>
+            {fieldErrors.networks ? (
+              <p
+                role="alert"
+                data-testid={`wallet-networks-err-${kind}`}
+                className="mt-1 text-xs text-red-400"
+              >
+                {fieldErrors.networks}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-profile-tag-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Nome do perfil</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <input
+              id={`wallet-profile-tag-${kind}`}
+              value={profileTag}
+              onChange={(event) => setProfileTag(event.target.value)}
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-address-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Endereço da carteira</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <input
+              id={`wallet-address-${kind}`}
+              data-testid={`wallet-address-${kind}`}
+              placeholder="Endereço 0x da carteira"
+              value={address}
+              aria-invalid={Boolean(fieldErrors.address)}
+              aria-describedby={fieldErrors.address ? `wallet-address-err-${kind}` : undefined}
+              onChange={(event) => setAddress(event.target.value)}
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            />
+            {fieldErrors.address ? (
+              <p
+                id={`wallet-address-err-${kind}`}
+                role="alert"
+                data-testid={`wallet-address-err-${kind}`}
+                className="mt-1 text-xs text-red-400"
+              >
+                {fieldErrors.address}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col justify-end">
+            <label htmlFor={`wallet-secondary-ref-${kind}`} className="sr-only">
+              ENS ou carteira secundária
+            </label>
+            <input
+              id={`wallet-secondary-ref-${kind}`}
+              value={secondaryRef}
+              onChange={(event) => setSecondaryRef(event.target.value)}
+              placeholder="ENS ou carteira secundária (opcional)"
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-provider-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Tipo de carteira</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
             <select
               id={`wallet-provider-${kind}`}
               data-testid={`wallet-provider-${kind}`}
               value={provider}
               onChange={(event) => setProvider(event.target.value as WalletProvider)}
-              className="mt-1.5 h-12 w-full rounded-[20px] border border-border-subtle bg-bg-primary px-4 text-sm text-white"
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
             >
               {walletProviders.map((prov) => (
                 <option key={prov} value={prov}>
@@ -155,74 +292,56 @@ function WalletFormCard({ kind, existing, isConnected, connectedNetwork }: Walle
               ))}
             </select>
           </div>
-        </div>
 
-        <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor={`wallet-address-${kind}`}>Endereço público (0x...)</Label>
-            <button
-              type="button"
-              data-testid={`wallet-fill-sample-${kind}`}
-              onClick={() => setAddress(sampleAddress)}
-              className="text-xs font-semibold text-accent-bright hover:underline cursor-pointer"
-            >
-              Preencher exemplo válido
-            </button>
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-referral-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Código de indicação</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <input
+              id={`wallet-referral-${kind}`}
+              value={referralCode}
+              onChange={(event) => setReferralCode(event.target.value)}
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            />
           </div>
-          <Input
-            id={`wallet-address-${kind}`}
-            data-testid={`wallet-address-${kind}`}
-            placeholder="0x..."
-            value={address}
-            aria-invalid={Boolean(fieldErrors.address)}
-            aria-describedby={fieldErrors.address ? `wallet-address-err-${kind}` : undefined}
-            onChange={(event) => setAddress(event.target.value)}
-            className="mt-1.5 bg-bg-primary font-mono text-sm"
-          />
-          {fieldErrors.address ? (
-            <p
-              id={`wallet-address-err-${kind}`}
-              role="alert"
-              data-testid={`wallet-address-err-${kind}`}
-              className="mt-1 text-xs text-red-400"
-            >
-              {fieldErrors.address}
-            </p>
-          ) : null}
-        </div>
 
-        <div>
-          <span className="block text-sm font-medium text-text-secondary">Redes habilitadas</span>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {networks.map((net) => {
-              const checked = selectedNetworks.includes(net)
-              return (
-                <button
-                  key={net}
-                  type="button"
-                  data-testid={`wallet-network-${kind}-${net}`}
-                  aria-pressed={checked}
-                  onClick={() => toggleNetwork(net)}
-                  className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold cursor-pointer ${
-                    checked
-                      ? 'border-accent-bright bg-accent text-white'
-                      : 'border-border-subtle bg-bg-primary text-text-secondary hover:text-white'
-                  }`}
-                >
-                  {networkLabels[net]}
-                </button>
-              )
-            })}
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-email-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>E-mail</span>
+              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <input
+              id={`wallet-email-${kind}`}
+              type="email"
+              value={emailField}
+              onChange={(event) => setEmailField(event.target.value)}
+              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            />
           </div>
-          {fieldErrors.networks ? (
-            <p
-              role="alert"
-              data-testid={`wallet-networks-err-${kind}`}
-              className="mt-1 text-xs text-red-400"
-            >
-              {fieldErrors.networks}
-            </p>
-          ) : null}
+
+          <div className="flex flex-col">
+            <label htmlFor={`wallet-ens-${kind}`} className="flex items-center text-[15px] text-text-primary">
+              <span>Nome ENS</span>
+              <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+            </label>
+            <div className="flex gap-[10px]">
+              <select
+                aria-label="Sufixo ENS"
+                defaultValue=".eth"
+                className="h-[40px] w-[78px] shrink-0 rounded-[3px] border border-border-subtle bg-bg-primary px-2 text-[15px] text-text-primary focus:border-accent focus:outline-none"
+              >
+                <option value=".eth">.eth</option>
+                <option value=".xyz">.xyz</option>
+              </select>
+              <input
+                id={`wallet-ens-${kind}`}
+                value={ensName}
+                onChange={(event) => setEnsName(event.target.value)}
+                className="h-[40px] flex-1 rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              />
+            </div>
+          </div>
         </div>
 
         {fieldErrors.form ? (
@@ -231,36 +350,31 @@ function WalletFormCard({ kind, existing, isConnected, connectedNetwork }: Walle
           </p>
         ) : null}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-          <Button
+        <div className="flex flex-wrap items-center gap-3">
+          <button
             type="submit"
             data-testid={`wallet-save-${kind}`}
             disabled={upsertWallet.isPending}
+            className="inline-flex h-[40px] min-w-[131px] items-center justify-center rounded-[3px] bg-accent px-4 text-[14px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
           >
-            <Save className="h-4 w-4" aria-hidden="true" />
-            {upsertWallet.isPending
-              ? 'Salvando...'
-              : existing
-                ? 'Atualizar carteira'
-                : 'Cadastrar carteira'}
-          </Button>
+            {upsertWallet.isPending ? 'Salvando...' : 'Salvar carteira'}
+          </button>
 
           {existing ? (
             isConnected ? (
-              <Button
-                variant="secondary"
-                size="sm"
+              <button
+                type="button"
                 data-testid={`wallet-disconnect-${kind}`}
                 disabled={disconnectWallet.isPending}
                 onClick={() => disconnectWallet.mutate()}
+                className="inline-flex h-[40px] items-center gap-1.5 rounded-[3px] border border-border-subtle bg-bg-secondary px-4 text-xs font-bold text-text-primary hover:border-accent cursor-pointer"
               >
-                <Unplug className="h-4 w-4" aria-hidden="true" />
-                Desconectar
-              </Button>
+                <Unplug className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Desconectar</span>
+              </button>
             ) : (
-              <Button
-                variant="secondary"
-                size="sm"
+              <button
+                type="button"
                 data-testid={`wallet-connect-${kind}`}
                 disabled={connectWallet.isPending}
                 onClick={() =>
@@ -269,28 +383,29 @@ function WalletFormCard({ kind, existing, isConnected, connectedNetwork }: Walle
                     network: existing.networks[0] ?? 'ethereum',
                   })
                 }
+                className="inline-flex h-[40px] items-center gap-1.5 rounded-[3px] border border-accent px-4 text-xs font-bold text-accent-bright hover:bg-accent/15 cursor-pointer"
               >
-                <Plug className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-                Simular conexão ({networkLabels[existing.networks[0] ?? 'ethereum']})
-              </Button>
+                <Plug className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Simular conexão ({networkLabels[existing.networks[0] ?? 'ethereum']})</span>
+              </button>
             )
           ) : null}
         </div>
       </form>
-    </Card>
+    </div>
   )
 }
 
 export function WalletsPage() {
+  const { logout } = useSession()
   const walletsQuery = useWallets()
 
   if (walletsQuery.isLoading) {
     return (
-      <div data-testid="wallets-skeleton" className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <Skeleton className="h-10 w-64" />
-        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Skeleton className="h-96 w-full" />
-          <Skeleton className="h-96 w-full" />
+      <div data-testid="wallets-skeleton" className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-0">
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <Skeleton className="h-96 lg:col-span-3" />
+          <Skeleton className="h-96 lg:col-span-9" />
         </div>
       </div>
     )
@@ -302,31 +417,93 @@ export function WalletsPage() {
   const secondary = wallets.find((wallet) => wallet.kind === 'secondary')
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white">Carteiras do Colecionador</h1>
-        <p className="mt-1 text-sm text-text-secondary">
-          Cadastre e edite suas carteiras principal e secundária para utilização nos fluxos de compra.
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-[1200px] px-4 pt-8 sm:px-6 lg:px-0">
+      <div className="flex flex-col items-start gap-[28px] lg:flex-row">
+        <aside className="w-full shrink-0 bg-bg-secondary py-[8px] lg:w-[310px]">
+          <div className="p-[10px]">
+            <h1 className="text-[18px] font-bold leading-[16px] text-text-primary">Meu perfil</h1>
+          </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <WalletFormCard
-          key={primary?.updatedAt ?? 'primary-new'}
-          kind="primary"
-          existing={primary}
-          isConnected={Boolean(primary && connection?.walletId === primary.id)}
-          connectedNetwork={primary && connection?.walletId === primary.id ? connection.network : null}
-        />
-        <WalletFormCard
-          key={secondary?.updatedAt ?? 'secondary-new'}
-          kind="secondary"
-          existing={secondary}
-          isConnected={Boolean(secondary && connection?.walletId === secondary.id)}
-          connectedNetwork={
-            secondary && connection?.walletId === secondary.id ? connection.network : null
-          }
-        />
+          <Link
+            to="/profile"
+            className="flex items-center gap-[16px] px-[16px] text-[15px] leading-[45px] text-accent-bright hover:bg-bg-elevated"
+          >
+            <UserIcon className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Dados do perfil</span>
+          </Link>
+
+          <Link
+            to="/wallets"
+            className="flex items-center gap-[12px] border-l-[6px] border-accent px-[16px] text-[15px] leading-[45px] text-accent-bright"
+          >
+            <MapPin className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Carteiras</span>
+          </Link>
+
+          <Link
+            to="/profile"
+            className="flex items-center gap-[12px] px-[16px] text-[15px] leading-[45px] text-accent-bright hover:bg-bg-elevated"
+          >
+            <ShoppingBag className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Atividade</span>
+          </Link>
+
+          <Link
+            to="/profile"
+            className="flex items-center gap-[12px] px-[16px] text-[15px] leading-[45px] text-accent-bright hover:bg-bg-elevated"
+          >
+            <Heart className="h-[16px] w-[16px]" aria-hidden="true" />
+            <span>Lista de interesse</span>
+          </Link>
+
+          <div className="flex items-center gap-[12px] px-[16px] text-[15px] leading-[45px] text-accent-bright">
+            <Activity className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Ofertas</span>
+          </div>
+
+          <div className="flex items-center gap-[12px] px-[16px] text-[15px] leading-[45px] text-accent-bright">
+            <Download className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Arquivos baixados</span>
+          </div>
+
+          <div className="flex items-center gap-[12px] px-[16px] text-[15px] leading-[45px] text-accent-bright">
+            <AlertTriangle className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Suporte</span>
+          </div>
+
+          <div className="my-1 h-px w-full bg-accent/35" />
+
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="flex h-[40px] w-full items-center gap-[8px] px-[16px] text-[15px] font-bold text-accent-bright hover:bg-bg-elevated cursor-pointer"
+          >
+            <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span>Sair</span>
+          </button>
+        </aside>
+
+        <div className="flex w-full flex-1 flex-col gap-[40px]">
+          <WalletFormSection
+            key={primary?.updatedAt ?? 'primary-new'}
+            kind="primary"
+            existing={primary}
+            isConnected={Boolean(primary && connection?.walletId === primary.id)}
+            connectedNetwork={primary && connection?.walletId === primary.id ? connection.network : null}
+          />
+
+          <div className="h-px w-full bg-border-subtle" />
+
+          <WalletFormSection
+            key={secondary?.updatedAt ?? 'secondary-new'}
+            kind="secondary"
+            existing={secondary}
+            isConnected={Boolean(secondary && connection?.walletId === secondary.id)}
+            connectedNetwork={
+              secondary && connection?.walletId === secondary.id ? connection.network : null
+            }
+          />
+        </div>
       </div>
     </div>
   )

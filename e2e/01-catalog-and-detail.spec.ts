@@ -31,17 +31,17 @@ test.describe('Catálogo e Detalhe do NFT', () => {
     await page.getByTestId('catalog-sort-select').selectOption('price_asc')
     await expect(page).toHaveURL(/sort=price_asc/)
 
-    await page.getByTestId('catalog-search-input').fill('Galaxy')
+    await page.getByTestId('catalog-search-input').fill('Emerald')
     await page.getByTestId('catalog-search-submit').click()
-    await expect(page).toHaveURL(/q=Galaxy/)
+    await expect(page).toHaveURL(/q=Emerald/)
     await expect(page.getByTestId('catalog-grid').getByTestId('nft-card-nft_001')).toBeVisible()
 
     await page.reload()
-    await expect(page).toHaveURL(/q=Galaxy/)
+    await expect(page).toHaveURL(/q=Emerald/)
     await expect(page.getByTestId('catalog-grid').getByTestId('nft-card-nft_001')).toBeVisible()
 
     await page.goBack()
-    await expect(page).not.toHaveURL(/q=Galaxy/)
+    await expect(page).not.toHaveURL(/q=Emerald/)
     await expect(page).toHaveURL(/sort=price_asc/)
   })
 
@@ -51,7 +51,7 @@ test.describe('Catálogo e Detalhe do NFT', () => {
     await resetSimulation(page, 'fast')
 
     await page.goto('/nft/nft_006')
-    await expect(page.getByTestId('detail-nft-title')).toHaveText('Mushroom King')
+    await expect(page.getByTestId('detail-nft-title')).toHaveText('Ivory Baron #088')
 
     await page.getByTestId('gallery-thumb-1').click()
     await expect(page.getByTestId('gallery-thumb-1')).toHaveAttribute('aria-pressed', 'true')

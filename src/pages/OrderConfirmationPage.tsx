@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { AlertCircle, CheckCircle2, Clock, ExternalLink, Receipt, ShoppingBag } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { AlertCircle, Clock, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -15,10 +14,9 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
     return (
       <div
         data-testid="confirmation-skeleton"
-        className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto max-w-[578px] px-4 py-10 sm:px-6"
       >
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="mt-6 h-64 w-full" />
+        <Skeleton className="h-[640px] w-full" />
       </div>
     )
   }
@@ -28,7 +26,7 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
       <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
         <Card role="alert" data-testid="confirmation-error" className="p-10">
           <AlertCircle className="mx-auto h-12 w-12 text-red-400" aria-hidden="true" />
-          <h1 className="mt-4 text-2xl font-bold text-white">Pedido não encontrado</h1>
+          <h1 className="mt-4 text-2xl font-bold text-text-primary">Pedido não encontrado</h1>
           <p className="mt-2 text-sm text-text-secondary">
             {orderQuery.error instanceof Error
               ? orderQuery.error.message
@@ -58,7 +56,7 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
           ) : (
             <AlertCircle className="mx-auto h-12 w-12 text-red-400" aria-hidden="true" />
           )}
-          <h1 className="mt-4 text-2xl font-bold text-white">
+          <h1 className="mt-4 text-2xl font-bold text-text-primary">
             {isPending ? 'Pedido ainda pendente' : 'Pedido recusado'}
           </h1>
           <p className="mt-2 text-sm text-text-secondary">
@@ -79,148 +77,170 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
     )
   }
 
+  const shortTx = order.txHash
+    ? `${order.txHash.slice(0, 6)}…${order.txHash.slice(-4)}`
+    : order.id
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-      <Card data-testid="order-confirmation-receipt" className="p-6 sm:p-10">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border-subtle pb-6">
-          <div className="flex items-start gap-4">
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300">
-              <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
+    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 lg:px-0">
+      <div
+        data-testid="order-confirmation-receipt"
+        className="relative mx-auto w-full max-w-[578px] overflow-hidden bg-bg-secondary shadow-2xl"
+      >
+        <Link
+          to="/"
+          aria-label="Fechar confirmação e voltar ao início"
+          className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center text-accent hover:text-text-primary"
+        >
+          <X className="h-5 w-5" aria-hidden="true" />
+        </Link>
+
+        <div className="flex h-[156px] flex-col items-center justify-center gap-[16px] px-6">
+          <img
+            src="/images/figma/thank-you.svg"
+            alt="Thank You"
+            width={80}
+            height={80}
+            className="h-[80px] w-[80px] object-contain"
+          />
+          <h1 className="text-center text-[16px] font-bold leading-[16px] text-text-secondary">
+            Seus NFTs agora estão na sua carteira
+          </h1>
+          <span data-testid="receipt-order-id" className="sr-only">
+            {order.id}
+          </span>
+        </div>
+
+        <div className="h-px w-full bg-accent" />
+
+        <div className="grid grid-cols-2 gap-4 px-6 py-3 text-text-secondary sm:grid-cols-4 sm:px-[36px]">
+          <div className="flex flex-col">
+            <span className="text-[14px] font-bold leading-[16px]">ID da transação</span>
+            <span data-testid="receipt-tx-hash" className="text-[15px]">
+              {shortTx}
             </span>
-            <div>
-              <Badge variant="success">Pedido confirmado</Badge>
-              <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-                Compra Concluída com Sucesso
-              </h1>
-              <p className="mt-1 text-sm text-text-secondary">
-                Este recibo reproduz o snapshot imutável do seu pedido no momento da confirmação.
-              </p>
+          </div>
+          <div className="flex flex-col sm:border-l sm:border-accent/40 sm:pl-3">
+            <span className="text-[14px] leading-[16px]">Data</span>
+            <span className="text-[15px]">29 Jul, 2026</span>
+          </div>
+          <div className="flex flex-col sm:border-l sm:border-accent/40 sm:pl-3">
+            <span className="text-[14px] leading-[16px]">Total</span>
+            <span className="text-[15px]">{formatEth(order.totalEth)}</span>
+          </div>
+          <div className="flex flex-col sm:border-l sm:border-accent/40 sm:pl-3">
+            <span className="text-[14px] font-bold leading-[16px]">Carteira</span>
+            <span className="text-[15px]">{order.wallet.label || 'MetaMask'}</span>
+          </div>
+        </div>
+
+        <div className="h-px w-full bg-accent" />
+
+        <div className="flex flex-col gap-[16px] px-6 pt-[20px] pb-[36px] sm:px-[44px]">
+          <h2 className="text-[15px] font-bold leading-[16px] text-text-primary">
+            Detalhes da transação
+          </h2>
+
+          <div className="flex items-center justify-between border-b border-accent/35 pb-3 text-[16px] text-text-primary">
+            <span className="font-bold">NFTs</span>
+            <div className="flex items-center gap-[48px]">
+              <span className="font-bold">Edições</span>
+              <span className="font-medium">Subtotal</span>
             </div>
           </div>
 
-          <div className="font-mono text-xs text-text-secondary sm:text-right">
-            <span className="block text-text-muted">Identificador do pedido</span>
-            <span data-testid="receipt-order-id" className="text-sm font-bold text-white">
-              {order.id}
-            </span>
-          </div>
-        </div>
-
-        <dl className="mt-6 grid grid-cols-1 gap-4 rounded-2xl border border-border-subtle bg-bg-primary p-5 font-mono text-xs sm:grid-cols-2">
-          <div>
-            <dt className="text-text-muted">Hash da transação (simulado)</dt>
-            <dd data-testid="receipt-tx-hash" className="mt-1 break-all font-semibold text-white">
-              {order.txHash}
-            </dd>
-            {order.explorerUrl ? (
-              <span className="mt-1.5 inline-flex items-center gap-1 text-accent-bright">
-                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                Referência simulada ({networkLabels[order.network]})
-              </span>
-            ) : null}
-          </div>
-
-          <div>
-            <dt className="text-text-muted">Carteira e Rede</dt>
-            <dd className="mt-1 font-semibold text-white">
-              {order.wallet.label} ({networkLabels[order.network]})
-            </dd>
-            <dd className="mt-0.5 truncate text-text-secondary">{order.wallet.address}</dd>
-          </div>
-
-          <div>
-            <dt className="text-text-muted">Colecionador</dt>
-            <dd className="mt-1 font-semibold text-white">{order.collector.fullName}</dd>
-            <dd className="mt-0.5 text-text-secondary">
-              {order.collector.email} · {order.collector.country}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-text-muted">Chave de idempotência</dt>
-            <dd className="mt-1 font-semibold text-white">{order.idempotencyKey}</dd>
-          </div>
-        </dl>
-
-        <div className="mt-8">
-          <h2 className="flex items-center gap-2 text-lg font-bold text-white">
-            <Receipt className="h-5 w-5 text-accent-bright" aria-hidden="true" />
-            Itens Adquiridos
-          </h2>
-          <ul className="mt-4 divide-y divide-border-subtle rounded-2xl border border-border-subtle bg-bg-primary px-5">
-            {order.lines.map((line) => (
-              <li
-                key={`${line.nftId}_${line.editionId}`}
-                data-testid={`receipt-line-${line.nftId}`}
-                className="flex flex-wrap items-center justify-between gap-4 py-4"
-              >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={line.image.url}
-                    alt={line.image.alt}
-                    width={56}
-                    height={56}
-                    className="h-14 w-14 rounded-xl object-cover"
-                  />
-                  <div>
-                    <p className="font-semibold text-white">{line.name}</p>
-                    <p className="font-mono text-xs text-text-secondary">
-                      Edição {line.editionName} · {line.quantity} × {formatEth(line.unitPriceEth)}
-                    </p>
-                  </div>
-                </div>
-                <span
-                  data-testid={`receipt-line-total-${line.nftId}`}
-                  className="font-mono text-sm font-bold text-white"
+          <ul className="flex flex-col gap-[12px]">
+            {order.lines.map((line) => {
+              const tokenNumber = line.nftId.replace(/\D/g, '').padStart(4, '0')
+              return (
+                <li
+                  key={`${line.nftId}_${line.editionId}`}
+                  data-testid={`receipt-line-${line.nftId}`}
+                  className="flex h-[70px] items-center justify-between bg-bg-secondary"
                 >
-                  {formatEth(line.lineTotalEth)}
-                </span>
-              </li>
-            ))}
+                  <div className="flex items-center gap-[12px]">
+                    <img
+                      src={line.image.url}
+                      alt={line.image.alt}
+                      width={70}
+                      height={70}
+                      className="h-[70px] w-[70px] rounded-[8px] object-cover"
+                    />
+                    <div className="flex flex-col gap-[6px]">
+                      <p className="text-[16px] font-bold leading-[16px] text-text-primary">
+                        {line.name}
+                      </p>
+                      <p className="text-[14px] leading-[16px] text-text-muted">
+                        ID do token: #{tokenNumber}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-[32px] sm:gap-[48px]">
+                    <span className="text-[14px] text-text-secondary">(x {line.quantity})</span>
+                    <span
+                      data-testid={`receipt-line-total-${line.nftId}`}
+                      className="text-[18px] font-bold text-accent-bright"
+                    >
+                      {formatEth(line.lineTotalEth)}
+                    </span>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
-        </div>
 
-        <dl className="mt-6 space-y-2.5 border-t border-border-subtle pt-5 font-mono text-sm">
-          <div className="flex justify-between">
-            <dt className="text-text-secondary">Subtotal</dt>
-            <dd data-testid="receipt-subtotal" className="text-white">
-              {formatEth(order.subtotalEth)}
-            </dd>
+          <div className="flex flex-col items-end gap-[10px] border-b border-accent/35 pb-4 pt-2">
+            <div className="flex w-full max-w-[321px] flex-col gap-[10px]">
+              <div className="flex items-center justify-between text-text-primary">
+                <span className="text-[15px]">Subtotal</span>
+                <span data-testid="receipt-subtotal" className="text-[16px]">
+                  {formatEth(order.subtotalEth)}
+                </span>
+              </div>
+              {!isZeroEth(order.discountEth) ? (
+                <div className="flex items-center justify-between text-text-primary">
+                  <span className="text-[15px]">Desconto</span>
+                  <span data-testid="receipt-discount" className="text-[16px] text-emerald-300">
+                    - {formatEth(order.discountEth)}
+                  </span>
+                </div>
+              ) : (
+                <span data-testid="receipt-discount" className="sr-only">
+                  0 ETH
+                </span>
+              )}
+              <div className="flex items-center justify-between text-text-primary">
+                <span className="text-[15px]">Taxa de rede</span>
+                <span data-testid="receipt-network-fee" className="text-[18px]">
+                  {formatEth(order.networkFeeEth)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between font-bold">
+                <span className="text-[16px] text-text-primary">Total</span>
+                <span data-testid="receipt-total" className="text-[18px] text-accent-bright">
+                  {formatEth(order.totalEth)}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <dt className="text-text-secondary">
-              Desconto {order.couponCode ? `(${order.couponCode})` : ''}
-            </dt>
-            <dd data-testid="receipt-discount" className="text-emerald-300">
-              {isZeroEth(order.discountEth) ? '0 ETH' : `- ${formatEth(order.discountEth)}`}
-            </dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-text-secondary">Taxa de rede ({networkLabels[order.network]})</dt>
-            <dd data-testid="receipt-network-fee" className="text-white">
-              {formatEth(order.networkFeeEth)}
-            </dd>
-          </div>
-          <div className="flex justify-between border-t border-border-subtle pt-3 text-base">
-            <dt className="font-bold text-white">Total liquidado</dt>
-            <dd data-testid="receipt-total" className="text-xl font-bold text-accent-bright">
-              {formatEth(order.totalEth)}
-            </dd>
-          </div>
-        </dl>
 
-        <div className="mt-8 flex flex-wrap justify-between gap-3">
-          <Button variant="secondary" asChild>
-            <Link to="/cart">
-              <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-              Voltar ao carrinho
+          <p className="text-center text-[14px] leading-[22px] text-text-secondary">
+            Transação confirmada na {networkLabels[order.network]}. A propriedade foi transferida para sua
+            carteira conectada e registrada na rede.
+          </p>
+
+          <div className="mt-2 flex justify-center">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-[5px] bg-accent px-6 py-[14px] text-[16px] font-bold leading-[16px] text-bg-primary hover:bg-accent-hover"
+            >
+              Ver no Etherscan
             </Link>
-          </Button>
-          <Button asChild>
-            <Link to="/">Continuar explorando o catálogo</Link>
-          </Button>
+          </div>
         </div>
-      </Card>
+
+        <div className="h-[10px] w-full bg-accent" />
+      </div>
     </div>
   )
 }
