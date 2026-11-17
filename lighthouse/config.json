@@ -1,0 +1,23 @@
+{
+  "runsPerTarget": 3,
+  "baseUrl": "http://localhost:4173",
+  "targets": [
+    {
+      "slug": "home",
+      "name": "Início (Catálogo)",
+      "path": "/"
+    },
+    {
+      "slug": "nft-detail",
+      "name": "Detalhe do NFT",
+      "path": "/nft/nft_001"
+    }
+  ],
+  "profiles": ["mobile", "desktop"],
+  "thresholds": {
+    "performance": 90,
+    "accessibility": 95,
+    "best-practices": 95,
+    "seo": 90
+  }
+}

@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/|images/|assets/|mockServiceWorker\\.js|favicon\\.svg).*)",
+      "source": "/((?!api/|images/|assets/|mockServiceWorker\\.js|favicon\\.svg|robots\\.txt).*)",
       "destination": "/index.html"
     }
   ]

@@ -5,7 +5,7 @@ export function NotificationsViewport() {
   const { items, dismiss } = useNotifications()
 
   return (
-    <div
+    <section
       aria-label="Notificações do sistema"
       className="pointer-events-none fixed bottom-4 right-4 z-50 flex w-full max-w-sm flex-col gap-2 px-4 sm:px-0"
     >
@@ -55,6 +55,6 @@ export function NotificationsViewport() {
           </div>
         )
       })}
-    </div>
+    </section>
   )
 }

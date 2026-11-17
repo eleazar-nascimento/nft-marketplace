@@ -61,17 +61,15 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
           onClick={handleFavorite}
           data-testid={`favorite-btn-${nft.id}`}
           aria-pressed={isFavorite}
-          aria-label={
-            isFavorite
-              ? `Remover ${nft.name} dos favoritos (${nft.likes} curtidas)`
-              : `Adicionar ${nft.name} aos favoritos (${nft.likes} curtidas)`
-          }
           className="absolute right-3 top-3 inline-flex h-10 items-center gap-1.5 rounded-full border border-border-subtle bg-bg-primary/90 px-3 text-xs font-mono font-semibold text-white hover:border-accent-bright cursor-pointer"
         >
           <Heart
             className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-white'}`}
             aria-hidden="true"
           />
+          <span className="sr-only">
+            {isFavorite ? `Remover ${nft.name} dos favoritos, ` : `Favoritar ${nft.name}, `}
+          </span>
           <span data-testid={`favorite-likes-${nft.id}`}>{nft.likes}</span>
         </button>
       </div>

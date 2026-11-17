@@ -79,7 +79,6 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <Link
               to="/cart"
               data-testid="nav-cart-link"
-              aria-label={`Carrinho de NFTs (${itemCount} ${itemCount === 1 ? 'item' : 'itens'})`}
               className="relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-bg-secondary hover:text-white [&.active]:text-white"
             >
               <ShoppingBag className="h-4 w-4 text-accent-bright" aria-hidden="true" />
@@ -152,10 +151,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <Link
               to="/cart"
               data-testid="mobile-cart-link"
-              aria-label={`Carrinho (${itemCount} ${itemCount === 1 ? 'item' : 'itens'})`}
               className="relative inline-flex h-11 items-center gap-1.5 rounded-2xl border border-border-subtle bg-bg-secondary px-3 text-sm font-semibold text-white"
             >
               <ShoppingBag className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+              <span className="sr-only">Carrinho: </span>
               <span data-testid="mobile-cart-count" className="font-mono text-xs">
                 {itemCount}
               </span>

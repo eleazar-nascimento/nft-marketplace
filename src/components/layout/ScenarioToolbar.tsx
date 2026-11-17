@@ -124,10 +124,10 @@ export function ScenarioToolbar() {
         <button
           type="button"
           data-testid="scenario-toolbar-trigger"
-          aria-label="Abrir painel de simulação MSW e Socket.IO"
           className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-bg-secondary px-3 py-1.5 text-xs font-mono text-text-secondary hover:bg-bg-elevated hover:text-white cursor-pointer"
         >
           <SlidersHorizontal className="h-3.5 w-3.5 text-accent-bright" aria-hidden="true" />
+          <span className="sr-only">Painel de simulação, </span>
           <span className="hidden sm:inline">Cenário:</span>
           <span className="font-semibold text-white" data-testid="active-scenario-label">
             {preset}

@@ -344,7 +344,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
         </div>
       </section>
 
-      {featuredQuery.data && featuredQuery.data.length > 1 ? (
+      {featuredQuery.isLoading || (featuredQuery.data && featuredQuery.data.length > 1) ? (
         <section aria-labelledby="featured-heading" className="mt-12">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -357,14 +357,16 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
             </div>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredQuery.data.map((entry, idx) => (
-              <NftCard
-                key={entry.nft.id}
-                nft={entry.nft}
-                isFavorite={favoriteSet.has(entry.nft.id)}
-                priority={idx === 0}
-              />
-            ))}
+            {featuredQuery.isLoading
+              ? Array.from({ length: 3 }, (_, idx) => <NftCardSkeleton key={idx} />)
+              : featuredQuery.data?.map((entry, idx) => (
+                  <NftCard
+                    key={entry.nft.id}
+                    nft={entry.nft}
+                    isFavorite={favoriteSet.has(entry.nft.id)}
+                    priority={idx === 0}
+                  />
+                ))}
           </div>
         </section>
       ) : null}
