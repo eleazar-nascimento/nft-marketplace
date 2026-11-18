@@ -60,6 +60,14 @@ export function saveReturnTo(path: string): void {
   }
 }
 
+export function peekReturnTo(): string | null {
+  try {
+    return sessionStorage.getItem(RETURN_TO_KEY)
+  } catch {
+    return null
+  }
+}
+
 export function consumeReturnTo(): string | null {
   try {
     const value = sessionStorage.getItem(RETURN_TO_KEY)

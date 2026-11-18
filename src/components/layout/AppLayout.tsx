@@ -53,7 +53,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <div
           role="alert"
           data-testid="session-expired-banner"
-          className="border-b border-amber-500/60 bg-amber-950/90 px-4 py-3 text-amber-100"
+          className="relative z-60 border-b border-amber-500/60 bg-amber-950/90 px-4 py-3 text-amber-100"
         >
           <div className="mx-auto flex max-w-300 flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm">
