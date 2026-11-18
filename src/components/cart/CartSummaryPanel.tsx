@@ -41,7 +41,7 @@ export function CartSummaryPanel({
         <div className="h-px w-full bg-accent/35" />
       </div>
 
-      <div className="mt-0 lg:mt-4">
+      <div className="mt-4 hidden lg:block">
         <label htmlFor="cart-network-select" className="sr-only">
           Rede para estimativa de taxas
         </label>
@@ -60,7 +60,7 @@ export function CartSummaryPanel({
         </select>
       </div>
 
-      <div className="mt-3 lg:mt-5">
+      <div className="mt-0 lg:mt-5">
         {couponCode ? (
           <div
             data-testid="active-coupon-pill"
@@ -89,7 +89,7 @@ export function CartSummaryPanel({
             >
               Código promocional
             </label>
-            <div className="flex h-10 w-full overflow-hidden rounded-full border border-border-subtle bg-bg-primary/60 lg:rounded-[3px] lg:border-accent lg:bg-transparent">
+            <div className="flex h-12.5 w-full items-center overflow-hidden rounded-[40px] border border-border-subtle bg-bg-secondary drop-shadow-[0px_6px_10px_rgba(10,6,4,0.45)] lg:h-10 lg:rounded-[3px] lg:border-accent lg:bg-transparent lg:drop-shadow-none">
               <input
                 id="cart-coupon-input"
                 data-testid="cart-coupon-input"
@@ -98,13 +98,13 @@ export function CartSummaryPanel({
                 aria-invalid={Boolean(couponError)}
                 aria-describedby={couponError ? 'cart-coupon-error' : undefined}
                 onChange={(event) => onChangeCouponInput(event.target.value)}
-                className="flex-1 bg-transparent pl-4 pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none lg:pl-2"
+                className="flex-1 bg-transparent pl-4 pr-2 text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none lg:pl-2 lg:text-[12px]"
               />
               <button
                 type="submit"
                 data-testid="apply-coupon-btn"
                 disabled={applyCouponPending}
-                className="h-10 w-24 shrink-0 rounded-full bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover lg:w-25.5 lg:rounded-none lg:text-[15px] cursor-pointer"
+                className="h-12.5 w-24.25 shrink-0 rounded-[40px] bg-[linear-gradient(96deg,rgba(210,138,76,0.54)_0.94%,rgb(210,138,76)_105.02%)] text-[15px] font-bold leading-4 text-text-primary hover:opacity-95 lg:h-10 lg:w-25.5 lg:rounded-none lg:bg-accent lg:bg-none lg:text-bg-primary lg:hover:bg-accent-hover cursor-pointer"
               >
                 Aplicar
               </button>
