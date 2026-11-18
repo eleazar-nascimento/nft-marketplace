@@ -1,4 +1,5 @@
 import { RotateCcw } from 'lucide-react'
+import { useRef, type KeyboardEvent, type PointerEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,6 +13,19 @@ import {
   type Network,
   type NftCategory,
 } from '@/contracts'
+
+const SLIDER_MIN = 0.02
+const SLIDER_MAX = 15
+const DEFAULT_MIN_PRICE = 0.02
+const DEFAULT_MAX_PRICE = 12.3
+
+function parsePriceValue(raw: string, fallback: number): number {
+  const normalized = raw.trim().replace(',', '.')
+  if (!normalized) return fallback
+  const parsed = Number(normalized)
+  if (!Number.isFinite(parsed)) return fallback
+  return Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, parsed))
+}
 
 const networkCounts: Record<Network, number> = {
   ethereum: 119,
@@ -54,6 +68,74 @@ export function CatalogFilters({
   onToggleOnlyAvailable,
   onClearFilters,
 }: CatalogFiltersProps) {
+  const trackRef = useRef<HTMLDivElement | null>(null)
+  const activeThumbRef = useRef<'min' | 'max' | null>(null)
+
+  const rawMin = parsePriceValue(minPriceInput, DEFAULT_MIN_PRICE)
+  const rawMax = parsePriceValue(maxPriceInput, DEFAULT_MAX_PRICE)
+  const numericMin = Math.min(rawMin, rawMax)
+  const numericMax = Math.max(rawMin, rawMax)
+
+  const leftPercent = ((numericMin - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100
+  const rightPercent = ((numericMax - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100
+
+  const valueFromClientX = (clientX: number): number => {
+    const track = trackRef.current
+    if (!track) return DEFAULT_MIN_PRICE
+    const rect = track.getBoundingClientRect()
+    if (rect.width <= 0) return DEFAULT_MIN_PRICE
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
+    const raw = SLIDER_MIN + ratio * (SLIDER_MAX - SLIDER_MIN)
+    return Math.round(raw * 100) / 100
+  }
+
+  const updateThumbValue = (thumb: 'min' | 'max', nextValue: number) => {
+    if (thumb === 'min') {
+      const clamped = Math.min(Math.max(SLIDER_MIN, nextValue), Math.max(SLIDER_MIN, numericMax - 0.05))
+      onChangeMinPrice(clamped.toFixed(2))
+    } else {
+      const clamped = Math.max(Math.min(SLIDER_MAX, nextValue), Math.min(SLIDER_MAX, numericMin + 0.05))
+      onChangeMaxPrice(clamped.toFixed(2))
+    }
+  }
+
+  const handleTrackPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    const clickedValue = valueFromClientX(event.clientX)
+    const distMin = Math.abs(clickedValue - numericMin)
+    const distMax = Math.abs(clickedValue - numericMax)
+    const chosenThumb: 'min' | 'max' =
+      distMin < distMax ? 'min' : distMax < distMin ? 'max' : clickedValue < numericMin ? 'min' : 'max'
+    activeThumbRef.current = chosenThumb
+    event.currentTarget.setPointerCapture(event.pointerId)
+    updateThumbValue(chosenThumb, clickedValue)
+  }
+
+  const handleTrackPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!activeThumbRef.current) return
+    const nextValue = valueFromClientX(event.clientX)
+    updateThumbValue(activeThumbRef.current, nextValue)
+  }
+
+  const handleTrackPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (!activeThumbRef.current) return
+    activeThumbRef.current = null
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+  }
+
+  const handleThumbKeyDown = (thumb: 'min' | 'max', event: KeyboardEvent<HTMLButtonElement>) => {
+    const step = event.shiftKey ? 0.5 : 0.1
+    const current = thumb === 'min' ? numericMin : numericMax
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      updateThumbValue(thumb, Math.round((current - step) * 100) / 100)
+    } else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      updateThumbValue(thumb, Math.round((current + step) * 100) / 100)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-9">
       <div className="flex flex-col gap-3">
@@ -83,15 +165,49 @@ export function CatalogFilters({
       <div className="flex flex-col gap-3">
         <h3 className="text-[18px] font-bold leading-4 text-text-primary">Faixa de preço</h3>
         <div className="flex flex-col gap-3 pl-3">
-          <div className="flex items-center">
-            <span className="h-3.75 w-3.75 rounded-full bg-accent" />
-            <span className="h-1 flex-1 bg-accent" />
-            <span className="h-3.75 w-3.75 rounded-full bg-accent" />
-            <span className="h-1 w-12 bg-accent/30" />
+          <div
+            ref={trackRef}
+            data-testid={`${idPrefix}-price-slider`}
+            onPointerDown={handleTrackPointerDown}
+            onPointerMove={handleTrackPointerMove}
+            onPointerUp={handleTrackPointerUp}
+            onPointerCancel={handleTrackPointerUp}
+            className="relative flex h-6 w-full touch-none items-center select-none cursor-pointer"
+          >
+            <div className="h-1 w-full rounded-full bg-accent/30" />
+            <div
+              className="pointer-events-none absolute h-1 rounded-full bg-accent"
+              style={{
+                left: `${leftPercent}%`,
+                width: `${Math.max(0, rightPercent - leftPercent)}%`,
+              }}
+            />
+            <button
+              type="button"
+              role="slider"
+              aria-label="Indicador de preço mínimo em ETH"
+              aria-valuemin={SLIDER_MIN}
+              aria-valuemax={numericMax}
+              aria-valuenow={numericMin}
+              onKeyDown={(event) => handleThumbKeyDown('min', event)}
+              style={{ left: `${leftPercent}%` }}
+              className="absolute top-1/2 h-3.75 w-3.75 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow transition-transform hover:scale-125 focus-visible:scale-125 cursor-grab active:cursor-grabbing"
+            />
+            <button
+              type="button"
+              role="slider"
+              aria-label="Indicador de preço máximo em ETH"
+              aria-valuemin={numericMin}
+              aria-valuemax={SLIDER_MAX}
+              aria-valuenow={numericMax}
+              onKeyDown={(event) => handleThumbKeyDown('max', event)}
+              style={{ left: `${rightPercent}%` }}
+              className="absolute top-1/2 h-3.75 w-3.75 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow transition-transform hover:scale-125 focus-visible:scale-125 cursor-grab active:cursor-grabbing"
+            />
           </div>
 
           <p className="text-[15px] text-text-primary">
-            Preço: {minPriceInput || '0,02'} - {maxPriceInput || '12,30'} ETH
+            Preço: {numericMin.toFixed(2).replace('.', ',')} - {numericMax.toFixed(2).replace('.', ',')} ETH
           </p>
 
           <div className="grid grid-cols-2 gap-2">

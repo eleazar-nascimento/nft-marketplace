@@ -79,8 +79,8 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
   }
 
   const applyPriceRange = () => {
-    const min = minPriceInput.trim()
-    const max = maxPriceInput.trim()
+    const min = minPriceInput.trim().replace(',', '.')
+    const max = maxPriceInput.trim().replace(',', '.')
     const validPattern = /^\d+(\.\d+)?$/
     if ((min && !validPattern.test(min)) || (max && !validPattern.test(max))) {
       setPriceError('Use valores numéricos válidos em ETH (ex.: 0.5).')
@@ -109,6 +109,8 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
     (search.q ? 1 : 0)
 
   const handleClearFilters = () => {
+    setMinPriceInput('')
+    setMaxPriceInput('')
     setPriceError(null)
     onResetFilters()
   }
