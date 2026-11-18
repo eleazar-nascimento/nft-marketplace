@@ -105,8 +105,8 @@ Ambiente: macOS (`arm64`), Node `v22.19.0`, Lighthouse `13.6.0`, Chromium Headle
 
 | Página | Perfil | Performance | Accessibility | Best Practices | SEO | LCP | CLS | TBT |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Início (`/`) | Mobile | **94** | **100** | **100** | **100** | 2.814 ms | 0 | 144 ms |
-| Início (`/`) | Desktop | **100** | **100** | **100** | **100** | 737 ms | 0,0002 | 0 ms |
-| Detalhe (`/nft/nft_001`) | Mobile | **95** | **100** | **100** | **100** | 2.804 ms | 0,0045 | 122 ms |
-| Detalhe (`/nft/nft_001`) | Desktop | **91** | **100** | **100** | **100** | 710 ms | 0,1908 | 0 ms |
+| Início (`/`) | Mobile | **90** | **100** | **100** | **100** | 2.883 ms | 0 | 259 ms |
+| Início (`/`) | Desktop | **99** | **100** | **100** | **100** | 823 ms | 0,0002 | 0 ms |
+| Detalhe (`/nft/nft_001`) | Mobile | **93** | **100** | **100** | **100** | 2.826 ms | 0,0176 | 198 ms |
+| Detalhe (`/nft/nft_001`) | Desktop | **100** | **100** | **100** | **100** | 797 ms | 0 | 0 ms |
 | **Meta do Desafio** | — | **≥ 90** | **≥ 95** | **≥ 95** | **≥ 90** | — | — | — |
