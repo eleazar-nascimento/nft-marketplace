@@ -1,6 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import { AlertCircle, ArrowRight, ChevronRight, Filter, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react'
+import { AlertCircle, ChevronRight, Filter, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
+import { CatalogFilters } from '@/components/catalog/CatalogFilters'
+import { HeroBanner } from '@/components/catalog/HeroBanner'
+import { MintJournalSection } from '@/components/catalog/MintJournalSection'
+import { PromoBanners } from '@/components/catalog/PromoBanners'
 import { NftCard, NftCardSkeleton } from '@/components/nft/NftCard'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -8,11 +12,6 @@ import { Dialog, DialogTitle, DrawerContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  networkLabels,
-  networks,
-  nftCategories,
-  nftCategoryCounts,
-  nftCategoryLabels,
   nftSortLabels,
   nftSorts,
   type AvailabilityFilter,
@@ -39,43 +38,6 @@ interface HomePageProps {
   onUpdateSearch: (next: Partial<HomeSearchState>, resetPage?: boolean) => void
   onResetFilters: () => void
 }
-
-const networkCounts: Record<Network, number> = {
-  ethereum: 119,
-  polygon: 78,
-  base: 86,
-}
-
-const blogPosts = [
-  {
-    id: 'blog-1',
-    meta: '12 de setembro  |  Leitura de 6 min',
-    title: 'Como funciona a propriedade de NFTs',
-    excerpt: 'Aprenda a colecionar, negociar e verificar ativos digitais.',
-    image: '/images/figma/9add2.jpg',
-  },
-  {
-    id: 'blog-2',
-    meta: '13 de setembro  |  Leitura de 2 min',
-    title: '10 artistas digitais para acompanhar',
-    excerpt: 'Conheça criadores que moldam a cultura digital.',
-    image: '/images/figma/8f387.jpg',
-  },
-  {
-    id: 'blog-3',
-    meta: '15 de setembro  |  Leitura de 3 min',
-    title: 'Raridade, atributos e procedência',
-    excerpt: 'Entenda raridade, procedência, direitos autorais e utilidade.',
-    image: '/images/figma/83794.jpg',
-  },
-  {
-    id: 'blog-4',
-    meta: '15 de setembro  |  Leitura de 2 min',
-    title: 'Como proteger sua carteira',
-    excerpt: 'Proteja sua carteira, seus ativos e sua identidade.',
-    image: '/images/figma/b7cfc.jpg',
-  },
-]
 
 export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePageProps) {
   const [searchInput, setSearchInput] = useState(search.q ?? '')
@@ -146,169 +108,10 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
     (search.availability === 'available' ? 1 : 0) +
     (search.q ? 1 : 0)
 
-  const renderFilterControls = (idPrefix: string) => (
-    <div className="flex flex-col gap-[36px]">
-      <div className="flex flex-col gap-[12px]">
-        <h3 className="text-[18px] font-bold leading-[16px] text-text-primary">Coleções</h3>
-        <div className="flex flex-col px-[12px]">
-          {nftCategories.map((cat) => {
-            const selected = search.category?.includes(cat) ?? false
-            return (
-              <button
-                key={cat}
-                type="button"
-                data-testid={`${idPrefix}-category-${cat}`}
-                aria-pressed={selected}
-                onClick={() => toggleCategory(cat)}
-                className={`flex w-full items-center justify-between text-left text-[15px] leading-[40px] transition-colors cursor-pointer ${
-                  selected ? 'font-bold text-accent-bright' : 'text-text-secondary hover:text-text-primary'
-                }`}
-              >
-                <span>{nftCategoryLabels[cat]}</span>
-                <span className="font-bold">({nftCategoryCounts[cat]})</span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-[12px]">
-        <h3 className="text-[18px] font-bold leading-[16px] text-text-primary">Faixa de preço</h3>
-        <div className="flex flex-col gap-[12px] pl-[12px]">
-          <div className="flex items-center">
-            <span className="h-[15px] w-[15px] rounded-full bg-accent" />
-            <span className="h-[4px] flex-1 bg-accent" />
-            <span className="h-[15px] w-[15px] rounded-full bg-accent" />
-            <span className="h-[4px] w-12 bg-accent/30" />
-          </div>
-
-          <p className="text-[15px] text-text-primary">
-            Preço: {minPriceInput || '0,02'} - {maxPriceInput || '12,30'} ETH
-          </p>
-
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <Label htmlFor={`${idPrefix}-min-price`} className="sr-only">
-                Preço mínimo em ETH
-              </Label>
-              <Input
-                id={`${idPrefix}-min-price`}
-                data-testid={`${idPrefix}-min-price`}
-                placeholder="Mín (0.02)"
-                value={minPriceInput}
-                onChange={(event) => setMinPriceInput(event.target.value)}
-                className="h-9 text-xs"
-              />
-            </div>
-            <div>
-              <Label htmlFor={`${idPrefix}-max-price`} className="sr-only">
-                Preço máximo em ETH
-              </Label>
-              <Input
-                id={`${idPrefix}-max-price`}
-                data-testid={`${idPrefix}-max-price`}
-                placeholder="Máx (12.30)"
-                value={maxPriceInput}
-                onChange={(event) => setMaxPriceInput(event.target.value)}
-                className="h-9 text-xs"
-              />
-            </div>
-          </div>
-
-          {priceError ? (
-            <p role="alert" className="text-xs text-red-400">
-              {priceError}
-            </p>
-          ) : null}
-
-          <div>
-            <button
-              type="button"
-              data-testid={`${idPrefix}-apply-price`}
-              onClick={applyPriceRange}
-              className="inline-flex h-[36px] items-center justify-center rounded-[6px] bg-accent px-[16px] py-[8px] text-[16px] font-bold leading-[20px] text-bg-primary hover:bg-accent-hover cursor-pointer"
-            >
-              Aplicar
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-[12px]">
-        <Label htmlFor={`${idPrefix}-network-select`} className="text-[18px] font-bold leading-[16px] text-text-primary">
-          Rede
-        </Label>
-        <select
-          id={`${idPrefix}-network-select`}
-          data-testid={`${idPrefix}-network-select`}
-          value={search.network ?? ''}
-          onChange={(event) =>
-            onUpdateSearch({ network: (event.target.value || undefined) as Network | undefined }, true)
-          }
-          className="h-[38px] w-full rounded-[4px] border border-border-subtle bg-bg-primary px-3 text-xs text-text-primary"
-        >
-          <option value="">Todas as redes</option>
-          {networks.map((net) => (
-            <option key={net} value={net}>
-              {networkLabels[net]}
-            </option>
-          ))}
-        </select>
-
-        <div className="flex flex-col pl-[12px] text-[15px] leading-[40px] text-text-secondary">
-          {networks.map((net) => {
-            const active = search.network === net
-            const displayLabel = net === 'base' ? 'Solana' : networkLabels[net]
-            return (
-              <button
-                key={net}
-                type="button"
-                onClick={() => onUpdateSearch({ network: active ? undefined : net }, true)}
-                className={`flex w-full items-center justify-between text-left cursor-pointer ${
-                  active ? 'font-bold text-accent-bright' : 'hover:text-text-primary'
-                }`}
-              >
-                <span>{displayLabel}</span>
-                <span>({networkCounts[net]})</span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between border-t border-border-subtle pt-3 pl-[12px]">
-        <Label htmlFor={`${idPrefix}-only-available`} className="cursor-pointer text-xs text-text-secondary">
-          Apenas disponíveis
-        </Label>
-        <input
-          id={`${idPrefix}-only-available`}
-          data-testid={`${idPrefix}-only-available`}
-          type="checkbox"
-          checked={search.availability === 'available'}
-          onChange={(event) =>
-            onUpdateSearch({ availability: event.target.checked ? 'available' : undefined }, true)
-          }
-          className="h-4 w-4 accent-accent cursor-pointer"
-        />
-      </div>
-
-      {activeFilterCount > 0 ? (
-        <Button
-          variant="ghost"
-          size="sm"
-          data-testid={`${idPrefix}-clear-filters`}
-          className="w-full"
-          onClick={() => {
-            setPriceError(null)
-            onResetFilters()
-          }}
-        >
-          <RotateCcw className="h-4 w-4" aria-hidden="true" />
-          Limpar filtros ({activeFilterCount})
-        </Button>
-      ) : null}
-    </div>
-  )
+  const handleClearFilters = () => {
+    setPriceError(null)
+    onResetFilters()
+  }
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-4 pt-4 sm:px-6 lg:px-0">
@@ -342,70 +145,32 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
               <Filter className="h-5 w-5 text-accent-bright" aria-hidden="true" />
               Filtros
             </DialogTitle>
-            <div className="mt-6">{renderFilterControls('mobile')}</div>
+            <div className="mt-6">
+              <CatalogFilters
+                idPrefix="mobile"
+                selectedCategories={search.category}
+                selectedNetwork={search.network}
+                availability={search.availability}
+                minPriceInput={minPriceInput}
+                maxPriceInput={maxPriceInput}
+                priceError={priceError}
+                activeFilterCount={activeFilterCount}
+                onToggleCategory={toggleCategory}
+                onSelectNetwork={(network) => onUpdateSearch({ network }, true)}
+                onChangeMinPrice={setMinPriceInput}
+                onChangeMaxPrice={setMaxPriceInput}
+                onApplyPriceRange={applyPriceRange}
+                onToggleOnlyAvailable={(only) =>
+                  onUpdateSearch({ availability: only ? 'available' : undefined }, true)
+                }
+                onClearFilters={handleClearFilters}
+              />
+            </div>
           </DrawerContent>
         </Dialog>
       </div>
 
-      <section
-        aria-labelledby="hero-heading"
-        className="relative overflow-hidden rounded-[12px] bg-gradient-to-br from-bg-secondary via-bg-elevated to-surface-dark p-5 lg:h-[450px] lg:rounded-none lg:bg-none lg:bg-bg-secondary/40 lg:pl-[40px] lg:pr-0 lg:py-0"
-      >
-        <div className="flex flex-col items-center justify-between gap-6 lg:h-full lg:flex-row">
-          <div className="flex w-full flex-col justify-between lg:w-[600px]">
-            <div className="flex flex-col gap-[24px] lg:gap-[32px]">
-              <div className="flex flex-col gap-[8px]">
-                <p className="text-[12px] font-medium tracking-[1.4px] text-text-primary lg:text-[14px]">
-                  Bem-vindo à Kurio
-                </p>
-                <h1
-                  id="hero-heading"
-                  className="text-[22px] font-bold leading-[30px] text-text-primary sm:text-[34px] sm:leading-[44px] lg:text-[43px] lg:leading-[64px]"
-                >
-                  SEJA DONO DO FUTURO
-                  <br />
-                  DA ARTE DIGITAL
-                </h1>
-                <p className="max-w-[557px] text-[12px] leading-[18px] text-text-secondary lg:text-[14px] lg:leading-[24px]">
-                  Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte digital
-                  rara, apoie artistas e tenha uma parte da cultura da internet.
-                </p>
-              </div>
-
-              <div>
-                <a
-                  href="#catalogo-section"
-                  className="inline-flex h-[40px] w-[140px] items-center justify-center rounded-[6px] bg-accent text-[16px] font-bold leading-[20px] text-bg-primary hover:bg-accent-hover"
-                >
-                  EXPLORAR
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-6 flex items-center justify-center gap-2 lg:mt-10 lg:justify-end">
-              <span className="h-[8px] w-[8px] rounded-full bg-accent" />
-              <span className="h-[8px] w-[8px] rounded-full bg-accent/40" />
-              <span className="h-[8px] w-[8px] rounded-full bg-accent/40" />
-            </div>
-          </div>
-
-          <Link
-            to="/nft/$nftId"
-            params={{ nftId: 'nft_001' }}
-            data-testid="hero-featured-card"
-            className="relative block h-[220px] w-[220px] shrink-0 overflow-hidden rounded-[24px] sm:h-[320px] sm:w-[320px] lg:h-[450px] lg:w-[450px]"
-          >
-            <img
-              src="/images/figma/8f387.jpg"
-              alt="Emerald Ape #042 em destaque na Kurio"
-              width={450}
-              height={450}
-              fetchPriority="high"
-              className="h-full w-full rounded-[24px] object-cover"
-            />
-          </Link>
-        </div>
-      </section>
+      <HeroBanner />
 
       <section id="catalogo-section" aria-labelledby="catalog-heading" className="mt-[46px]">
         <h2 id="catalog-heading" className="sr-only">
@@ -452,7 +217,25 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
         <div className="flex flex-col items-start gap-[48px] lg:flex-row">
           <aside aria-label="Filtros do catálogo" className="hidden w-[310px] shrink-0 flex-col gap-[24px] lg:flex">
             <div className="w-[310px] bg-bg-secondary p-[20px]">
-              {renderFilterControls('desktop')}
+              <CatalogFilters
+                idPrefix="desktop"
+                selectedCategories={search.category}
+                selectedNetwork={search.network}
+                availability={search.availability}
+                minPriceInput={minPriceInput}
+                maxPriceInput={maxPriceInput}
+                priceError={priceError}
+                activeFilterCount={activeFilterCount}
+                onToggleCategory={toggleCategory}
+                onSelectNetwork={(network) => onUpdateSearch({ network }, true)}
+                onChangeMinPrice={setMinPriceInput}
+                onChangeMaxPrice={setMaxPriceInput}
+                onApplyPriceRange={applyPriceRange}
+                onToggleOnlyAvailable={(only) =>
+                  onUpdateSearch({ availability: only ? 'available' : undefined }, true)
+                }
+                onClearFilters={handleClearFilters}
+              />
             </div>
 
             <div className="relative flex h-[470px] w-[310px] flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-accent/10 to-accent/5 pt-[24px] pb-[4px]">
@@ -686,111 +469,8 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
         </div>
       </section>
 
-      <section aria-label="Coleções em destaque" className="mt-[72px] grid grid-cols-1 gap-[28px] lg:grid-cols-2">
-        <div className="flex flex-col items-center justify-between overflow-hidden rounded-[12px] bg-bg-secondary sm:h-[250px] sm:flex-row">
-          <img
-            src="/images/figma/8f387.jpg"
-            alt="Lançamentos gênesis de edição limitada"
-            width={280}
-            height={250}
-            loading="lazy"
-            className="h-[220px] w-full rounded-[12px] object-cover sm:h-[250px] sm:w-[270px]"
-          />
-          <div className="flex flex-1 flex-col items-end justify-center gap-3 p-6 text-right">
-            <h2 className="text-[18px] font-bold leading-[24px] text-text-primary">
-              Lançamentos gênesis
-              <br />
-              de edição limitada
-            </h2>
-            <p className="text-[14px] leading-[22px] text-text-secondary">
-              Colecione edições escassas diretamente dos criadores antes da revelação pública.
-            </p>
-            <Link
-              to="/nft/$nftId"
-              params={{ nftId: 'nft_001' }}
-              className="inline-flex h-[40px] items-center gap-2 rounded-[6px] bg-accent px-5 text-[14px] font-bold text-bg-primary hover:bg-accent-hover"
-            >
-              <span>Explorar</span>
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center justify-between overflow-hidden rounded-[12px] bg-bg-secondary sm:h-[250px] sm:flex-row">
-          <img
-            src="/images/figma/9add2.jpg"
-            alt="Arte digital selecionada e muito mais"
-            width={280}
-            height={250}
-            loading="lazy"
-            className="h-[220px] w-full rounded-[12px] object-cover sm:h-[250px] sm:w-[270px]"
-          />
-          <div className="flex flex-1 flex-col items-end justify-center gap-3 p-6 text-right">
-            <h2 className="text-[18px] font-bold leading-[24px] text-text-primary">
-              Arte digital selecionada
-              <br />e muito mais
-            </h2>
-            <p className="text-[14px] leading-[22px] text-text-secondary">
-              Explore novos artistas, coleções verificadas e obras digitais que definem a cultura.
-            </p>
-            <Link
-              to="/nft/$nftId"
-              params={{ nftId: 'nft_003' }}
-              className="inline-flex h-[40px] items-center gap-2 rounded-[6px] bg-accent px-5 text-[14px] font-bold text-bg-primary hover:bg-accent-hover"
-            >
-              <span>Explorar</span>
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="blog-heading" className="mt-[72px] flex flex-col items-center gap-[40px]">
-        <div className="flex flex-col items-center gap-[12px] text-center">
-          <h2 id="blog-heading" className="text-[28px] font-bold text-text-primary">
-            Diário da Cunhagem
-          </h2>
-          <p className="text-[14px] text-text-secondary">
-            Histórias, guias e insights para colecionadores sobre o universo da propriedade digital.
-          </p>
-        </div>
-
-        <div className="grid w-full grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-4">
-          {blogPosts.map((post) => (
-            <article
-              key={post.id}
-              className="flex flex-col overflow-hidden rounded-[8px] bg-bg-secondary"
-            >
-              <div className="h-[195px] w-full overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  width={268}
-                  height={195}
-                  loading="lazy"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="flex flex-1 flex-col justify-between gap-[8px] px-[16px] pt-[12px] pb-[16px]">
-                <div className="flex flex-col gap-[8px]">
-                  <p className="text-[12px] font-medium leading-[16px] text-text-secondary">{post.meta}</p>
-                  <h3 className="text-[16px] font-bold leading-snug text-text-primary">{post.title}</h3>
-                  <p className="text-[12px] font-medium leading-[16px] text-text-secondary">
-                    {post.excerpt}
-                  </p>
-                </div>
-                <a
-                  href="#catalogo-section"
-                  className="mt-2 inline-flex items-center gap-1 text-[12px] font-bold text-accent-bright hover:underline"
-                >
-                  <span>Ler mais</span>
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <PromoBanners />
+      <MintJournalSection />
     </div>
   )
 }

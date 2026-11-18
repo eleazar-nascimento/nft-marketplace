@@ -11,12 +11,15 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { AppApiError } from '@/api/client'
+import { NftDetailSkeleton } from '@/components/nft/NftDetailSkeleton'
+import { NftDetailTabs } from '@/components/nft/NftDetailTabs'
+import { RelatedNftsSection } from '@/components/nft/RelatedNftsSection'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { networkLabels, type NftEdition } from '@/contracts'
+import type { NftEdition } from '@/contracts'
 import { formatEth, mulEth } from '@/lib/eth'
 import { saveReturnTo } from '@/lib/storage'
+import { formatTokenNumber } from '@/lib/validation'
 import { useCartMutations, useFavorites, useNftDetail, useNftsList, useToggleFavorite } from '@/state/queries'
 import { useSession } from '@/state/session'
 
@@ -33,40 +36,9 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [selectedEditionId, setSelectedEditionId] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details')
 
   if (detailQuery.isLoading) {
-    return (
-      <div
-        data-testid="nft-detail-skeleton"
-        className="mx-auto min-h-220 w-full max-w-[1200px] px-4 pt-6 sm:px-6 lg:px-0"
-      >
-        <Skeleton className="h-[16px] w-40 rounded-[4px]" />
-        <div className="mt-4 flex flex-col gap-[32px] lg:flex-row lg:items-start">
-          <div className="flex flex-col-reverse gap-[16px] sm:flex-row sm:gap-[28px] lg:w-[573px] lg:shrink-0">
-            <div className="flex flex-row gap-[12px] sm:w-[100px] sm:flex-col sm:gap-[16px]">
-              <Skeleton className="h-[76px] w-[76px] rounded-[8px] sm:h-[100px] sm:w-[100px]" />
-              <Skeleton className="h-[76px] w-[76px] rounded-[8px] sm:h-[100px] sm:w-[100px]" />
-              <Skeleton className="h-[76px] w-[76px] rounded-[8px] sm:h-[100px] sm:w-[100px]" />
-              <Skeleton className="h-[76px] w-[76px] rounded-[8px] sm:h-[100px] sm:w-[100px]" />
-            </div>
-            <Skeleton className="aspect-square w-full rounded-[6px] sm:h-[444px] sm:w-[444px]" />
-          </div>
-          <div className="flex-1 space-y-5">
-            <Skeleton className="h-8 w-3/4 rounded-[4px]" />
-            <Skeleton className="h-6 w-1/2 rounded-[4px]" />
-            <Skeleton className="h-20 w-full rounded-[4px]" />
-            <Skeleton className="h-10 w-64 rounded-[4px]" />
-            <Skeleton className="h-12 w-full rounded-[6px]" />
-            <Skeleton className="h-24 w-full rounded-[4px]" />
-          </div>
-        </div>
-        <div className="mt-[56px] space-y-4">
-          <Skeleton className="h-8 w-80 rounded-[4px]" />
-          <Skeleton className="h-44 w-full rounded-[4px]" />
-        </div>
-      </div>
-    )
+    return <NftDetailSkeleton />
   }
 
   if (detailQuery.isError || !detailQuery.data) {
@@ -117,7 +89,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
       : 0
   const safeQuantity = maxAllowed > 0 ? Math.min(Math.max(1, quantity), maxAllowed) : 1
   const activeImage = nft.gallery[selectedImageIndex] ?? nft.image
-  const tokenNumber = nft.id.replace(/\D/g, '').padStart(4, '0')
+  const tokenNumber = formatTokenNumber(nft.id)
   const relatedItems = (relatedQuery.data?.items ?? []).filter((item) => item.id !== nft.id).slice(0, 5)
 
   const handleSelectEdition = (edition: NftEdition) => {
@@ -399,104 +371,12 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
         </div>
       </div>
 
-      <section aria-label="Informações e avaliações do NFT" className="mt-[56px]">
-        <div className="flex items-center gap-[32px] border-b border-border-subtle">
-          <button
-            type="button"
-            onClick={() => setActiveTab('details')}
-            className={`relative pb-3 text-[17px] cursor-pointer ${
-              activeTab === 'details' ? 'font-bold text-accent-bright' : 'text-text-primary'
-            }`}
-          >
-            Detalhes do NFT
-            {activeTab === 'details' ? (
-              <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent" />
-            ) : null}
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('reviews')}
-            className={`relative pb-3 text-[17px] cursor-pointer ${
-              activeTab === 'reviews' ? 'font-bold text-accent-bright' : 'text-text-primary'
-            }`}
-          >
-            Avaliações de colecionadores ({nft.likes})
-            {activeTab === 'reviews' ? (
-              <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent" />
-            ) : null}
-          </button>
-        </div>
-
-        <div className="mt-6 space-y-5 text-[14px] leading-[24px] text-text-secondary">
-          <p>
-            {nft.name} é uma obra digital 1/50 finalizada à mão da coleção {nft.collection}. Cada atributo
-            fica armazenado nos metadados do token e verificado na {networkLabels[nft.network]}. A obra
-            explora identidade, movimento e luz em um mundo digital sem fronteiras.
-          </p>
-          <p>
-            A propriedade inclui a arte em alta resolução, lançamentos exclusivos para colecionadores e um
-            registro permanente de procedência registrada na rede. {nft.creator.displayName} recebe 5% de
-            direitos autorais nas vendas secundárias, apoiando novos trabalhos e lançamentos da comunidade.
-          </p>
-
-          <div>
-            <h3 className="font-bold text-text-primary">Rede:</h3>
-            <p>Cunhado na {networkLabels[nft.network]} com procedência imutável e metadados armazenados no IPFS.</p>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-text-primary">Contrato:</h3>
-            <p>
-              Direitos autorais do criador: 5% nas vendas secundárias, pagos automaticamente pelos mercados
-              compatíveis.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-text-primary">Direitos autorais:</h3>
-            <p>
-              {nft.contractAddress.slice(0, 6)}...{nft.contractAddress.slice(-4)} • Contrato inteligente{' '}
-              {nft.tokenStandard} verificado.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {relatedItems.length > 0 ? (
-        <section aria-labelledby="related-heading" className="mt-[64px]">
-          <h2 id="related-heading" className="text-[17px] font-bold text-accent-bright">
-            Mais desta coleção
-          </h2>
-          <div className="mt-3 h-px w-full bg-border-subtle" />
-          <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-            {relatedItems.map((item) => (
-              <Link
-                key={item.id}
-                to="/nft/$nftId"
-                params={{ nftId: item.id }}
-                className="group flex flex-col gap-2"
-              >
-                <div className="flex aspect-square items-center justify-center rounded-[6px] bg-bg-secondary p-2">
-                  <img
-                    src={item.image.url}
-                    alt={item.image.alt}
-                    width={190}
-                    height={190}
-                    loading="lazy"
-                    className="h-full w-full rounded-[12px] object-cover transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <span className="text-[15px] text-text-primary group-hover:text-accent-bright">
-                  {item.name}
-                </span>
-                <span className="text-[16px] font-bold text-accent-bright">
-                  {formatEth(item.priceFromEth)}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      <NftDetailTabs nft={nft} />
+      <RelatedNftsSection
+        headingId="related-heading"
+        title="Mais desta coleção"
+        items={relatedItems}
+      />
     </div>
   )
 }
