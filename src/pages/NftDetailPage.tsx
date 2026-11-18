@@ -359,15 +359,37 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             </div>
           )}
 
-          <div className="flex flex-col gap-2.5 text-[15px] text-text-muted">
-            <p>ID do token: #{tokenNumber}</p>
-            <p>Coleção: {nft.collection}</p>
-            <p>Atributos: Óculos, Esmeralda, Raro</p>
-            <div className="flex items-center gap-2.5 pt-1 text-text-primary">
-              <span className="font-bold">Compartilhar este NFT:</span>
-              <span className="text-xs text-text-secondary">in</span>
-              <span className="text-xs text-text-secondary">✉</span>
-              <span className="text-xs text-text-secondary">𝕏</span>
+          <div className="flex flex-col gap-3 text-[15px] text-text-muted">
+            <div className="flex flex-col gap-3 leading-normal">
+              <p>ID do token: #{tokenNumber}</p>
+              <p>Coleção: {nft.collection}</p>
+              <p>Atributos: Óculos, Esmeralda, Raro</p>
+            </div>
+            <div className="flex items-center gap-2 text-text-primary">
+              <span className="text-[15px] font-bold leading-4 whitespace-nowrap">
+                Compartilhar este NFT:
+              </span>
+              <img
+                src="/images/figma/share-linkedin.svg"
+                alt="Compartilhar no LinkedIn"
+                width={15}
+                height={14}
+                className="h-[14.375px] w-3.75 shrink-0"
+              />
+              <img
+                src="/images/figma/share-message.svg"
+                alt="Compartilhar por mensagem"
+                width={18}
+                height={18}
+                className="h-4.5 w-4.5 shrink-0"
+              />
+              <img
+                src="/images/figma/share-twitter.svg"
+                alt="Compartilhar no Twitter"
+                width={16}
+                height={12}
+                className="h-[12.191px] w-[15.966px] shrink-0"
+              />
             </div>
           </div>
         </div>
