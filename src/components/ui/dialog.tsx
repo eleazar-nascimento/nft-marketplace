@@ -29,7 +29,7 @@ export const DialogContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-border-subtle bg-bg-secondary p-6 text-white shadow-2xl',
+        'fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[calc(100%-1.5rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[16px] border border-border-subtle bg-bg-secondary p-4 text-white shadow-2xl sm:w-[calc(100%-2rem)] sm:rounded-[20px] sm:p-6',
         className,
       )}
       {...props}
@@ -37,9 +37,9 @@ export const DialogContent = forwardRef<
       {children}
       <DialogPrimitive.Close
         aria-label={closeLabel}
-        className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-xl text-text-secondary hover:bg-bg-elevated hover:text-white cursor-pointer"
+        className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-xl text-text-secondary hover:bg-bg-elevated hover:text-white cursor-pointer sm:right-4 sm:top-4 sm:h-9 sm:w-9"
       >
-        <X className="h-5 w-5" aria-hidden="true" />
+        <X className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -76,7 +76,11 @@ export const DialogTitle = forwardRef<
   ElementRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn('text-xl font-semibold text-white', className)} {...props} />
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cn('pr-8 text-base font-semibold text-white sm:text-xl', className)}
+    {...props}
+  />
 ))
 DialogTitle.displayName = 'DialogTitle'
 
