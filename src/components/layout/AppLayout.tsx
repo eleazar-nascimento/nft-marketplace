@@ -23,6 +23,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const itemCount = cart?.itemCount ?? 0
   const pathname = routerState.location.pathname
   const currentFullPath = `${pathname}${routerState.location.searchStr}`
+  const showMobileTabBar =
+    pathname === '/' || pathname.startsWith('/profile') || pathname.startsWith('/wallets')
 
   const handleGoToLogin = () => {
     saveReturnTo(currentFullPath)
@@ -107,12 +109,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       ) : null}
 
-      <main id="main-content" className="flex-1 pb-24 lg:pb-0">
+      <main id="main-content" className={`flex-1 ${showMobileTabBar ? 'pb-24 lg:pb-0' : ''}`}>
         {children}
       </main>
 
       <AppFooter onOpenOutOfScope={setOutOfScopeFeature} />
-      <MobileTabBar pathname={pathname} status={status} />
+      {showMobileTabBar ? <MobileTabBar pathname={pathname} status={status} /> : null}
 
       <OutOfScopeDialog featureName={outOfScopeFeature} onClose={() => setOutOfScopeFeature(null)} />
       <NotificationsViewport />

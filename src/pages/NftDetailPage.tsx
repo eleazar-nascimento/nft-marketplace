@@ -121,7 +121,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-300 px-0 pt-2 sm:px-6 sm:pt-6 lg:px-0">
+    <div className="mx-auto w-full max-w-300 px-0 pt-2 pb-32 sm:px-6 sm:pt-6 lg:px-0 lg:pb-0">
       <div className="hidden items-center justify-between lg:flex">
         <p className="text-[15px] font-bold leading-4 text-text-primary">
           <Link to="/" className="hover:text-accent-bright">
@@ -298,7 +298,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                 : 'Esta edição está temporariamente indisponível para novas compras.'}
             </div>
           ) : (
-            <div className="order-last flex flex-col gap-4 border-t border-border-subtle pt-4 lg:order-none lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:border-t-0 lg:pt-0">
+            <div className="fixed bottom-0 left-0 right-0 z-30 flex flex-col gap-3 border-t border-border-subtle bg-bg-secondary/95 px-5 py-4 backdrop-blur-md lg:static lg:z-auto lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-4 lg:border-t-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="text-[14px] text-text-secondary lg:hidden">Qtd.</span>
