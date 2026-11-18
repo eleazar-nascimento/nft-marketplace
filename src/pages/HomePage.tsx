@@ -114,7 +114,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
   }
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-4 sm:px-6 lg:px-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-4 sm:px-6 lg:px-0 lg:pt-8">
       <div className="mb-4 flex items-center gap-2 lg:hidden">
         <form onSubmit={handleSearchSubmit} className="relative flex-1" role="search">
           <Search
