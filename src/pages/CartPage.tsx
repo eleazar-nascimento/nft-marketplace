@@ -6,18 +6,19 @@ import {
   Plus,
   RefreshCw,
   ShoppingBag,
-  Tag,
   Trash2,
-  X,
 } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
+import { CartSummaryPanel } from '@/components/cart/CartSummaryPanel'
+import { RelatedNftsSection } from '@/components/nft/RelatedNftsSection'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { networkLabels, networks, type Network } from '@/contracts'
-import { compareEth, formatEth, isZeroEth, mulEth } from '@/lib/eth'
+import type { Network } from '@/contracts'
+import { compareEth, formatEth, mulEth } from '@/lib/eth'
 import { saveReturnTo } from '@/lib/storage'
+import { formatTokenNumber } from '@/lib/validation'
 import { useCart, useCartMutations, useNftsList, useQuote } from '@/state/queries'
 import { useSession } from '@/state/session'
 
@@ -175,7 +176,7 @@ export function CartPage() {
                 line.status === 'available' ? Math.min(line.available, line.maxPerOrder) : 0
               const priceChanged = compareEth(line.unitPriceEth, line.addedUnitPriceEth) !== 0
               const isSoldOut = maxAllowed === 0
-              const tokenNumber = line.nftId.replace(/\D/g, '').padStart(4, '0')
+              const tokenNumber = formatTokenNumber(line.nftId)
 
               return (
                 <div
@@ -287,185 +288,27 @@ export function CartPage() {
           </div>
         </div>
 
-        <div className="w-full rounded-t-[32px] bg-bg-secondary p-6 lg:w-[332px] lg:rounded-none lg:bg-transparent lg:p-0">
-          <div className="flex flex-col gap-[12px]">
-            <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Resumo da carteira</h2>
-            <div className="h-px w-full bg-accent/35" />
-          </div>
-
-          <div className="mt-4">
-            <label htmlFor="cart-network-select" className="sr-only">
-              Rede para estimativa de taxas
-            </label>
-            <select
-              id="cart-network-select"
-              data-testid="cart-network-select"
-              value={network}
-              onChange={(event) => setNetwork(event.target.value as Network)}
-              className="h-[34px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-xs text-text-secondary"
-            >
-              {networks.map((net) => (
-                <option key={net} value={net}>
-                  Rede: {networkLabels[net]}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mt-[20px]">
-            {cart.couponCode ? (
-              <div
-                data-testid="active-coupon-pill"
-                className="flex items-center justify-between rounded-[3px] border border-accent bg-bg-secondary px-3 py-2 text-xs text-text-primary"
-              >
-                <div className="flex items-center gap-2">
-                  <Tag className="h-3.5 w-3.5 text-accent-bright" aria-hidden="true" />
-                  <span>Cupom: {cart.couponCode}</span>
-                </div>
-                <button
-                  type="button"
-                  data-testid="remove-coupon-btn"
-                  aria-label={`Remover cupom ${cart.couponCode}`}
-                  onClick={() => removeCoupon.mutate()}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-accent-bright hover:text-text-primary cursor-pointer"
-                >
-                  <X className="h-3.5 w-3.5" aria-hidden="true" />
-                  Remover
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={(event) => void handleApplyCoupon(event)} noValidate className="flex flex-col gap-[8px]">
-                <label
-                  htmlFor="cart-coupon-input"
-                  className="text-[14px] font-bold leading-[16px] text-text-primary"
-                >
-                  Código promocional
-                </label>
-                <div className="flex h-[40px] w-full overflow-hidden rounded-[3px] border border-accent">
-                  <input
-                    id="cart-coupon-input"
-                    data-testid="cart-coupon-input"
-                    placeholder="Digite o código promocional..."
-                    value={couponInput}
-                    aria-invalid={Boolean(couponError)}
-                    aria-describedby={couponError ? 'cart-coupon-error' : undefined}
-                    onChange={(event) => setCouponInput(event.target.value)}
-                    className="flex-1 bg-transparent pl-[8px] pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none"
-                  />
-                  <button
-                    type="submit"
-                    data-testid="apply-coupon-btn"
-                    disabled={applyCoupon.isPending}
-                    className="h-[40px] w-[102px] shrink-0 bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
-                  >
-                    Aplicar
-                  </button>
-                </div>
-                {couponError ? (
-                  <p
-                    id="cart-coupon-error"
-                    role="alert"
-                    data-testid="cart-coupon-error"
-                    className="text-xs text-red-400"
-                  >
-                    {couponError}
-                  </p>
-                ) : null}
-              </form>
-            )}
-          </div>
-
-          {quoteQuery.isLoading || !quote ? (
-            <div data-testid="cart-summary-skeleton" className="mt-6 space-y-3">
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          ) : (
-            <div className="mt-[24px] flex flex-col gap-[12px]">
-              <div className="flex items-start justify-between text-text-primary">
-                <span className="text-[15px]">Subtotal</span>
-                <span data-testid="quote-subtotal" className="text-[18px] leading-[16px]">
-                  {formatEth(quote.subtotalEth)}
-                </span>
-              </div>
-              <div className="flex items-start justify-between text-[15px] text-text-primary">
-                <span>Desconto do lançamento</span>
-                <span data-testid="quote-discount">
-                  {isZeroEth(quote.discountEth) ? '(-) 00.00' : `(-) ${formatEth(quote.discountEth)}`}
-                </span>
-              </div>
-              <div className="flex flex-col items-end gap-1">
-                <div className="flex w-full items-center justify-between text-text-primary">
-                  <span className="text-[15px]">Taxa de rede</span>
-                  <span data-testid="quote-network-fee" className="text-[18px] leading-[16px]">
-                    {formatEth(quote.networkFeeEth)}
-                  </span>
-                </div>
-                <span className="text-[12px] leading-[16px] text-accent-bright">Taxa estimada</span>
-              </div>
-              <div className="mt-2 flex items-start justify-between font-bold">
-                <span className="text-[16px] text-text-primary">Total</span>
-                <span data-testid="quote-total" className="text-[18px] text-accent-bright">
-                  {formatEth(quote.totalEth)}
-                </span>
-              </div>
-            </div>
-          )}
-
-          <div className="mt-[24px] flex flex-col items-center gap-[12px]">
-            <button
-              type="button"
-              data-testid="proceed-to-checkout-btn"
-              disabled={!quote || quote.lines.length === 0}
-              onClick={handleProceedToCheckout}
-              className="flex h-[40px] w-full items-center justify-center rounded-[3px] bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
-            >
-              Conectar e finalizar
-            </button>
-            <Link to="/" className="text-[15px] text-accent-bright hover:underline">
-              Continuar explorando
-            </Link>
-          </div>
-        </div>
+        <CartSummaryPanel
+          network={network}
+          couponCode={cart.couponCode}
+          couponInput={couponInput}
+          couponError={couponError}
+          applyCouponPending={applyCoupon.isPending}
+          quote={quote}
+          quoteLoading={quoteQuery.isLoading}
+          onChangeNetwork={setNetwork}
+          onChangeCouponInput={setCouponInput}
+          onApplyCoupon={(event) => void handleApplyCoupon(event)}
+          onRemoveCoupon={() => removeCoupon.mutate()}
+          onProceedToCheckout={handleProceedToCheckout}
+        />
       </div>
 
-      {relatedItems.length > 0 ? (
-        <section aria-labelledby="also-viewed-heading" className="mt-[64px]">
-          <h2 id="also-viewed-heading" className="text-[17px] font-bold text-accent-bright">
-            Colecionadores também viram
-          </h2>
-          <div className="mt-3 h-px w-full bg-border-subtle" />
-          <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-            {relatedItems.map((item) => (
-              <Link
-                key={item.id}
-                to="/nft/$nftId"
-                params={{ nftId: item.id }}
-                className="group flex flex-col gap-2"
-              >
-                <div className="flex aspect-square items-center justify-center rounded-[6px] bg-bg-secondary p-2">
-                  <img
-                    src={item.image.url}
-                    alt={item.image.alt}
-                    width={190}
-                    height={190}
-                    loading="lazy"
-                    className="h-full w-full rounded-[12px] object-cover transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <span className="text-[15px] text-text-primary group-hover:text-accent-bright">
-                  {item.name}
-                </span>
-                <span className="text-[16px] font-bold text-accent-bright">
-                  {formatEth(item.priceFromEth)}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      <RelatedNftsSection
+        headingId="also-viewed-heading"
+        title="Colecionadores também viram"
+        items={relatedItems}
+      />
     </div>
   )
 }

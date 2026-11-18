@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { networkLabels } from '@/contracts'
 import { formatEth, isZeroEth } from '@/lib/eth'
+import { formatTokenNumber } from '@/lib/validation'
 import { useOrder } from '@/state/queries'
 
 export function OrderConfirmationPage({ orderId }: { orderId: string }) {
@@ -151,7 +152,7 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
 
           <ul className="flex flex-col gap-[12px]">
             {order.lines.map((line) => {
-              const tokenNumber = line.nftId.replace(/\D/g, '').padStart(4, '0')
+              const tokenNumber = formatTokenNumber(line.nftId)
               return (
                 <li
                   key={`${line.nftId}_${line.editionId}`}
