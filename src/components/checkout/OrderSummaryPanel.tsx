@@ -133,12 +133,12 @@ export function OrderSummaryPanel({
       )}
 
       <div className="mt-2 flex flex-col gap-4">
-        <h3 className="text-center text-[17px] font-bold leading-4 text-text-primary">
+        <h3 className="text-left text-[16px] font-bold leading-4 text-text-primary lg:text-center lg:text-[17px]">
           Carteira e rede
         </h3>
 
         <div role="radiogroup" aria-label="Selecione a carteira" className="flex flex-col gap-3">
-          <div className="flex h-11.25 items-center gap-2.5 rounded-[3px] border border-border-subtle px-3">
+          <div className="hidden h-11.25 items-center gap-2.5 rounded-[3px] border border-border-subtle px-3 lg:flex">
             <span className="h-4 w-4 rounded-full border border-accent" />
             <div className="flex h-6.5 items-center justify-center rounded-md border border-border-soft bg-surface-dark px-2.5">
               <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright">
@@ -157,29 +157,42 @@ export function OrderSummaryPanel({
                 aria-checked={isSelected}
                 data-testid={`checkout-wallet-${wallet.kind}`}
                 onClick={() => onSelectWallet(wallet)}
-                className={`flex h-11.25 items-center justify-between rounded-[3px] border px-3 text-left transition-colors cursor-pointer ${
+                className={`flex h-14 items-center justify-between rounded-xl border bg-bg-secondary px-4 text-left transition-colors lg:h-11.25 lg:rounded-[3px] lg:bg-transparent lg:px-3 cursor-pointer ${
                   isSelected ? 'border-accent' : 'border-border-subtle hover:border-accent/60'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-3 lg:gap-2.5">
                   <span
-                    className={`flex h-4 w-4 items-center justify-center rounded-full border border-accent ${
+                    className={`hidden h-4 w-4 items-center justify-center rounded-full border border-accent lg:flex ${
                       isSelected ? 'bg-accent' : 'bg-transparent'
                     }`}
                   />
-                  <span className="text-[15px] text-text-primary">
-                    {walletProviderLabels[wallet.provider]} ({wallet.label})
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-bg-elevated text-xs font-bold text-accent-bright lg:hidden">
+                    {walletProviderLabels[wallet.provider].slice(0, 1)}
                   </span>
+                  <div className="flex flex-col">
+                    <span className="text-[14px] text-text-primary lg:text-[15px]">
+                      {walletProviderLabels[wallet.provider]} ({wallet.label})
+                    </span>
+                    <span className="text-[11px] text-text-secondary lg:hidden">
+                      {wallet.address.slice(0, 6)}…{wallet.address.slice(-4)}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-xs text-text-secondary">
+                <span className="hidden text-xs text-text-secondary lg:inline">
                   {wallet.address.slice(0, 6)}…{wallet.address.slice(-4)}
                 </span>
+                <span
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-accent lg:hidden ${
+                    isSelected ? 'bg-accent' : 'bg-transparent'
+                  }`}
+                />
               </button>
             )
           })}
         </div>
 
-        <div className="flex items-start gap-2.5 rounded-[3px] border border-border-subtle bg-bg-secondary p-3">
+        <div className="flex items-start gap-2.5 rounded-xl border border-border-subtle bg-bg-secondary p-3 lg:rounded-[3px]">
           <input
             id="checkout-review-checkbox"
             data-testid="checkout-review-checkbox"
@@ -202,7 +215,7 @@ export function OrderSummaryPanel({
           <div
             role="alert"
             data-testid="checkout-submit-error"
-            className="rounded-[3px] border border-red-500/80 bg-red-950/70 p-3 text-xs text-red-100"
+            className="rounded-xl border border-red-500/80 bg-red-950/70 p-3 text-xs text-red-100 lg:rounded-[3px]"
           >
             <p className="font-bold">{submitError}</p>
           </div>
@@ -218,7 +231,7 @@ export function OrderSummaryPanel({
             !quote ||
             quote.lines.length === 0
           }
-          className="flex h-11.25 w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+          className="flex h-12 w-full items-center justify-center rounded-full bg-accent px-4 py-3 text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 lg:h-11.25 lg:rounded-lg cursor-pointer"
         >
           {createOrderPending
             ? 'Enviando pedido...'

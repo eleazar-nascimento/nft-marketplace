@@ -121,29 +121,22 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto w-full max-w-300 px-0 pt-2 sm:px-6 sm:pt-6 lg:px-0">
+      <div className="hidden items-center justify-between lg:flex">
         <p className="text-[15px] font-bold leading-4 text-text-primary">
           <Link to="/" className="hover:text-accent-bright">
             Início
           </Link>{' '}
           / Mercado
         </p>
-        <Link
-          to="/"
-          className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
-          aria-label="Voltar"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        </Link>
       </div>
 
-      <div className="mt-4 flex flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex flex-col-reverse gap-4 sm:flex-row sm:gap-7 lg:w-143.25 lg:shrink-0">
+      <div className="flex flex-col lg:mt-4 lg:flex-row lg:items-start lg:gap-8">
+        <div className="relative flex flex-col-reverse gap-4 sm:flex-row sm:gap-7 lg:w-143.25 lg:shrink-0">
           <div
             role="group"
             aria-label="Galeria de imagens do NFT"
-            className="flex flex-row gap-3 sm:w-25 sm:flex-col sm:gap-4"
+            className="hidden flex-row gap-3 sm:flex sm:w-25 sm:flex-col sm:gap-4"
           >
             {nft.gallery.slice(0, 4).map((img, index) => {
               const isSelected = index === selectedImageIndex
@@ -171,7 +164,28 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             })}
           </div>
 
-          <div className="relative flex aspect-square w-full items-center justify-center rounded-md bg-bg-secondary p-4 sm:h-111 sm:w-111">
+          <div className="relative flex aspect-square w-full items-center justify-center bg-bg-secondary p-4 sm:h-111 sm:w-111 sm:rounded-md">
+            <Link
+              to="/"
+              className="absolute left-4 top-4 z-10 inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-primary/80 text-text-primary lg:hidden"
+              aria-label="Voltar"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleFavorite}
+              aria-pressed={isFavorite}
+              aria-label={isFavorite ? `Remover ${nft.name} dos favoritos` : `Favoritar ${nft.name}`}
+              className="absolute right-4 top-4 z-10 inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-accent/60 bg-bg-primary/80 text-accent-bright lg:hidden cursor-pointer"
+            >
+              <Heart
+                className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
+                aria-hidden="true"
+              />
+            </button>
+
             <img
               src={activeImage.url}
               alt={activeImage.alt}
@@ -182,7 +196,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
               className="h-full w-full max-h-101 max-w-101 rounded-3xl object-cover"
             />
             <span
-              className="pointer-events-none absolute right-4 top-4 flex h-7.5 w-7.5 items-center justify-center rounded-full bg-bg-primary/80 text-text-primary"
+              className="pointer-events-none absolute right-4 top-4 hidden h-7.5 w-7.5 items-center justify-center rounded-full bg-bg-primary/80 text-text-primary lg:flex"
               aria-hidden="true"
             >
               <Search className="h-4 w-4" />
@@ -190,23 +204,23 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-between gap-4.5">
+        <div className="relative z-10 -mt-5 flex flex-1 flex-col justify-between gap-4.5 rounded-t-[28px] bg-bg-secondary px-5 pt-6 pb-6 lg:mt-0 lg:rounded-none lg:bg-transparent lg:p-0">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h1
                 data-testid="detail-nft-title"
-                className="text-[22px] font-bold leading-tight text-text-primary sm:text-[28px]"
+                className="text-[20px] font-bold leading-tight text-text-primary sm:text-[28px]"
               >
                 {nft.name}
               </h1>
-              <span className="inline-flex h-6.75 items-center gap-1 rounded-4xl border border-accent px-3 text-[14px] lg:hidden">
+              <span className="inline-flex h-6.75 shrink-0 items-center gap-1 rounded-4xl border border-accent px-3 text-[13px] lg:hidden">
                 <Star className="h-3.5 w-3.5 fill-accent text-accent" aria-hidden="true" />
                 <span className="font-medium text-text-primary">4.8</span>
                 <span className="text-text-secondary">({nft.likes})</span>
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="hidden flex-wrap items-center justify-between gap-3 lg:flex">
               <p
                 data-testid={`edition-price-${activeEdition.id}`}
                 className="text-[22px] font-bold leading-4 text-accent-bright"
@@ -214,7 +228,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                 {formatEth(activeEdition.priceEth)}
               </p>
 
-              <div className="hidden items-center gap-1 lg:flex">
+              <div className="flex items-center gap-1">
                 <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
                 <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
                 <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
@@ -226,12 +240,16 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
               </div>
             </div>
 
-            <div className="h-px w-full bg-accent/35" />
+            <div className="hidden h-px w-full bg-accent/35 lg:block" />
           </div>
 
           <div className="flex flex-col gap-2">
-            <h2 className="text-[15px] font-bold leading-4 text-text-primary">Sobre este NFT:</h2>
-            <p className="text-[14px] leading-6 text-text-secondary">{nft.description}</p>
+            <h2 className="hidden text-[15px] font-bold leading-4 text-text-primary lg:block">
+              Sobre este NFT:
+            </h2>
+            <p className="text-[13px] leading-5.5 text-text-secondary lg:text-[14px] lg:leading-6">
+              {nft.description}
+            </p>
           </div>
 
           <div className="flex flex-col gap-2.5">
@@ -280,49 +298,57 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                 : 'Esta edição está temporariamente indisponível para novas compras.'}
             </div>
           ) : (
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  data-testid="detail-qty-decrease"
-                  aria-label="Diminuir quantidade"
-                  disabled={safeQuantity <= 1}
-                  onClick={() => setQuantity(Math.max(1, safeQuantity - 1))}
-                  className="flex h-[49.5px] w-8.25 items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
-                >
-                  <Minus className="h-4 w-4" aria-hidden="true" />
-                </button>
-                <span
-                  data-testid="detail-qty-value"
-                  aria-live="polite"
-                  className="min-w-5 text-center text-[20px] leading-7 text-text-primary"
-                >
-                  {safeQuantity}
-                </span>
-                <button
-                  type="button"
-                  data-testid="detail-qty-increase"
-                  aria-label="Aumentar quantidade"
-                  disabled={safeQuantity >= maxAllowed}
-                  onClick={() => setQuantity(Math.min(maxAllowed, safeQuantity + 1))}
-                  className="flex h-[49.5px] w-8.25 items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
-                >
-                  <Plus className="h-4 w-4" aria-hidden="true" />
-                </button>
-                <span data-testid="detail-subtotal" className="sr-only">
-                  {formatEth(mulEth(activeEdition.priceEth, safeQuantity))}
-                </span>
+            <div className="order-last flex flex-col gap-4 border-t border-border-subtle pt-4 lg:order-none lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:border-t-0 lg:pt-0">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-[14px] text-text-secondary lg:hidden">Qtd.</span>
+                  <button
+                    type="button"
+                    data-testid="detail-qty-decrease"
+                    aria-label="Diminuir quantidade"
+                    disabled={safeQuantity <= 1}
+                    onClick={() => setQuantity(Math.max(1, safeQuantity - 1))}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 lg:h-[49.5px] lg:w-8.25 lg:rounded-[33px] cursor-pointer"
+                  >
+                    <Minus className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
+                  </button>
+                  <span
+                    data-testid="detail-qty-value"
+                    aria-live="polite"
+                    className="min-w-5 text-center text-[18px] leading-7 text-text-primary lg:text-[20px]"
+                  >
+                    {safeQuantity}
+                  </span>
+                  <button
+                    type="button"
+                    data-testid="detail-qty-increase"
+                    aria-label="Aumentar quantidade"
+                    disabled={safeQuantity >= maxAllowed}
+                    onClick={() => setQuantity(Math.min(maxAllowed, safeQuantity + 1))}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 lg:h-[49.5px] lg:w-8.25 lg:rounded-[33px] cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
+                  </button>
+                  <span data-testid="detail-subtotal" className="sr-only">
+                    {formatEth(mulEth(activeEdition.priceEth, safeQuantity))}
+                  </span>
+                </div>
+
+                <p className="text-[18px] font-bold text-accent-bright lg:hidden">
+                  {formatEth(activeEdition.priceEth)}
+                </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-3 lg:flex-wrap lg:gap-2">
                 <button
                   type="button"
                   data-testid="detail-buy-now"
                   disabled={addItem.isPending}
                   onClick={() => void handleAddToCart(true)}
-                  className="inline-flex h-10 w-32.5 items-center justify-center rounded-md bg-accent text-[14px] font-bold leading-5 text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+                  className="inline-flex h-12 flex-1 items-center justify-center rounded-full bg-accent text-[15px] font-bold leading-5 text-bg-primary hover:bg-accent-hover disabled:opacity-50 lg:h-10 lg:w-32.5 lg:flex-none lg:rounded-md lg:text-[14px] cursor-pointer"
                 >
-                  COMPRAR
+                  <span className="lg:hidden">Comprar NFT</span>
+                  <span className="hidden lg:inline">COMPRAR</span>
                 </button>
 
                 <button
@@ -331,10 +357,10 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   aria-label="Adicionar ao carrinho"
                   disabled={addItem.isPending}
                   onClick={() => void handleAddToCart(false)}
-                  className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-border-subtle bg-bg-secondary px-3 text-[13px] font-medium text-text-primary hover:border-accent disabled:opacity-50 cursor-pointer"
+                  className="inline-flex h-12 w-12 shrink-0 items-center justify-center gap-1.5 rounded-full border border-border-subtle bg-bg-elevated text-[13px] font-medium text-text-primary hover:border-accent disabled:opacity-50 lg:h-10 lg:w-auto lg:rounded-md lg:bg-bg-secondary lg:px-3 cursor-pointer"
                 >
-                  <ShoppingCart className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-                  <span>Carrinho</span>
+                  <ShoppingCart className="h-4.5 w-4.5 text-accent-bright lg:h-4 lg:w-4" aria-hidden="true" />
+                  <span className="hidden lg:inline">Carrinho</span>
                 </button>
 
                 {status === 'authenticated' ? (
@@ -343,7 +369,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                     data-testid="detail-favorite-btn"
                     aria-pressed={isFavorite}
                     onClick={handleFavorite}
-                    className="inline-flex h-10 min-w-32.5 items-center justify-center gap-2 rounded-md border border-accent px-3 text-[14px] font-medium leading-5 text-accent-bright hover:bg-accent/15 cursor-pointer"
+                    className="hidden h-10 min-w-32.5 items-center justify-center gap-2 rounded-md border border-accent px-3 text-[14px] font-medium leading-5 text-accent-bright hover:bg-accent/15 lg:inline-flex cursor-pointer"
                   >
                     <Heart
                       className={`h-4.5 w-4.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}

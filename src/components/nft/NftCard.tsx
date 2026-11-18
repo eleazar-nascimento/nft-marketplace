@@ -47,9 +47,9 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
   return (
     <article
       data-testid={`nft-card-${nft.id}`}
-      className="group flex w-full flex-col gap-3"
+      className="group flex w-full flex-col gap-2.5 sm:gap-3"
     >
-      <div className="relative flex h-75 w-full items-center justify-center overflow-hidden rounded-md bg-bg-secondary p-1">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-bg-secondary p-1.5 sm:aspect-auto sm:h-75 sm:rounded-md sm:p-1">
         <span
           aria-hidden="true"
           className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-0.5 bg-accent transition-opacity duration-200 ${
@@ -60,7 +60,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
         <Link
           to="/nft/$nftId"
           params={{ nftId: nft.id }}
-          className="relative block h-62.5 w-full max-w-62.5 overflow-hidden rounded-[15px]"
+          className="relative block h-full w-full overflow-hidden rounded-[14px] sm:h-62.5 sm:max-w-62.5 sm:rounded-[15px]"
         >
           <img
             src={nft.image.url}
@@ -70,7 +70,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
             loading={priority ? 'eager' : 'lazy'}
             fetchPriority={priority ? 'high' : 'auto'}
             decoding="async"
-            className="h-full w-full rounded-[15px] object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full rounded-[14px] object-cover transition-transform duration-300 group-hover:scale-105 sm:rounded-[15px]"
           />
         </Link>
 

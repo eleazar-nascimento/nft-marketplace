@@ -36,12 +36,12 @@ export function CartSummaryPanel({
 }: CartSummaryPanelProps) {
   return (
     <div className="w-full rounded-t-4xl bg-bg-secondary p-6 lg:w-83 lg:rounded-none lg:bg-transparent lg:p-0">
-      <div className="flex flex-col gap-3">
+      <div className="hidden flex-col gap-3 lg:flex">
         <h2 className="text-[18px] font-bold leading-4 text-text-primary">Resumo da carteira</h2>
         <div className="h-px w-full bg-accent/35" />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-0 lg:mt-4">
         <label htmlFor="cart-network-select" className="sr-only">
           Rede para estimativa de taxas
         </label>
@@ -60,7 +60,7 @@ export function CartSummaryPanel({
         </select>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-4 lg:mt-5">
         {couponCode ? (
           <div
             data-testid="active-coupon-pill"
@@ -85,11 +85,11 @@ export function CartSummaryPanel({
           <form onSubmit={onApplyCoupon} noValidate className="flex flex-col gap-2">
             <label
               htmlFor="cart-coupon-input"
-              className="text-[14px] font-bold leading-4 text-text-primary"
+              className="hidden text-[14px] font-bold leading-4 text-text-primary lg:block"
             >
               Código promocional
             </label>
-            <div className="flex h-10 w-full overflow-hidden rounded-[3px] border border-accent">
+            <div className="flex h-11 w-full overflow-hidden rounded-full border border-border-subtle bg-bg-primary/60 lg:h-10 lg:rounded-[3px] lg:border-accent lg:bg-transparent">
               <input
                 id="cart-coupon-input"
                 data-testid="cart-coupon-input"
@@ -98,13 +98,13 @@ export function CartSummaryPanel({
                 aria-invalid={Boolean(couponError)}
                 aria-describedby={couponError ? 'cart-coupon-error' : undefined}
                 onChange={(event) => onChangeCouponInput(event.target.value)}
-                className="flex-1 bg-transparent pl-2 pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                className="flex-1 bg-transparent pl-4 pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none lg:pl-2"
               />
               <button
                 type="submit"
                 data-testid="apply-coupon-btn"
                 disabled={applyCouponPending}
-                className="h-10 w-25.5 shrink-0 bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                className="h-11 w-24 shrink-0 rounded-full bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover lg:h-10 lg:w-25.5 lg:rounded-none lg:text-[15px] cursor-pointer"
               >
                 Aplicar
               </button>
@@ -168,11 +168,11 @@ export function CartSummaryPanel({
           data-testid="proceed-to-checkout-btn"
           disabled={!quote || quote.lines.length === 0}
           onClick={onProceedToCheckout}
-          className="flex h-10 w-full items-center justify-center rounded-[3px] bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+          className="flex h-12 w-full items-center justify-center rounded-full bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 lg:h-10 lg:rounded-[3px] cursor-pointer"
         >
           Conectar e finalizar
         </button>
-        <Link to="/" className="text-[15px] text-accent-bright hover:underline">
+        <Link to="/" className="hidden text-[15px] text-accent-bright hover:underline lg:inline">
           Continuar explorando
         </Link>
       </div>

@@ -90,7 +90,7 @@ export function LoginPage({ redirectTo }: { redirectTo?: string }) {
       <form
         onSubmit={(event) => void handleSubmit(event)}
         noValidate
-        className="mt-6 flex flex-col gap-3 px-6 sm:px-20"
+        className="mt-6 flex flex-col gap-3 sm:px-20"
       >
         <div>
           <label htmlFor="login-email" className="sr-only">

@@ -58,7 +58,7 @@ export function AuthModalShell({
 
   return (
     <div className="relative">
-      <div aria-hidden="true" inert className="pointer-events-none select-none">
+      <div aria-hidden="true" inert className="pointer-events-none hidden select-none sm:block">
         <HomePage search={{}} onUpdateSearch={() => {}} onResetFilters={() => {}} />
       </div>
 
@@ -72,25 +72,38 @@ export function AuthModalShell({
             handleClose()
           }
         }}
-        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/75 p-4 backdrop-blur-xs"
+        className="flex min-h-[calc(100dvh-160px)] flex-col items-center justify-center bg-bg-primary px-5 py-8 sm:fixed sm:inset-0 sm:z-50 sm:min-h-0 sm:overflow-y-auto sm:bg-black/75 sm:p-4 sm:backdrop-blur-xs"
       >
-        <div className="relative my-auto w-full max-w-125 overflow-hidden rounded-lg border border-border-subtle bg-bg-secondary pt-10 shadow-2xl sm:pt-12">
+        <div className="relative w-full max-w-125 overflow-hidden bg-bg-primary sm:my-auto sm:rounded-lg sm:border sm:border-border-subtle sm:bg-bg-secondary sm:pt-12 sm:shadow-2xl">
           <button
             type="button"
             onClick={handleClose}
             aria-label={closeLabel}
-            className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center text-accent hover:text-text-primary cursor-pointer"
+            className="absolute right-4 top-4 hidden h-8 w-8 items-center justify-center text-accent hover:text-text-primary sm:inline-flex cursor-pointer"
           >
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
 
-          <div className="flex flex-col items-center gap-6 px-6 sm:gap-8 sm:px-12">
-            <div className="flex items-center justify-center gap-2">
+          <div className="mb-8 flex justify-center sm:hidden">
+            <Link to="/" className="text-[24px] font-bold tracking-[3px] text-text-primary">
+              KURIO
+            </Link>
+          </div>
+
+          <div className="flex flex-col items-center gap-6 px-1 sm:gap-8 sm:px-12">
+            <h1
+              id="auth-modal-title"
+              className="text-center text-[18px] font-bold leading-5 text-text-primary sm:hidden"
+            >
+              {isLogin ? 'Entrar' : 'Criar perfil de colecionador'}
+            </h1>
+
+            <div className="hidden items-center justify-center gap-2 sm:flex">
               {isLogin ? (
                 <>
-                  <h1 id="auth-modal-title" className="text-[20px] font-medium leading-4 text-accent-bright">
+                  <h2 className="text-[20px] font-medium leading-4 text-accent-bright">
                     Entrar
-                  </h1>
+                  </h2>
                   <span className="h-4.5 w-px bg-coral" aria-hidden="true" />
                   <Link
                     to="/register"
@@ -108,30 +121,32 @@ export function AuthModalShell({
                     Entrar
                   </Link>
                   <span className="h-4.5 w-px bg-coral" aria-hidden="true" />
-                  <h1 id="auth-modal-title" className="text-[20px] font-medium leading-4 text-accent-bright">
+                  <h2 className="text-[20px] font-medium leading-4 text-accent-bright">
                     Criar conta
-                  </h1>
+                  </h2>
                 </>
               )}
             </div>
 
-            <p className="text-center text-[13px] leading-4 text-text-primary">{subtitle}</p>
+            <p className="hidden text-center text-[13px] leading-4 text-text-primary sm:block">
+              {subtitle}
+            </p>
           </div>
 
           {children}
 
-          <div className={`mt-6 flex flex-col gap-3 ${footerSlot ? '' : 'pb-8'}`}>
+          <div className={`mt-6 flex flex-col gap-3 ${footerSlot ? '' : 'sm:pb-8'}`}>
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-border-subtle" />
               <span className="text-[13px] leading-4 text-text-primary">Ou continue com</span>
               <div className="h-px flex-1 bg-border-subtle" />
             </div>
 
-            <div className="flex flex-col gap-3 px-6 sm:px-20">
+            <div className="flex flex-col gap-3 sm:px-20">
               <button
                 type="button"
                 onClick={onGoogleClick}
-                className="flex h-10 w-full items-center justify-center gap-3 rounded-[5px] border border-border-subtle text-[13px] font-medium text-text-secondary hover:border-accent cursor-pointer"
+                className="flex h-10 w-full items-center justify-center gap-3 rounded-lg border border-border-subtle text-[13px] font-medium text-text-secondary hover:border-accent sm:rounded-[5px] cursor-pointer"
               >
                 <span className="font-bold text-text-primary">G</span>
                 <span>Continuar com Google</span>
@@ -139,7 +154,7 @@ export function AuthModalShell({
               <button
                 type="button"
                 onClick={onFacebookClick}
-                className="flex h-10 w-full items-center justify-center gap-3 rounded-[5px] border border-border-subtle text-[13px] font-medium text-text-secondary hover:border-accent cursor-pointer"
+                className="flex h-10 w-full items-center justify-center gap-3 rounded-lg border border-border-subtle text-[13px] font-medium text-text-secondary hover:border-accent sm:rounded-[5px] cursor-pointer"
               >
                 <span className="font-bold text-[#3b5999]">f</span>
                 <span>Continuar com Facebook</span>
@@ -147,9 +162,27 @@ export function AuthModalShell({
             </div>
           </div>
 
-          {footerSlot ? <div className="mt-5 px-6 pb-6 sm:px-20">{footerSlot}</div> : null}
+          <div className="mt-6 text-center text-[13px] text-text-secondary sm:hidden">
+            {isLogin ? (
+              <p>
+                Novo na Kurio?{' '}
+                <Link to="/register" className="font-medium text-text-primary underline underline-offset-4">
+                  Crie uma conta
+                </Link>
+              </p>
+            ) : (
+              <p>
+                Já tem uma conta?{' '}
+                <Link to="/login" className="font-medium text-text-primary underline underline-offset-4">
+                  Entre
+                </Link>
+              </p>
+            )}
+          </div>
 
-          <div className="h-2.5 w-full bg-accent" />
+          {footerSlot ? <div className="mt-5 pb-4 sm:px-20 sm:pb-6">{footerSlot}</div> : null}
+
+          <div className="hidden h-2.5 w-full bg-accent sm:block" />
         </div>
       </div>
     </div>

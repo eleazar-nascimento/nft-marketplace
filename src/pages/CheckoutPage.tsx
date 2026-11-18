@@ -230,27 +230,28 @@ export function CheckoutPage() {
   return (
     <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center gap-3 lg:flex-none">
           <Link
             to="/cart"
-            className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+            className="inline-flex h-8.75 w-8.75 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
             aria-label="Voltar ao carrinho"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <div>
+          <div className="flex-1 text-center lg:flex-none lg:text-left">
             <p className="hidden text-[15px] font-bold leading-4 text-text-primary lg:block">
               <Link to="/" className="hover:text-accent-bright">
                 Início
               </Link>{' '}
               / Mercado / Pagamento
             </p>
-            <h1 className="text-[20px] font-bold text-text-primary lg:sr-only">
+            <h1 className="text-[18px] font-bold text-text-primary lg:sr-only">
               Pagamento com carteira
             </h1>
           </div>
+          <div className="w-8.75 shrink-0 lg:hidden" aria-hidden="true" />
         </div>
-        <Badge variant="default" data-testid="checkout-idempotency-badge">
+        <Badge variant="default" data-testid="checkout-idempotency-badge" className="hidden sm:inline-flex">
           Chave: {idempotencyKey.slice(0, 14)}
         </Badge>
       </div>

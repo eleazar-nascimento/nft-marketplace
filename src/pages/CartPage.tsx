@@ -109,25 +109,26 @@ export function CartPage() {
   return (
     <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center gap-3 lg:flex-none">
           <Link
             to="/"
-            className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+            className="inline-flex h-8.75 w-8.75 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
             aria-label="Voltar"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <div>
+          <div className="flex-1 text-center lg:flex-none lg:text-left">
             <p className="hidden text-[15px] font-bold leading-4 text-text-primary lg:block">
               <Link to="/" className="hover:text-accent-bright">
                 Início
               </Link>{' '}
               / Mercado / Carrinho
             </p>
-            <h1 className="text-[20px] font-bold text-text-primary lg:sr-only">Carrinho de NFTs</h1>
+            <h1 className="text-[18px] font-bold text-text-primary lg:sr-only">Carrinho de NFTs</h1>
           </div>
+          <div className="w-8.75 shrink-0 lg:hidden" aria-hidden="true" />
         </div>
-        <span data-testid="cart-items-badge" className="text-xs text-text-secondary">
+        <span data-testid="cart-items-badge" className="hidden text-xs text-text-secondary sm:inline">
           {cart.itemCount} {cart.itemCount === 1 ? 'item' : 'itens'}
         </span>
       </div>
@@ -182,32 +183,40 @@ export function CartPage() {
                 <div
                   key={line.id}
                   data-testid={`cart-line-${line.nftId}`}
-                  className="flex flex-col justify-between gap-4 rounded-[14px] bg-bg-secondary p-3 pr-4 sm:h-17.5 sm:flex-row sm:items-center sm:rounded-none sm:p-0 sm:pr-6"
+                  className="flex items-center justify-between gap-3 rounded-xl bg-bg-secondary p-2.5 sm:h-17.5 sm:rounded-none sm:p-0 sm:pr-6"
                 >
-                  <div className="flex items-center gap-4 sm:w-62.5">
+                  <div className="flex min-w-0 flex-1 items-center gap-3 sm:flex-none sm:w-62.5 sm:gap-4">
                     <Link
                       to="/nft/$nftId"
                       params={{ nftId: line.nftId }}
-                      className="h-17.5 w-17.5 shrink-0 overflow-hidden rounded-md"
+                      className="h-19 w-19 shrink-0 overflow-hidden rounded-lg sm:h-17.5 sm:w-17.5 sm:rounded-md"
                     >
                       <img
                         src={line.image.url}
                         alt={line.image.alt}
-                        width={70}
-                        height={70}
+                        width={76}
+                        height={76}
                         className="h-full w-full object-cover"
                       />
                     </Link>
 
-                    <div className="flex flex-col gap-1.5">
+                    <div className="flex min-w-0 flex-col gap-1 sm:gap-1.5">
                       <Link
                         to="/nft/$nftId"
                         params={{ nftId: line.nftId }}
-                        className="text-[16px] font-bold leading-4 text-text-primary hover:text-accent-bright"
+                        className="truncate text-[14px] font-bold leading-4 text-text-primary hover:text-accent-bright sm:text-[16px]"
                       >
                         {line.name}
                       </Link>
-                      <p className="text-[14px] leading-4 text-text-muted">ID do token: #{tokenNumber}</p>
+                      <p className="text-[12px] leading-4 text-text-muted sm:hidden">
+                        Edição: {line.editionName}
+                      </p>
+                      <p className="hidden text-[14px] leading-4 text-text-muted sm:block">
+                        ID do token: #{tokenNumber}
+                      </p>
+                      <p className="text-[14px] font-bold leading-4 text-accent-bright sm:hidden">
+                        {formatEth(mulEth(line.unitPriceEth, line.quantity))}
+                      </p>
                       <div className="flex flex-wrap gap-1">
                         {priceChanged ? (
                           <Badge variant="warning" data-testid={`cart-line-price-changed-${line.nftId}`}>
@@ -223,15 +232,15 @@ export function CartPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 sm:flex-1">
+                  <div className="flex shrink-0 items-center justify-end gap-2 sm:flex-1 sm:justify-between sm:gap-4">
                     <span
                       data-testid={`cart-line-unit-price-${line.nftId}`}
-                      className="text-[16px] font-bold leading-4 text-text-secondary sm:w-22.5"
+                      className="hidden text-[16px] font-bold leading-4 text-text-secondary sm:inline sm:w-22.5"
                     >
                       {formatEth(line.unitPriceEth)}
                     </span>
 
-                    <div className="flex items-center justify-center gap-3 sm:w-23.75">
+                    <div className="flex items-center justify-center gap-2 sm:w-23.75 sm:gap-3">
                       <button
                         type="button"
                         data-testid={`cart-qty-decrease-${line.nftId}`}
@@ -240,13 +249,13 @@ export function CartPage() {
                         onClick={() =>
                           updateItem.mutate({ lineId: line.id, quantity: Math.max(1, line.quantity - 1) })
                         }
-                        className="flex h-7.5 w-5 items-center justify-center rounded-[20px] border border-bg-primary bg-accent text-bg-primary disabled:opacity-40 cursor-pointer"
+                        className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-accent-bright disabled:opacity-40 sm:h-7.5 sm:w-5 sm:rounded-[20px] sm:border-bg-primary sm:bg-accent sm:text-bg-primary cursor-pointer"
                       >
-                        <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+                        <Minus className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
                       </button>
                       <span
                         data-testid={`cart-qty-value-${line.nftId}`}
-                        className="text-[17px] leading-6 text-text-primary"
+                        className="min-w-4 text-center text-[14px] leading-6 text-text-primary sm:text-[17px]"
                       >
                         {line.quantity}
                       </span>
@@ -258,15 +267,15 @@ export function CartPage() {
                         onClick={() =>
                           updateItem.mutate({ lineId: line.id, quantity: line.quantity + 1 })
                         }
-                        className="flex h-7.5 w-5 items-center justify-center rounded-[20px] border border-bg-primary bg-accent text-bg-primary disabled:opacity-40 cursor-pointer"
+                        className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-accent-bright disabled:opacity-40 sm:h-7.5 sm:w-5 sm:rounded-[20px] sm:border-bg-primary sm:bg-accent sm:text-bg-primary cursor-pointer"
                       >
-                        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                        <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
                       </button>
                     </div>
 
                     <span
                       data-testid={`cart-line-total-${line.nftId}`}
-                      className="text-[16px] font-bold leading-4 text-accent-bright sm:w-25"
+                      className="hidden text-[16px] font-bold leading-4 text-accent-bright sm:inline sm:w-25"
                     >
                       {formatEth(mulEth(line.unitPriceEth, line.quantity))}
                     </span>
@@ -279,7 +288,7 @@ export function CartPage() {
                       onClick={() => removeItem.mutate(line.id)}
                       className="inline-flex h-6 w-6 items-center justify-center text-text-secondary hover:text-red-400 cursor-pointer"
                     >
-                      <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
