@@ -1,10 +1,10 @@
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
-import { Heart } from 'lucide-react'
+import { Heart, Search } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { type NftSummary } from '@/contracts'
 import { formatEth } from '@/lib/eth'
 import { saveReturnTo } from '@/lib/storage'
-import { useToggleFavorite } from '@/state/queries'
+import { useCartMutations, useToggleFavorite } from '@/state/queries'
 import { useSession } from '@/state/session'
 
 interface NftCardProps {
@@ -18,6 +18,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
   const navigate = useNavigate()
   const routerState = useRouterState()
   const toggleFavorite = useToggleFavorite()
+  const { addItem } = useCartMutations()
 
   const handleFavorite = () => {
     if (status !== 'authenticated') {
@@ -26,6 +27,18 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
       return
     }
     toggleFavorite.mutate({ nftId: nft.id, isFavorite })
+  }
+
+  const handleQuickAddToCart = () => {
+    if (nft.available <= 0) {
+      void navigate({ to: '/nft/$nftId', params: { nftId: nft.id } })
+      return
+    }
+    addItem.mutate({
+      nftId: nft.id,
+      editionId: `${nft.id}_ed1`,
+      quantity: 1,
+    })
   }
 
   const isSoldOut = nft.available === 0
@@ -37,6 +50,13 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
       className="group flex w-full flex-col gap-3"
     >
       <div className="relative flex h-75 w-full items-center justify-center overflow-hidden rounded-md bg-bg-secondary p-1">
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-0.5 bg-accent transition-opacity duration-200 ${
+            isFavorite ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
+          }`}
+        />
+
         <Link
           to="/nft/$nftId"
           params={{ nftId: nft.id }}
@@ -60,29 +80,60 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
           </span>
         ) : null}
 
-        {status === 'authenticated' ? (
+        <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5">
+          <button
+            type="button"
+            onClick={handleQuickAddToCart}
+            disabled={addItem.isPending}
+            aria-label={`Adicionar ${nft.name} ao carrinho`}
+            className="pointer-events-none inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm bg-bg-secondary text-text-primary opacity-0 shadow-md transition-opacity duration-200 hover:text-accent-bright group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100 cursor-pointer"
+          >
+            <img
+              src="/images/figma/cart-icon.svg"
+              alt=""
+              width={20}
+              height={20}
+              className="h-5 w-5"
+            />
+          </button>
+
           <button
             type="button"
             onClick={handleFavorite}
             data-testid={`favorite-btn-${nft.id}`}
             aria-pressed={isFavorite}
-            className="absolute right-3 top-3 inline-flex h-7 items-center gap-1 rounded-full border border-border-subtle bg-bg-primary/85 px-2 text-[11px] font-mono text-text-primary hover:border-accent cursor-pointer"
+            aria-label={isFavorite ? `Remover ${nft.name} dos favoritos` : `Favoritar ${nft.name}`}
+            className={`inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm bg-bg-secondary text-text-primary shadow-md transition-opacity duration-200 hover:text-accent-bright cursor-pointer ${
+              isFavorite
+                ? 'pointer-events-auto opacity-100'
+                : 'pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100'
+            }`}
           >
             <Heart
-              className={`h-3.5 w-3.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-accent-bright'}`}
+              className={`h-5 w-5 ${
+                isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-text-primary'
+              }`}
               aria-hidden="true"
             />
-            <span className="sr-only">
-              {isFavorite ? `Remover ${nft.name} dos favoritos, ` : `Favoritar ${nft.name}, `}
+            <span data-testid={`favorite-likes-${nft.id}`} className="sr-only">
+              {nft.likes}
             </span>
-            <span data-testid={`favorite-likes-${nft.id}`}>{nft.likes}</span>
           </button>
-        ) : null}
+
+          <Link
+            to="/nft/$nftId"
+            params={{ nftId: nft.id }}
+            aria-label={`Ver detalhes de ${nft.name}`}
+            className="pointer-events-none inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm bg-bg-secondary text-text-primary opacity-0 shadow-md transition-opacity duration-200 hover:text-accent-bright group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
+          >
+            <Search className="h-5 w-5" aria-hidden="true" />
+          </Link>
+        </div>
 
         {isSoldOut ? (
           <span
             data-testid={`nft-availability-${nft.id}`}
-            className="absolute bottom-2 left-3 rounded bg-red-950/90 px-2 py-0.5 text-[11px] font-bold text-red-200"
+            className="absolute left-3 top-3 rounded bg-red-950/90 px-2 py-0.5 text-[11px] font-bold text-red-200"
           >
             Esgotado
           </span>
