@@ -23,8 +23,8 @@ function parsePriceValue(raw: string, fallback: number): number {
   const normalized = raw.trim().replace(',', '.')
   if (!normalized) return fallback
   const parsed = Number(normalized)
-  if (!Number.isFinite(parsed)) return fallback
-  return Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, parsed))
+  if (!Number.isFinite(parsed) || parsed < 0) return fallback
+  return parsed
 }
 
 const networkCounts: Record<Network, number> = {
@@ -75,9 +75,12 @@ export function CatalogFilters({
   const rawMax = parsePriceValue(maxPriceInput, DEFAULT_MAX_PRICE)
   const numericMin = Math.min(rawMin, rawMax)
   const numericMax = Math.max(rawMin, rawMax)
+  const effectiveMax = Math.max(SLIDER_MAX, numericMax)
+  const effectiveMin = Math.min(SLIDER_MIN, numericMin)
+  const span = Math.max(0.01, effectiveMax - effectiveMin)
 
-  const leftPercent = ((numericMin - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100
-  const rightPercent = ((numericMax - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100
+  const leftPercent = Math.min(100, Math.max(0, ((numericMin - effectiveMin) / span) * 100))
+  const rightPercent = Math.min(100, Math.max(0, ((numericMax - effectiveMin) / span) * 100))
 
   const valueFromClientX = (clientX: number): number => {
     const track = trackRef.current
@@ -85,17 +88,34 @@ export function CatalogFilters({
     const rect = track.getBoundingClientRect()
     if (rect.width <= 0) return DEFAULT_MIN_PRICE
     const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
-    const raw = SLIDER_MIN + ratio * (SLIDER_MAX - SLIDER_MIN)
+    const raw = effectiveMin + ratio * span
     return Math.round(raw * 100) / 100
   }
 
   const updateThumbValue = (thumb: 'min' | 'max', nextValue: number) => {
     if (thumb === 'min') {
-      const clamped = Math.min(Math.max(SLIDER_MIN, nextValue), Math.max(SLIDER_MIN, numericMax - 0.05))
+      const clamped = Math.min(Math.max(effectiveMin, nextValue), Math.max(effectiveMin, numericMax - 0.05))
       onChangeMinPrice(clamped.toFixed(2))
+      if (!maxPriceInput.trim()) {
+        onChangeMaxPrice(numericMax.toFixed(2))
+      }
     } else {
-      const clamped = Math.max(Math.min(SLIDER_MAX, nextValue), Math.min(SLIDER_MAX, numericMin + 0.05))
+      const clamped = Math.max(Math.min(effectiveMax, nextValue), Math.min(effectiveMax, numericMin + 0.05))
       onChangeMaxPrice(clamped.toFixed(2))
+      if (!minPriceInput.trim()) {
+        onChangeMinPrice(numericMin.toFixed(2))
+      }
+    }
+  }
+
+  const handleThumbPointerDown = (thumb: 'min' | 'max', event: PointerEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+    activeThumbRef.current = thumb
+    trackRef.current?.setPointerCapture(event.pointerId)
+    if (thumb === 'min' && !maxPriceInput.trim()) {
+      onChangeMaxPrice(numericMax.toFixed(2))
+    } else if (thumb === 'max' && !minPriceInput.trim()) {
+      onChangeMinPrice(numericMin.toFixed(2))
     }
   }
 
@@ -186,9 +206,10 @@ export function CatalogFilters({
               type="button"
               role="slider"
               aria-label="Indicador de preço mínimo em ETH"
-              aria-valuemin={SLIDER_MIN}
+              aria-valuemin={effectiveMin}
               aria-valuemax={numericMax}
               aria-valuenow={numericMin}
+              onPointerDown={(event) => handleThumbPointerDown('min', event)}
               onKeyDown={(event) => handleThumbKeyDown('min', event)}
               style={{ left: `${leftPercent}%` }}
               className="absolute top-1/2 h-3.75 w-3.75 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow transition-transform hover:scale-125 focus-visible:scale-125 cursor-grab active:cursor-grabbing"
@@ -198,8 +219,9 @@ export function CatalogFilters({
               role="slider"
               aria-label="Indicador de preço máximo em ETH"
               aria-valuemin={numericMin}
-              aria-valuemax={SLIDER_MAX}
+              aria-valuemax={effectiveMax}
               aria-valuenow={numericMax}
+              onPointerDown={(event) => handleThumbPointerDown('max', event)}
               onKeyDown={(event) => handleThumbKeyDown('max', event)}
               style={{ left: `${rightPercent}%` }}
               className="absolute top-1/2 h-3.75 w-3.75 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow transition-transform hover:scale-125 focus-visible:scale-125 cursor-grab active:cursor-grabbing"
