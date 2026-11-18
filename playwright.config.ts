@@ -30,6 +30,14 @@ export default defineConfig({
       },
     },
     {
+      name: 'tablet-chromium',
+      grep: /@responsive/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 768, height: 1024 },
+      },
+    },
+    {
       name: 'mobile-chromium',
       grep: /@responsive|@visual/,
       use: {

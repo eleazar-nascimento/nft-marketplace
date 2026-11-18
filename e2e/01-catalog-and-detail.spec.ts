@@ -4,7 +4,6 @@ import { resetSimulation } from './helpers'
 test.describe('Catálogo e Detalhe do NFT', () => {
   test('1. busca, filtros combinados, ordenação, paginação e restauração pelo histórico @responsive', async ({
     page,
-    isMobile,
   }) => {
     await resetSimulation(page, 'fast')
 
@@ -14,8 +13,9 @@ test.describe('Catálogo e Detalhe do NFT', () => {
     await expect(page).toHaveURL(/page=2/)
     await expect(page.getByTestId('catalog-results-summary')).toContainText('página 2 de 5')
 
-    if (isMobile) {
-      await page.getByTestId('mobile-filters-trigger').click()
+    const mobileTrigger = page.getByTestId('mobile-filters-trigger')
+    if (await mobileTrigger.isVisible()) {
+      await mobileTrigger.click()
       await page.getByTestId('mobile-category-art').click()
       await page.getByTestId('mobile-network-select').selectOption('ethereum')
       await page.keyboard.press('Escape')
