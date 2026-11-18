@@ -20,13 +20,13 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
   return (
     <footer className="mt-20 text-text-primary">
       <div className="mx-auto w-full max-w-300 px-4 sm:px-6 lg:px-0">
-        <div className="bg-bg-secondary p-6 sm:p-8">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
-            <div className="flex flex-col gap-3 lg:col-span-2">
-              <div className="flex h-18.5 w-18.5 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+        <div className="bg-bg-secondary p-6 sm:p-8 lg:min-h-62.5">
+          <div className="flex h-full w-full flex-col gap-8 lg:flex-row lg:items-stretch lg:justify-between lg:gap-0">
+            <div className="flex flex-col items-start gap-3 lg:flex-1 lg:pr-6">
+              <div className="flex h-18.5 w-18.5 shrink-0 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                 W
               </div>
-              <h2 className="text-[17px] font-bold leading-4 text-text-primary">
+              <h2 className="text-[17px] font-bold leading-5 text-text-primary whitespace-nowrap">
                 Segurança da carteira
               </h2>
               <p className="text-[14px] leading-5.5 text-text-secondary">
@@ -34,11 +34,13 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
-              <div className="flex h-18.5 w-18.5 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+            <div className="hidden lg:block lg:w-px lg:shrink-0 lg:self-stretch lg:bg-accent/50" />
+
+            <div className="flex flex-col items-start gap-3 lg:flex-1 lg:px-6">
+              <div className="flex h-18.5 w-18.5 shrink-0 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                 C
               </div>
-              <h2 className="text-[17px] font-bold leading-4 text-text-primary">
+              <h2 className="text-[17px] font-bold leading-5 text-text-primary whitespace-nowrap">
                 Criadores em destaque
               </h2>
               <p className="text-[14px] leading-5.5 text-text-secondary">
@@ -46,11 +48,13 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
-              <div className="flex h-18.5 w-18.5 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+            <div className="hidden lg:block lg:w-px lg:shrink-0 lg:self-stretch lg:bg-accent/50" />
+
+            <div className="flex flex-col items-start gap-3 lg:flex-1 lg:px-6">
+              <div className="flex h-18.5 w-18.5 shrink-0 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                 D
               </div>
-              <h2 className="text-[17px] font-bold leading-4 text-text-primary">
+              <h2 className="text-[17px] font-bold leading-5 text-text-primary whitespace-nowrap">
                 Alertas de lançamentos
               </h2>
               <p className="text-[14px] leading-5.5 text-text-secondary">
@@ -58,38 +62,42 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 lg:col-span-4 lg:border-l lg:border-accent/40 lg:pl-6">
-              <h2 className="text-[18px] font-bold leading-5.5 text-text-primary">
-                Antecipe-se ao próximo lançamento
-              </h2>
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault()
-                  if (newsletterEmail.trim()) {
-                    setNewsletterSent(true)
-                    setNewsletterEmail('')
-                  }
-                }}
-                className="flex h-10 w-full overflow-hidden rounded-md bg-surface-dark shadow-[0px_0px_10px_rgba(10,6,4,0.45)]"
-              >
-                <label htmlFor="footer-newsletter-email" className="sr-only">
-                  Seu e-mail para receber novidades
-                </label>
-                <input
-                  id="footer-newsletter-email"
-                  type="email"
-                  value={newsletterEmail}
-                  onChange={(event) => setNewsletterEmail(event.target.value)}
-                  placeholder="digite seu e-mail..."
-                  className="flex-1 bg-transparent px-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="h-10 w-21.25 shrink-0 bg-accent text-[18px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+            <div className="hidden lg:block lg:w-px lg:shrink-0 lg:self-stretch lg:bg-accent/50" />
+
+            <div className="flex flex-col items-start justify-between gap-3 lg:w-85 lg:shrink-0 lg:pl-6">
+              <div className="flex w-full flex-col items-start gap-4">
+                <h2 className="text-[18px] font-bold leading-5.5 text-text-primary">
+                  Antecipe-se ao próximo lançamento
+                </h2>
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault()
+                    if (newsletterEmail.trim()) {
+                      setNewsletterSent(true)
+                      setNewsletterEmail('')
+                    }
+                  }}
+                  className="flex h-10 w-full overflow-hidden rounded-md bg-surface-dark shadow-[0px_0px_10px_rgba(10,6,4,0.45)]"
                 >
-                  Enviar
-                </button>
-              </form>
+                  <label htmlFor="footer-newsletter-email" className="sr-only">
+                    Seu e-mail para receber novidades
+                  </label>
+                  <input
+                    id="footer-newsletter-email"
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(event) => setNewsletterEmail(event.target.value)}
+                    placeholder="digite seu e-mail..."
+                    className="flex-1 bg-transparent px-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    className="h-10 w-21.25 shrink-0 bg-accent text-[18px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                  >
+                    Enviar
+                  </button>
+                </form>
+              </div>
               <p className="text-[13px] leading-5.5 text-text-secondary">
                 {newsletterSent
                   ? 'Inscrição confirmada! Você receberá os próximos alertas da Kurio.'
@@ -99,24 +107,26 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-4 bg-surface-dark px-6 py-6 sm:px-8 lg:h-22 lg:flex-row lg:items-center">
-          <span className="text-[14px] font-bold tracking-[1.4px] text-text-primary">KURIO</span>
-          <p className="text-[14px] leading-5.5 text-text-primary">
-            Feito para colecionadores,
-            <br />
-            criadores e cultura
-          </p>
-          <a
-            href="mailto:contato@email.com"
-            className="text-[14px] leading-5.5 text-text-primary hover:text-accent-bright"
-          >
-            contato@email.com
-          </a>
-          <span className="text-[14px] leading-5.5 text-text-primary">+55 11 4002 8922</span>
+        <div className="bg-surface-dark px-6 py-6 sm:px-8 lg:flex lg:h-22 lg:items-center lg:py-0">
+          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_228px] lg:items-center lg:gap-23">
+            <span className="text-[14px] font-bold tracking-[1.4px] text-text-primary">KURIO</span>
+            <p className="text-[14px] leading-5.5 text-text-primary">
+              Feito para colecionadores,
+              <br />
+              criadores e cultura
+            </p>
+            <a
+              href="mailto:contato@email.com"
+              className="text-[14px] leading-5.5 text-text-primary hover:text-accent-bright"
+            >
+              contato@email.com
+            </a>
+            <span className="text-[14px] leading-5.5 text-text-primary">+55 11 4002 8922</span>
+          </div>
         </div>
 
         <div className="bg-bg-secondary p-6 sm:p-8">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_228px] lg:gap-23">
             <div>
               <h2 className="text-[18px] font-bold leading-4 text-text-primary">Meu perfil</h2>
               <ul className="mt-3 space-y-1 text-[14px] leading-7.5 text-text-primary">
@@ -254,11 +264,11 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
               </div>
 
               <div className="flex flex-col gap-3">
-                <h2 className="text-[18px] font-bold leading-4 text-text-primary">
+                <h2 className="text-[18px] font-bold leading-4 text-text-primary whitespace-nowrap">
                   Carteiras compatíveis
                 </h2>
                 <div className="flex h-6.5 items-center justify-center rounded-md border border-border-soft bg-surface-dark px-2">
-                  <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright">
+                  <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright whitespace-nowrap">
                     METAMASK • WALLETCONNECT • COINBASE
                   </span>
                 </div>
