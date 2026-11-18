@@ -60,22 +60,24 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
           </span>
         ) : null}
 
-        <button
-          type="button"
-          onClick={handleFavorite}
-          data-testid={`favorite-btn-${nft.id}`}
-          aria-pressed={isFavorite}
-          className="absolute right-3 top-3 inline-flex h-7 items-center gap-1 rounded-full border border-border-subtle bg-bg-primary/85 px-2 text-[11px] font-mono text-text-primary hover:border-accent cursor-pointer"
-        >
-          <Heart
-            className={`h-3.5 w-3.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-accent-bright'}`}
-            aria-hidden="true"
-          />
-          <span className="sr-only">
-            {isFavorite ? `Remover ${nft.name} dos favoritos, ` : `Favoritar ${nft.name}, `}
-          </span>
-          <span data-testid={`favorite-likes-${nft.id}`}>{nft.likes}</span>
-        </button>
+        {status === 'authenticated' ? (
+          <button
+            type="button"
+            onClick={handleFavorite}
+            data-testid={`favorite-btn-${nft.id}`}
+            aria-pressed={isFavorite}
+            className="absolute right-3 top-3 inline-flex h-7 items-center gap-1 rounded-full border border-border-subtle bg-bg-primary/85 px-2 text-[11px] font-mono text-text-primary hover:border-accent cursor-pointer"
+          >
+            <Heart
+              className={`h-3.5 w-3.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-accent-bright'}`}
+              aria-hidden="true"
+            />
+            <span className="sr-only">
+              {isFavorite ? `Remover ${nft.name} dos favoritos, ` : `Favoritar ${nft.name}, `}
+            </span>
+            <span data-testid={`favorite-likes-${nft.id}`}>{nft.likes}</span>
+          </button>
+        ) : null}
 
         {isSoldOut ? (
           <span

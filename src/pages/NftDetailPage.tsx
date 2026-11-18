@@ -337,22 +337,24 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   <span>Carrinho</span>
                 </button>
 
-                <button
-                  type="button"
-                  data-testid="detail-favorite-btn"
-                  aria-pressed={isFavorite}
-                  onClick={handleFavorite}
-                  className="inline-flex h-10 min-w-32.5 items-center justify-center gap-2 rounded-md border border-accent px-3 text-[14px] font-medium leading-5 text-accent-bright hover:bg-accent/15 cursor-pointer"
-                >
-                  <Heart
-                    className={`h-4.5 w-4.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
-                    aria-hidden="true"
-                  />
-                  <span>Favoritar</span>
-                  <span className="text-xs">
-                    (<span data-testid="detail-favorite-count">{nft.likes}</span>)
-                  </span>
-                </button>
+                {status === 'authenticated' ? (
+                  <button
+                    type="button"
+                    data-testid="detail-favorite-btn"
+                    aria-pressed={isFavorite}
+                    onClick={handleFavorite}
+                    className="inline-flex h-10 min-w-32.5 items-center justify-center gap-2 rounded-md border border-accent px-3 text-[14px] font-medium leading-5 text-accent-bright hover:bg-accent/15 cursor-pointer"
+                  >
+                    <Heart
+                      className={`h-4.5 w-4.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
+                      aria-hidden="true"
+                    />
+                    <span>Favoritar</span>
+                    <span className="text-xs">
+                      (<span data-testid="detail-favorite-count">{nft.likes}</span>)
+                    </span>
+                  </button>
+                ) : null}
               </div>
             </div>
           )}

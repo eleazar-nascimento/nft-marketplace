@@ -137,6 +137,7 @@ const indexRoute = createRoute({
 
     const handleUpdateSearch = (next: Partial<HomeSearchState>, resetPage = false) => {
       void navigate({
+        resetScroll: false,
         search: (prev) => {
           const merged: HomeSearchState = {
             ...prev,
@@ -154,6 +155,7 @@ const indexRoute = createRoute({
 
     const handleResetFilters = () => {
       void navigate({
+        resetScroll: false,
         search: {},
       })
     }

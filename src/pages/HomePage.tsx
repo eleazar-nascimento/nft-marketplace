@@ -412,26 +412,44 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                   ))}
                 </div>
 
-                {catalogQuery.data.totalPages > 1 ? (
-                  <nav
-                    aria-label="Paginação do catálogo"
-                    data-testid="catalog-pagination"
-                    className="mt-16 flex flex-wrap items-center justify-end gap-2"
-                  >
-                    <button
-                      type="button"
-                      data-testid="pagination-prev"
-                      aria-label="Página anterior"
-                      disabled={catalogQuery.data.page <= 1}
-                      onClick={() => onUpdateSearch({ page: catalogQuery.data.page - 1 }, false)}
-                      className="inline-flex h-8.75 px-2.5 items-center justify-center rounded-sm border border-border-subtle text-xs text-text-primary disabled:opacity-40 cursor-pointer"
-                    >
-                      Anterior
-                    </button>
+                {catalogQuery.data.totalPages > 1 ? (() => {
+                  const totalPages = catalogQuery.data.totalPages
+                  const currentPage = catalogQuery.data.page
+                  const maxVisiblePages = 4
+                  const startPage = Math.max(
+                    1,
+                    Math.min(
+                      currentPage - Math.floor(maxVisiblePages / 2),
+                      Math.max(1, totalPages - maxVisiblePages + 1),
+                    ),
+                  )
+                  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
+                  const visiblePages = Array.from(
+                    { length: endPage - startPage + 1 },
+                    (_, i) => startPage + i,
+                  )
+                  const isPageOneVisible = visiblePages.includes(1)
 
-                    {Array.from({ length: catalogQuery.data.totalPages }, (_, i) => i + 1).map(
-                      (pageNumber) => {
-                        const isCurrent = pageNumber === catalogQuery.data.page
+                  return (
+                    <nav
+                      aria-label="Paginação do catálogo"
+                      data-testid="catalog-pagination"
+                      className="mt-16 flex flex-wrap items-center justify-end gap-2"
+                    >
+                      {!isPageOneVisible ? (
+                        <button
+                          type="button"
+                          data-testid="pagination-prev"
+                          aria-label="Página anterior"
+                          onClick={() => onUpdateSearch({ page: currentPage - 1 }, false)}
+                          className="inline-flex h-8.75 items-center justify-center rounded-sm border border-border-subtle px-2.5 text-xs text-text-primary hover:border-accent cursor-pointer"
+                        >
+                          Anterior
+                        </button>
+                      ) : null}
+
+                      {visiblePages.map((pageNumber) => {
+                        const isCurrent = pageNumber === currentPage
                         return (
                           <button
                             key={pageNumber}
@@ -448,21 +466,21 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                             {pageNumber}
                           </button>
                         )
-                      },
-                    )}
+                      })}
 
-                    <button
-                      type="button"
-                      data-testid="pagination-next"
-                      aria-label="Próxima página"
-                      disabled={catalogQuery.data.page >= catalogQuery.data.totalPages}
-                      onClick={() => onUpdateSearch({ page: catalogQuery.data.page + 1 }, false)}
-                      className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm border border-border-subtle text-text-primary hover:border-accent disabled:opacity-40 cursor-pointer"
-                    >
-                      <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                  </nav>
-                ) : null}
+                      <button
+                        type="button"
+                        data-testid="pagination-next"
+                        aria-label="Próxima página"
+                        disabled={currentPage >= totalPages}
+                        onClick={() => onUpdateSearch({ page: currentPage + 1 }, false)}
+                        className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm border border-border-subtle text-text-primary hover:border-accent disabled:opacity-40 cursor-pointer"
+                      >
+                        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </nav>
+                  )
+                })() : null}
               </>
             ) : null}
           </div>

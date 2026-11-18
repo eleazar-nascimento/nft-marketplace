@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import {
   cartApi,
@@ -54,6 +54,7 @@ export function useNftsList(params: NftListQuery) {
   const query = useQuery({
     queryKey: queryKeys.nfts.list(params),
     queryFn: ({ signal }) => nftsApi.list(params, signal),
+    placeholderData: keepPreviousData,
     staleTime: 15_000,
   })
 
