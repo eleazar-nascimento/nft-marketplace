@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 
 interface AppFooterProps {
+  hideOnMobile?: boolean
   onOpenOutOfScope: (feature: string) => void
 }
 
@@ -13,12 +14,12 @@ const socialItems = [
   { label: 'YouTube da Kurio', icon: '/images/figma/social-yt.svg' },
 ]
 
-export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
+export function AppFooter({ hideOnMobile = false, onOpenOutOfScope }: AppFooterProps) {
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterSent, setNewsletterSent] = useState(false)
 
   return (
-    <footer className="mt-20 text-text-primary">
+    <footer className={`mt-20 text-text-primary ${hideOnMobile ? 'hidden lg:block' : ''}`}>
       <div className="mx-auto w-full max-w-300 px-4 sm:px-6 lg:px-0">
         <div className="bg-bg-secondary p-6 sm:p-8 lg:min-h-62.5">
           <div className="flex h-full w-full flex-col gap-8 lg:flex-row lg:items-stretch lg:justify-between lg:gap-0">

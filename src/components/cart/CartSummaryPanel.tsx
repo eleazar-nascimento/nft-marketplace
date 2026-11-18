@@ -35,7 +35,7 @@ export function CartSummaryPanel({
   onProceedToCheckout,
 }: CartSummaryPanelProps) {
   return (
-    <div className="w-full rounded-t-4xl bg-bg-secondary p-6 lg:w-83 lg:rounded-none lg:bg-transparent lg:p-0">
+    <div className="-mx-4 w-[calc(100%+2rem)] rounded-t-4xl border-t border-border-subtle/70 bg-bg-secondary p-6 sm:-mx-6 sm:w-[calc(100%+3rem)] lg:mx-0 lg:w-83 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0">
       <div className="hidden flex-col gap-3 lg:flex">
         <h2 className="text-[18px] font-bold leading-4 text-text-primary">Resumo da carteira</h2>
         <div className="h-px w-full bg-accent/35" />

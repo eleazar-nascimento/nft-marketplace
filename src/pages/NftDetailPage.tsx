@@ -1,4 +1,4 @@
-import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
+import { Link, useNavigate, useRouter, useRouterState } from '@tanstack/react-router'
 import {
   AlertCircle,
   ArrowLeft,
@@ -26,6 +26,7 @@ import { useSession } from '@/state/session'
 export function NftDetailPage({ nftId }: { nftId: string }) {
   const { status } = useSession()
   const navigate = useNavigate()
+  const router = useRouter()
   const routerState = useRouterState()
   const detailQuery = useNftDetail(nftId)
   const relatedQuery = useNftsList({ page: 1, pageSize: 6 })
@@ -121,7 +122,41 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-300 px-0 pt-2 pb-32 sm:px-6 sm:pt-6 lg:px-0 lg:pb-0">
+    <div className="mx-auto w-full max-w-300 px-0 pt-2 pb-36 sm:px-6 sm:pt-6 lg:px-0 lg:pb-0">
+      <div className="flex items-center justify-between px-5 py-3 lg:hidden">
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) {
+              router.history.back()
+            } else {
+              void navigate({ to: '/' })
+            }
+          }}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-bg-secondary text-text-primary hover:border-accent cursor-pointer"
+          aria-label="Voltar à página anterior"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        </button>
+
+        {status === 'authenticated' ? (
+          <button
+            type="button"
+            onClick={handleFavorite}
+            aria-pressed={isFavorite}
+            aria-label={isFavorite ? `Remover ${nft.name} dos favoritos` : `Favoritar ${nft.name}`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-bg-secondary text-accent-bright hover:border-accent cursor-pointer"
+          >
+            <Heart
+              className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
+              aria-hidden="true"
+            />
+          </button>
+        ) : (
+          <span className="h-9 w-9" aria-hidden="true" />
+        )}
+      </div>
+
       <div className="hidden items-center justify-between lg:flex">
         <p className="text-[15px] font-bold leading-4 text-text-primary">
           <Link to="/" className="hover:text-accent-bright">
@@ -164,28 +199,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             })}
           </div>
 
-          <div className="relative flex aspect-square w-full items-center justify-center bg-bg-secondary p-4 sm:h-111 sm:w-111 sm:rounded-md">
-            <Link
-              to="/"
-              className="absolute left-4 top-4 z-10 inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-primary/80 text-text-primary lg:hidden"
-              aria-label="Voltar"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleFavorite}
-              aria-pressed={isFavorite}
-              aria-label={isFavorite ? `Remover ${nft.name} dos favoritos` : `Favoritar ${nft.name}`}
-              className="absolute right-4 top-4 z-10 inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-accent/60 bg-bg-primary/80 text-accent-bright lg:hidden cursor-pointer"
-            >
-              <Heart
-                className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
-                aria-hidden="true"
-              />
-            </button>
-
+          <div className="relative flex aspect-square w-full items-center justify-center bg-transparent px-5 pb-2 sm:h-111 sm:w-111 sm:rounded-md sm:bg-bg-secondary sm:p-4">
             <img
               src={activeImage.url}
               alt={activeImage.alt}
@@ -204,7 +218,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
           </div>
         </div>
 
-        <div className="relative z-10 -mt-5 flex flex-1 flex-col justify-between gap-4.5 rounded-t-[28px] bg-bg-secondary px-5 pt-6 pb-6 lg:mt-0 lg:rounded-none lg:bg-transparent lg:p-0">
+        <div className="relative z-10 -mt-5 flex flex-1 flex-col justify-between gap-4.5 rounded-t-[28px] border-t border-border-subtle/80 bg-bg-secondary px-5 pt-6 pb-8 lg:mt-0 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h1
@@ -298,7 +312,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                 : 'Esta edição está temporariamente indisponível para novas compras.'}
             </div>
           ) : (
-            <div className="fixed bottom-0 left-0 right-0 z-30 flex flex-col gap-3 border-t border-border-subtle bg-bg-secondary/95 px-5 py-4 backdrop-blur-md lg:static lg:z-auto lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-4 lg:border-t-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+            <div className="fixed bottom-0 left-0 right-0 z-30 flex flex-col gap-3 rounded-t-[28px] border-t border-border-subtle bg-bg-secondary/95 px-5 pt-4 pb-5 shadow-[0_-10px_28px_rgba(0,0,0,0.45)] backdrop-blur-md lg:static lg:z-auto lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-4 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="text-[14px] text-text-secondary lg:hidden">Qtd.</span>
@@ -391,7 +405,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
               <p>Coleção: {nft.collection}</p>
               <p>Atributos: Óculos, Esmeralda, Raro</p>
             </div>
-            <div className="flex items-center gap-2 text-text-primary">
+            <div className="hidden items-center gap-2 text-text-primary lg:flex">
               <span className="text-[15px] font-bold leading-4 whitespace-nowrap">
                 Compartilhar este NFT:
               </span>
@@ -421,12 +435,14 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
         </div>
       </div>
 
-      <NftDetailTabs nft={nft} />
-      <RelatedNftsSection
-        headingId="related-heading"
-        title="Mais desta coleção"
-        items={relatedItems}
-      />
+      <div className="hidden lg:block">
+        <NftDetailTabs nft={nft} />
+        <RelatedNftsSection
+          headingId="related-heading"
+          title="Mais desta coleção"
+          items={relatedItems}
+        />
+      </div>
     </div>
   )
 }

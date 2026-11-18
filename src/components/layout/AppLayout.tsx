@@ -23,8 +23,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const itemCount = cart?.itemCount ?? 0
   const pathname = routerState.location.pathname
   const currentFullPath = `${pathname}${routerState.location.searchStr}`
-  const showMobileTabBar =
-    pathname === '/' || pathname.startsWith('/profile') || pathname.startsWith('/wallets')
+  const isMobileFocusedFlow =
+    pathname.startsWith('/nft/') ||
+    pathname.startsWith('/cart') ||
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/register')
+  const showMobileTabBar = !isMobileFocusedFlow
 
   const handleGoToLogin = () => {
     saveReturnTo(currentFullPath)
@@ -47,6 +52,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         itemCount={itemCount}
         pathname={pathname}
         currentFullPath={currentFullPath}
+        hideOnMobile={isMobileFocusedFlow}
         onLogout={() => void logout()}
         onOpenOutOfScope={setOutOfScopeFeature}
       />
@@ -113,7 +119,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <AppFooter onOpenOutOfScope={setOutOfScopeFeature} />
+      <AppFooter hideOnMobile={isMobileFocusedFlow} onOpenOutOfScope={setOutOfScopeFeature} />
       {showMobileTabBar ? <MobileTabBar pathname={pathname} status={status} /> : null}
 
       <OutOfScopeDialog featureName={outOfScopeFeature} onClose={() => setOutOfScopeFeature(null)} />

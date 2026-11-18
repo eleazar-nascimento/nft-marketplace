@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { AppApiError } from '@/api/client'
@@ -27,6 +27,7 @@ import { useSession } from '@/state/session'
 export function CheckoutPage() {
   const { user } = useSession()
   const navigate = useNavigate()
+  const router = useRouter()
   const cartQuery = useCart()
   const { acknowledge } = useCartMutations()
   const walletsQuery = useWallets()
@@ -231,13 +232,20 @@ export function CheckoutPage() {
     <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-1 items-center gap-3 lg:flex-none">
-          <Link
-            to="/cart"
-            className="inline-flex h-8.75 w-8.75 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
-            aria-label="Voltar ao carrinho"
+          <button
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) {
+                router.history.back()
+              } else {
+                void navigate({ to: '/cart' })
+              }
+            }}
+            className="inline-flex h-8.75 w-8.75 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary hover:border-accent lg:hidden cursor-pointer"
+            aria-label="Voltar à página anterior"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          </button>
           <div className="flex-1 text-center lg:flex-none lg:text-left">
             <p className="hidden text-[15px] font-bold leading-4 text-text-primary lg:block">
               <Link to="/" className="hover:text-accent-bright">
@@ -268,7 +276,7 @@ export function CheckoutPage() {
       <form
         onSubmit={(event) => void handleSubmitOrder(event)}
         noValidate
-        className="mt-8 flex flex-col items-start justify-between gap-8 lg:flex-row"
+        className="mt-8 flex flex-col-reverse items-start justify-between gap-8 lg:flex-row"
       >
         <CollectorFormSection
           collector={collector}

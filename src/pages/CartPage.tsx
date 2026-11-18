@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useRouter } from '@tanstack/react-router'
 import {
   AlertTriangle,
   ArrowLeft,
@@ -25,6 +25,7 @@ import { useSession } from '@/state/session'
 export function CartPage() {
   const { status } = useSession()
   const navigate = useNavigate()
+  const router = useRouter()
   const cartQuery = useCart()
   const relatedQuery = useNftsList({ page: 1, pageSize: 5 })
   const { updateItem, removeItem, applyCoupon, removeCoupon, acknowledge } = useCartMutations()
@@ -107,16 +108,23 @@ export function CartPage() {
   const relatedItems = (relatedQuery.data?.items ?? []).slice(0, 5)
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
+    <div className="mx-auto flex min-h-dvh w-full max-w-300 flex-col px-4 pt-6 sm:px-6 lg:block lg:min-h-0 lg:px-0">
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-1 items-center gap-3 lg:flex-none">
-          <Link
-            to="/"
-            className="inline-flex h-8.75 w-8.75 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
-            aria-label="Voltar"
+          <button
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) {
+                router.history.back()
+              } else {
+                void navigate({ to: '/' })
+              }
+            }}
+            className="inline-flex h-8.75 w-8.75 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary hover:border-accent lg:hidden cursor-pointer"
+            aria-label="Voltar à página anterior"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          </button>
           <div className="flex-1 text-center lg:flex-none lg:text-left">
             <p className="hidden text-[15px] font-bold leading-4 text-text-primary lg:block">
               <Link to="/" className="hover:text-accent-bright">
@@ -161,7 +169,7 @@ export function CartPage() {
         </div>
       ) : null}
 
-      <div className="mt-6 flex flex-col items-start justify-between gap-10 lg:flex-row">
+      <div className="mt-6 flex flex-1 flex-col items-start justify-between gap-8 lg:flex-row lg:gap-10">
         <div className="w-full lg:w-195.5">
           <div className="hidden items-center justify-between border-b border-accent/35 pb-3 pr-6 text-[16px] text-text-primary sm:flex">
             <span className="w-62.5 font-bold">NFTs</span>
@@ -313,11 +321,13 @@ export function CartPage() {
         />
       </div>
 
-      <RelatedNftsSection
-        headingId="also-viewed-heading"
-        title="Colecionadores também viram"
-        items={relatedItems}
-      />
+      <div className="hidden lg:block">
+        <RelatedNftsSection
+          headingId="also-viewed-heading"
+          title="Colecionadores também viram"
+          items={relatedItems}
+        />
+      </div>
     </div>
   )
 }

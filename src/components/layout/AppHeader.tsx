@@ -20,6 +20,7 @@ interface AppHeaderProps {
   itemCount: number
   pathname: string
   currentFullPath: string
+  hideOnMobile?: boolean
   onLogout: () => void
   onOpenOutOfScope: (feature: string) => void
 }
@@ -30,6 +31,7 @@ export function AppHeader({
   itemCount,
   pathname,
   currentFullPath,
+  hideOnMobile = false,
   onLogout,
   onOpenOutOfScope,
 }: AppHeaderProps) {
@@ -49,7 +51,9 @@ export function AppHeader({
     pathname.startsWith('/register')
 
   return (
-    <header className="sticky top-0 z-40 bg-bg-primary/95 backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-40 bg-bg-primary/95 backdrop-blur-md ${hideOnMobile ? 'hidden lg:block' : ''}`}
+    >
       <div className="mx-auto w-full max-w-300 px-4 pt-5 sm:px-6 lg:px-0">
         <div className="flex items-start justify-between gap-4 pb-4">
           <div className="flex items-center gap-4">
