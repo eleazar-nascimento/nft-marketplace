@@ -35,7 +35,7 @@ export function CartSummaryPanel({
   onProceedToCheckout,
 }: CartSummaryPanelProps) {
   return (
-    <div className="-mx-4 w-[calc(100%+2rem)] rounded-t-4xl border-t border-border-subtle/70 bg-bg-secondary p-6 sm:-mx-6 sm:w-[calc(100%+3rem)] lg:mx-0 lg:w-83 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0">
+    <div className="-mx-4 w-[calc(100%+2rem)] shrink-0 rounded-t-4xl border-t border-border-subtle/70 bg-bg-secondary px-5 pt-4 pb-5 sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-6 lg:mx-0 lg:w-83 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0">
       <div className="hidden flex-col gap-3 lg:flex">
         <h2 className="text-[18px] font-bold leading-4 text-text-primary">Resumo da carteira</h2>
         <div className="h-px w-full bg-accent/35" />
@@ -60,7 +60,7 @@ export function CartSummaryPanel({
         </select>
       </div>
 
-      <div className="mt-4 lg:mt-5">
+      <div className="mt-3 lg:mt-5">
         {couponCode ? (
           <div
             data-testid="active-coupon-pill"
@@ -89,7 +89,7 @@ export function CartSummaryPanel({
             >
               Código promocional
             </label>
-            <div className="flex h-11 w-full overflow-hidden rounded-full border border-border-subtle bg-bg-primary/60 lg:h-10 lg:rounded-[3px] lg:border-accent lg:bg-transparent">
+            <div className="flex h-10 w-full overflow-hidden rounded-full border border-border-subtle bg-bg-primary/60 lg:rounded-[3px] lg:border-accent lg:bg-transparent">
               <input
                 id="cart-coupon-input"
                 data-testid="cart-coupon-input"
@@ -104,7 +104,7 @@ export function CartSummaryPanel({
                 type="submit"
                 data-testid="apply-coupon-btn"
                 disabled={applyCouponPending}
-                className="h-11 w-24 shrink-0 rounded-full bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover lg:h-10 lg:w-25.5 lg:rounded-none lg:text-[15px] cursor-pointer"
+                className="h-10 w-24 shrink-0 rounded-full bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover lg:w-25.5 lg:rounded-none lg:text-[15px] cursor-pointer"
               >
                 Aplicar
               </button>
@@ -124,14 +124,14 @@ export function CartSummaryPanel({
       </div>
 
       {quoteLoading || !quote ? (
-        <div data-testid="cart-summary-skeleton" className="mt-6 space-y-3">
+        <div data-testid="cart-summary-skeleton" className="mt-4 space-y-2.5 lg:mt-6 lg:space-y-3">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-8 w-full" />
         </div>
       ) : (
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-4 flex flex-col gap-2.5 lg:mt-6 lg:gap-3">
           <div className="flex items-start justify-between text-text-primary">
             <span className="text-[15px]">Subtotal</span>
             <span data-testid="quote-subtotal" className="text-[18px] leading-4">
