@@ -1,6 +1,3 @@
-import { AlertCircle, CheckCircle2, Plug, Unplug } from 'lucide-react'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import {
   networkLabels,
   networks,
@@ -9,6 +6,7 @@ import {
   type Network,
   type Wallet,
 } from '@/contracts'
+import { useState } from 'react'
 
 interface CollectorFormSectionProps {
   collector: Collector
@@ -18,14 +16,9 @@ interface CollectorFormSectionProps {
   effectiveWalletId: string
   selectedWallet: Wallet | null
   selectedNetwork: Network
-  isWalletConnectedOnNetwork: boolean
-  connectWalletPending: boolean
-  disconnectWalletPending: boolean
   onChangeCollectorField: (field: keyof Collector, value: string) => void
   onSelectNetwork: (network: Network) => void
   onSelectWalletId: (walletId: string) => void
-  onConnectWallet: () => void
-  onDisconnectWallet: () => void
 }
 
 export function CollectorFormSection({
@@ -36,14 +29,9 @@ export function CollectorFormSection({
   effectiveWalletId,
   selectedWallet,
   selectedNetwork,
-  isWalletConnectedOnNetwork,
-  connectWalletPending,
-  disconnectWalletPending,
   onChangeCollectorField,
   onSelectNetwork,
   onSelectWalletId,
-  onConnectWallet,
-  onDisconnectWallet,
 }: CollectorFormSectionProps) {
   const [usernameField, setUsernameField] = useState(defaultUsername)
   const [secondaryEns, setSecondaryEns] = useState('nova.kurio.eth')
@@ -51,7 +39,7 @@ export function CollectorFormSection({
   const [useAnotherWallet, setUseAnotherWallet] = useState(false)
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-5">
+    <div className="hidden w-full flex-1 flex-col gap-5 lg:flex">
       <h2 className="text-[17px] font-bold leading-4 text-text-primary">
         Perfil do colecionador
       </h2>
@@ -263,52 +251,6 @@ export function CollectorFormSection({
           onChange={(event) => setCollectorNote(event.target.value)}
           className="h-38 w-full rounded-[3px] border border-border-subtle bg-transparent p-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
         />
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[3px] border border-border-subtle bg-bg-secondary p-4">
-        <div className="flex items-center gap-2 text-sm">
-          {isWalletConnectedOnNetwork ? (
-            <>
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-              <span data-testid="wallet-connection-status" className="text-text-primary">
-                Carteira conectada na rede {networkLabels[selectedNetwork]}
-              </span>
-            </>
-          ) : (
-            <>
-              <AlertCircle className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-              <span data-testid="wallet-connection-status" className="text-text-secondary">
-                Carteira desconectada na rede {networkLabels[selectedNetwork]}
-              </span>
-            </>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          {isWalletConnectedOnNetwork ? (
-            <Button
-              variant="secondary"
-              size="sm"
-              data-testid="checkout-disconnect-wallet-btn"
-              disabled={disconnectWalletPending}
-              onClick={onDisconnectWallet}
-            >
-              <Unplug className="h-4 w-4" aria-hidden="true" />
-              Desconectar
-            </Button>
-          ) : (
-            <Button
-              variant="default"
-              size="sm"
-              data-testid="checkout-connect-wallet-btn"
-              disabled={connectWalletPending || !selectedWallet}
-              onClick={onConnectWallet}
-            >
-              <Plug className="h-4 w-4" aria-hidden="true" />
-              {connectWalletPending ? 'Conectando...' : 'Conectar carteira'}
-            </Button>
-          )}
-        </div>
       </div>
     </div>
   )

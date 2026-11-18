@@ -18,7 +18,7 @@ test.describe('Regressão Visual @visual', () => {
 
     await loginAsAna(page)
     await page.goto('/checkout')
-    await expect(page.getByTestId('checkout-line-nft_001')).toBeVisible()
+    await expect(page.getByTestId('checkout-submit-btn')).toBeVisible()
     await expect(page).toHaveScreenshot('04-checkout.png', {
       fullPage: false,
       mask: [page.getByTestId('checkout-idempotency-badge')],

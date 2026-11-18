@@ -229,8 +229,8 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="mx-auto flex h-dvh w-full max-w-300 flex-col overflow-hidden px-4 pt-4 sm:px-6 lg:block lg:h-auto lg:overflow-visible lg:px-0 lg:pt-6">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 pb-3 lg:pb-0">
         <div className="flex flex-1 items-center gap-3 lg:flex-none">
           <button
             type="button"
@@ -276,7 +276,7 @@ export function CheckoutPage() {
       <form
         onSubmit={(event) => void handleSubmitOrder(event)}
         noValidate
-        className="mt-8 flex flex-col-reverse items-start justify-between gap-8 lg:flex-row"
+        className="flex min-h-0 flex-1 flex-col items-start justify-between gap-4 lg:mt-8 lg:flex-row lg:gap-8"
       >
         <CollectorFormSection
           collector={collector}
@@ -286,9 +286,6 @@ export function CheckoutPage() {
           effectiveWalletId={effectiveWalletId}
           selectedWallet={selectedWallet}
           selectedNetwork={selectedNetwork}
-          isWalletConnectedOnNetwork={isWalletConnectedOnNetwork}
-          connectWalletPending={connectWallet.isPending}
-          disconnectWalletPending={disconnectWallet.isPending}
           onChangeCollectorField={(field, value) => {
             setCollector((prev) => ({ ...prev, [field]: value }))
             setIdempotencyKey(createIdempotencyKey())
@@ -305,8 +302,6 @@ export function CheckoutPage() {
             }
             setIdempotencyKey(createIdempotencyKey())
           }}
-          onConnectWallet={() => void handleConnectWallet()}
-          onDisconnectWallet={() => disconnectWallet.mutate()}
         />
 
         <OrderSummaryPanel
@@ -314,6 +309,10 @@ export function CheckoutPage() {
           quoteLoading={quoteQuery.isLoading}
           wallets={wallets}
           effectiveWalletId={effectiveWalletId}
+          selectedNetwork={selectedNetwork}
+          isWalletConnectedOnNetwork={isWalletConnectedOnNetwork}
+          connectWalletPending={connectWallet.isPending}
+          disconnectWalletPending={disconnectWallet.isPending}
           reviewConfirmed={reviewConfirmed}
           reviewError={fieldErrors.reviewConfirmed}
           submitError={submitError}
@@ -327,6 +326,12 @@ export function CheckoutPage() {
             }
             setIdempotencyKey(createIdempotencyKey())
           }}
+          onSelectNetwork={(network) => {
+            setSelectedNetwork(network)
+            setIdempotencyKey(createIdempotencyKey())
+          }}
+          onConnectWallet={() => void handleConnectWallet()}
+          onDisconnectWallet={() => disconnectWallet.mutate()}
           onToggleReviewConfirmed={(checked) => {
             setReviewConfirmed(checked)
             setFieldErrors((prev) => {
