@@ -34,13 +34,13 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
   return (
     <article
       data-testid={`nft-card-${nft.id}`}
-      className="group flex w-full flex-col gap-[12px]"
+      className="group flex w-full flex-col gap-3"
     >
-      <div className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-[6px] bg-bg-secondary p-[4px]">
+      <div className="relative flex h-75 w-full items-center justify-center overflow-hidden rounded-md bg-bg-secondary p-1">
         <Link
           to="/nft/$nftId"
           params={{ nftId: nft.id }}
-          className="relative block h-[250px] w-full max-w-[250px] overflow-hidden rounded-[15px]"
+          className="relative block h-62.5 w-full max-w-62.5 overflow-hidden rounded-[15px]"
         >
           <img
             src={nft.image.url}
@@ -55,7 +55,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
         </Link>
 
         {nft.id === 'nft_003' ? (
-          <span className="pointer-events-none absolute left-0 top-4 bg-accent px-2.5 py-1 text-[12px] font-medium leading-[16px] text-bg-primary">
+          <span className="pointer-events-none absolute left-0 top-4 bg-accent px-2.5 py-1 text-[12px] font-medium leading-4 text-bg-primary">
             RARO
           </span>
         ) : null}
@@ -65,7 +65,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
           onClick={handleFavorite}
           data-testid={`favorite-btn-${nft.id}`}
           aria-pressed={isFavorite}
-          className="absolute right-3 top-3 inline-flex h-[28px] items-center gap-1 rounded-full border border-border-subtle bg-bg-primary/85 px-2 text-[11px] font-mono text-text-primary hover:border-accent cursor-pointer"
+          className="absolute right-3 top-3 inline-flex h-7 items-center gap-1 rounded-full border border-border-subtle bg-bg-primary/85 px-2 text-[11px] font-mono text-text-primary hover:border-accent cursor-pointer"
         >
           <Heart
             className={`h-3.5 w-3.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-accent-bright'}`}
@@ -91,16 +91,16 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
         )}
       </div>
 
-      <div className="flex flex-col gap-[6px]">
+      <div className="flex flex-col gap-1.5">
         <Link
           to="/nft/$nftId"
           params={{ nftId: nft.id }}
-          className="text-[16px] font-normal leading-[16px] text-text-primary hover:text-accent-bright"
+          className="text-[16px] font-normal leading-4 text-text-primary hover:text-accent-bright"
         >
           {nft.name}
         </Link>
 
-        <div className="flex items-center gap-[12px] leading-[16px]">
+        <div className="flex items-center gap-3 leading-4">
           <span
             data-testid={`nft-price-${nft.id}`}
             className="text-[18px] font-bold text-accent-bright"
@@ -118,10 +118,10 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
 
 export function NftCardSkeleton() {
   return (
-    <div data-testid="nft-card-skeleton" className="flex w-full flex-col gap-[12px]">
-      <Skeleton className="h-[300px] w-full rounded-[6px]" />
-      <Skeleton className="h-[16px] w-3/4 rounded-[4px]" />
-      <Skeleton className="h-[18px] w-1/2 rounded-[4px]" />
+    <div data-testid="nft-card-skeleton" className="flex w-full flex-col gap-3">
+      <Skeleton className="h-75 w-full rounded-md" />
+      <Skeleton className="h-4 w-3/4 rounded-sm" />
+      <Skeleton className="h-4.5 w-1/2 rounded-sm" />
     </div>
   )
 }

@@ -5,8 +5,8 @@ export function NftDetailTabs({ nft }: { nft: NftDetail }) {
   const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details')
 
   return (
-    <section aria-label="Informações e avaliações do NFT" className="mt-[56px]">
-      <div className="flex items-center gap-[32px] border-b border-border-subtle">
+    <section aria-label="Informações e avaliações do NFT" className="mt-14">
+      <div className="flex items-center gap-8 border-b border-border-subtle">
         <button
           type="button"
           onClick={() => setActiveTab('details')}
@@ -16,7 +16,7 @@ export function NftDetailTabs({ nft }: { nft: NftDetail }) {
         >
           Detalhes do NFT
           {activeTab === 'details' ? (
-            <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent" />
+            <span className="absolute -bottom-px left-0 right-0 h-0.75 bg-accent" />
           ) : null}
         </button>
         <button
@@ -28,12 +28,12 @@ export function NftDetailTabs({ nft }: { nft: NftDetail }) {
         >
           Avaliações de colecionadores ({nft.likes})
           {activeTab === 'reviews' ? (
-            <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent" />
+            <span className="absolute -bottom-px left-0 right-0 h-0.75 bg-accent" />
           ) : null}
         </button>
       </div>
 
-      <div className="mt-6 space-y-5 text-[14px] leading-[24px] text-text-secondary">
+      <div className="mt-6 space-y-5 text-[14px] leading-6 text-text-secondary">
         <p>
           {nft.name} é uma obra digital 1/50 finalizada à mão da coleção {nft.collection}. Cada atributo
           fica armazenado nos metadados do token e verificado na {networkLabels[nft.network]}. A obra

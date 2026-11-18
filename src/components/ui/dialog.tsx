@@ -29,7 +29,7 @@ export const DialogContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[calc(100%-1.5rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[16px] border border-border-subtle bg-bg-secondary p-4 text-white shadow-2xl sm:w-[calc(100%-2rem)] sm:rounded-[20px] sm:p-6',
+        'fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[calc(100%-1.5rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border-subtle bg-bg-secondary p-4 text-white shadow-2xl sm:w-[calc(100%-2rem)] sm:rounded-[20px] sm:p-6',
         className,
       )}
       {...props}

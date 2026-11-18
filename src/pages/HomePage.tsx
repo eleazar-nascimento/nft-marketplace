@@ -114,11 +114,11 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pt-4 sm:px-6 lg:px-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-4 sm:px-6 lg:px-0">
       <div className="mb-4 flex items-center gap-2 lg:hidden">
         <form onSubmit={handleSearchSubmit} className="relative flex-1" role="search">
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 h-[20px] w-[20px] -translate-y-1/2 text-text-muted"
+            className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted"
             aria-hidden="true"
           />
           <input
@@ -127,7 +127,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
             placeholder="Explorar coleções"
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
-            className="h-[45px] w-full rounded-[10px] bg-bg-secondary pl-10 pr-4 text-[14px] font-bold text-text-primary placeholder:text-text-muted focus:outline-none"
+            className="h-11.25 w-full rounded-[10px] bg-bg-secondary pl-10 pr-4 text-[14px] font-bold text-text-primary placeholder:text-text-muted focus:outline-none"
           />
         </form>
         <Dialog open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
@@ -136,7 +136,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
             data-testid="mobile-filters-trigger"
             aria-label="Abrir filtros"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex h-[45px] w-[45px] shrink-0 items-center justify-center rounded-[14px] bg-gradient-to-br from-accent/60 to-accent text-bg-primary cursor-pointer"
+            className="flex h-11.25 w-11.25 shrink-0 items-center justify-center rounded-[14px] bg-linear-to-br from-accent/60 to-accent text-bg-primary cursor-pointer"
           >
             <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -172,7 +172,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
 
       <HeroBanner />
 
-      <section id="catalogo-section" aria-labelledby="catalog-heading" className="mt-[46px]">
+      <section id="catalogo-section" aria-labelledby="catalog-heading" className="mt-11.5">
         <h2 id="catalog-heading" className="sr-only">
           Catálogo de NFTs
         </h2>
@@ -214,9 +214,9 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
           </Button>
         </form>
 
-        <div className="flex flex-col items-start gap-[48px] lg:flex-row">
-          <aside aria-label="Filtros do catálogo" className="hidden w-[310px] shrink-0 flex-col gap-[24px] lg:flex">
-            <div className="w-[310px] bg-bg-secondary p-[20px]">
+        <div className="flex flex-col items-start gap-12 lg:flex-row">
+          <aside aria-label="Filtros do catálogo" className="hidden w-77.5 shrink-0 flex-col gap-6 lg:flex">
+            <div className="w-77.5 bg-bg-secondary p-5">
               <CatalogFilters
                 idPrefix="desktop"
                 selectedCategories={search.category}
@@ -238,15 +238,15 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
               />
             </div>
 
-            <div className="relative flex h-[470px] w-[310px] flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-accent/10 to-accent/5 pt-[24px] pb-[4px]">
-              <div className="flex flex-col items-center gap-[12px] px-[20px] text-center">
-                <p className="text-[24px] font-bold leading-[32px] text-accent-bright">NFT EM DESTAQUE</p>
-                <p className="text-[22px] font-bold leading-[16px] text-text-primary">OFERTA LIMITADA</p>
+            <div className="relative flex h-117.5 w-77.5 flex-col items-center justify-between overflow-hidden bg-linear-to-b from-accent/10 to-accent/5 pt-6 pb-1">
+              <div className="flex flex-col items-center gap-3 px-5 text-center">
+                <p className="text-[24px] font-bold leading-8 text-accent-bright">NFT EM DESTAQUE</p>
+                <p className="text-[22px] font-bold leading-4 text-text-primary">OFERTA LIMITADA</p>
               </div>
               <Link
                 to="/nft/$nftId"
                 params={{ nftId: 'nft_002' }}
-                className="block h-[368px] w-full overflow-hidden rounded-[22px]"
+                className="block h-92 w-full overflow-hidden rounded-[22px]"
               >
                 <img
                   src="/images/figma/83794.jpg"
@@ -262,7 +262,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
 
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-3">
-              <div className="flex items-center gap-[20px] text-[15px] font-medium leading-[16px]">
+              <div className="flex items-center gap-5 text-[15px] font-medium leading-4">
                 <button
                   type="button"
                   onClick={() => {
@@ -275,7 +275,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                 >
                   Todos os NFTs
                   {activeFeedTab === 'all' ? (
-                    <span className="absolute bottom-[-12px] left-0 right-0 h-[2px] bg-accent" />
+                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent" />
                   ) : null}
                 </button>
                 <button
@@ -290,7 +290,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                 >
                   Novos lançamentos
                   {activeFeedTab === 'new' ? (
-                    <span className="absolute bottom-[-12px] left-0 right-0 h-[2px] bg-accent" />
+                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent" />
                   ) : null}
                 </button>
                 <button
@@ -305,7 +305,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                 >
                   Em alta
                   {activeFeedTab === 'trending' ? (
-                    <span className="absolute bottom-[-12px] left-0 right-0 h-[2px] bg-accent" />
+                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent" />
                   ) : null}
                 </button>
               </div>
@@ -348,7 +348,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
             {catalogQuery.isLoading ? (
               <div
                 data-testid="catalog-skeleton-grid"
-                className="grid grid-cols-2 gap-6 lg:grid-cols-3 lg:gap-x-[34px] lg:gap-y-[56px]"
+                className="grid grid-cols-2 gap-6 lg:grid-cols-3 lg:gap-x-8.5 lg:gap-y-14"
               >
                 {Array.from({ length: 9 }, (_, index) => (
                   <NftCardSkeleton key={index} />
@@ -400,7 +400,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
               <>
                 <div
                   data-testid="catalog-grid"
-                  className="grid grid-cols-2 gap-5 lg:grid-cols-3 lg:gap-x-[34px] lg:gap-y-[56px]"
+                  className="grid grid-cols-2 gap-5 lg:grid-cols-3 lg:gap-x-8.5 lg:gap-y-14"
                 >
                   {catalogQuery.data.items.map((nft, index) => (
                     <NftCard
@@ -416,7 +416,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                   <nav
                     aria-label="Paginação do catálogo"
                     data-testid="catalog-pagination"
-                    className="mt-[64px] flex flex-wrap items-center justify-end gap-[8px]"
+                    className="mt-16 flex flex-wrap items-center justify-end gap-2"
                   >
                     <button
                       type="button"
@@ -424,7 +424,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                       aria-label="Página anterior"
                       disabled={catalogQuery.data.page <= 1}
                       onClick={() => onUpdateSearch({ page: catalogQuery.data.page - 1 }, false)}
-                      className="inline-flex h-[35px] px-2.5 items-center justify-center rounded-[4px] border border-border-subtle text-xs text-text-primary disabled:opacity-40 cursor-pointer"
+                      className="inline-flex h-8.75 px-2.5 items-center justify-center rounded-sm border border-border-subtle text-xs text-text-primary disabled:opacity-40 cursor-pointer"
                     >
                       Anterior
                     </button>
@@ -439,7 +439,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                             data-testid={`pagination-page-${pageNumber}`}
                             aria-current={isCurrent ? 'page' : undefined}
                             onClick={() => onUpdateSearch({ page: pageNumber }, false)}
-                            className={`inline-flex h-[35px] w-[35px] items-center justify-center rounded-[4px] text-[18px] leading-[16px] cursor-pointer ${
+                            className={`inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm text-[18px] leading-4 cursor-pointer ${
                               isCurrent
                                 ? 'bg-accent font-bold text-bg-primary'
                                 : 'border border-border-subtle font-normal text-text-primary hover:border-accent'
@@ -457,7 +457,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                       aria-label="Próxima página"
                       disabled={catalogQuery.data.page >= catalogQuery.data.totalPages}
                       onClick={() => onUpdateSearch({ page: catalogQuery.data.page + 1 }, false)}
-                      className="inline-flex h-[35px] w-[35px] items-center justify-center rounded-[4px] border border-border-subtle text-text-primary hover:border-accent disabled:opacity-40 cursor-pointer"
+                      className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-sm border border-border-subtle text-text-primary hover:border-accent disabled:opacity-40 cursor-pointer"
                     >
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     </button>

@@ -121,9 +121,9 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pt-6 sm:px-6 lg:px-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
       <div className="flex items-center justify-between">
-        <p className="text-[15px] font-bold leading-[16px] text-text-primary">
+        <p className="text-[15px] font-bold leading-4 text-text-primary">
           <Link to="/" className="hover:text-accent-bright">
             Início
           </Link>{' '}
@@ -131,19 +131,19 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
         </p>
         <Link
           to="/"
-          className="inline-flex h-[35px] w-[35px] items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+          className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
           aria-label="Voltar"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
 
-      <div className="mt-4 flex flex-col gap-[32px] lg:flex-row lg:items-start">
-        <div className="flex flex-col-reverse gap-[16px] sm:flex-row sm:gap-[28px] lg:w-[573px] lg:shrink-0">
+      <div className="mt-4 flex flex-col gap-8 lg:flex-row lg:items-start">
+        <div className="flex flex-col-reverse gap-4 sm:flex-row sm:gap-7 lg:w-143.25 lg:shrink-0">
           <div
             role="group"
             aria-label="Galeria de imagens do NFT"
-            className="flex flex-row gap-[12px] sm:w-[100px] sm:flex-col sm:gap-[16px]"
+            className="flex flex-row gap-3 sm:w-25 sm:flex-col sm:gap-4"
           >
             {nft.gallery.slice(0, 4).map((img, index) => {
               const isSelected = index === selectedImageIndex
@@ -155,7 +155,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   aria-label={`Visualizar imagem ${index + 1} de ${nft.name}`}
                   aria-pressed={isSelected}
                   onClick={() => setSelectedImageIndex(index)}
-                  className={`h-[76px] w-[76px] overflow-hidden rounded-[8px] bg-bg-secondary transition-all sm:h-[100px] sm:w-[100px] cursor-pointer ${
+                  className={`h-19 w-19 overflow-hidden rounded-lg bg-bg-secondary transition-all sm:h-25 sm:w-25 cursor-pointer ${
                     isSelected ? 'border-2 border-accent' : 'border border-transparent opacity-85 hover:opacity-100'
                   }`}
                 >
@@ -164,14 +164,14 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                     alt={img.alt}
                     width={100}
                     height={100}
-                    className="h-full w-full rounded-[8px] object-cover"
+                    className="h-full w-full rounded-lg object-cover"
                   />
                 </button>
               )
             })}
           </div>
 
-          <div className="relative flex aspect-square w-full items-center justify-center rounded-[6px] bg-bg-secondary p-[16px] sm:h-[444px] sm:w-[444px]">
+          <div className="relative flex aspect-square w-full items-center justify-center rounded-md bg-bg-secondary p-4 sm:h-111 sm:w-111">
             <img
               src={activeImage.url}
               alt={activeImage.alt}
@@ -179,10 +179,10 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
               height={404}
               fetchPriority="high"
               data-testid="detail-main-image"
-              className="h-full w-full max-h-[404px] max-w-[404px] rounded-[24px] object-cover"
+              className="h-full w-full max-h-101 max-w-101 rounded-3xl object-cover"
             />
             <span
-              className="pointer-events-none absolute right-4 top-4 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-bg-primary/80 text-text-primary"
+              className="pointer-events-none absolute right-4 top-4 flex h-7.5 w-7.5 items-center justify-center rounded-full bg-bg-primary/80 text-text-primary"
               aria-hidden="true"
             >
               <Search className="h-4 w-4" />
@@ -190,8 +190,8 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-between gap-[18px]">
-          <div className="flex flex-col gap-[12px]">
+        <div className="flex flex-1 flex-col justify-between gap-4.5">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h1
                 data-testid="detail-nft-title"
@@ -199,7 +199,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
               >
                 {nft.name}
               </h1>
-              <span className="inline-flex h-[27px] items-center gap-1 rounded-[32px] border border-accent px-3 text-[14px] lg:hidden">
+              <span className="inline-flex h-6.75 items-center gap-1 rounded-4xl border border-accent px-3 text-[14px] lg:hidden">
                 <Star className="h-3.5 w-3.5 fill-accent text-accent" aria-hidden="true" />
                 <span className="font-medium text-text-primary">4.8</span>
                 <span className="text-text-secondary">({nft.likes})</span>
@@ -209,17 +209,17 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p
                 data-testid={`edition-price-${activeEdition.id}`}
-                className="text-[22px] font-bold leading-[16px] text-accent-bright"
+                className="text-[22px] font-bold leading-4 text-accent-bright"
               >
                 {formatEth(activeEdition.priceEth)}
               </p>
 
-              <div className="hidden items-center gap-[4px] lg:flex">
-                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
-                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
-                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
-                <Star className="h-[15px] w-[15px] fill-accent text-accent" aria-hidden="true" />
-                <Star className="h-[15px] w-[15px] text-text-muted" aria-hidden="true" />
+              <div className="hidden items-center gap-1 lg:flex">
+                <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-3.75 w-3.75 fill-accent text-accent" aria-hidden="true" />
+                <Star className="h-3.75 w-3.75 text-text-muted" aria-hidden="true" />
                 <span className="ml-1 text-[15px] text-text-primary">
                   {nft.likes} avaliações de colecionadores
                 </span>
@@ -229,17 +229,17 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             <div className="h-px w-full bg-accent/35" />
           </div>
 
-          <div className="flex flex-col gap-[8px]">
-            <h2 className="text-[15px] font-bold leading-[16px] text-text-primary">Sobre este NFT:</h2>
-            <p className="text-[14px] leading-[24px] text-text-secondary">{nft.description}</p>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-[15px] font-bold leading-4 text-text-primary">Sobre este NFT:</h2>
+            <p className="text-[14px] leading-6 text-text-secondary">{nft.description}</p>
           </div>
 
-          <div className="flex flex-col gap-[10px]">
-            <h2 className="text-[15px] font-bold leading-[16px] text-text-primary">Edição:</h2>
+          <div className="flex flex-col gap-2.5">
+            <h2 className="text-[15px] font-bold leading-4 text-text-primary">Edição:</h2>
             <div
               role="radiogroup"
               aria-label="Edições do NFT"
-              className="flex flex-wrap items-center gap-[8px]"
+              className="flex flex-wrap items-center gap-2"
             >
               {nft.editions.map((edition) => {
                 const isSelected = edition.id === activeEdition.id
@@ -251,7 +251,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                     aria-checked={isSelected}
                     data-testid={`edition-option-${edition.id}`}
                     onClick={() => handleSelectEdition(edition)}
-                    className={`inline-flex h-[28px] min-w-[42px] items-center justify-center rounded-full border px-3 text-[14px] leading-[16px] transition-colors cursor-pointer ${
+                    className={`inline-flex h-7 min-w-10.5 items-center justify-center rounded-full border px-3 text-[14px] leading-4 transition-colors cursor-pointer ${
                       isSelected
                         ? 'border-accent font-medium text-accent-bright'
                         : 'border-border-subtle font-normal text-text-secondary hover:border-accent/60'
@@ -273,7 +273,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             <div
               role="status"
               data-testid="edition-unavailable-banner"
-              className="rounded-[6px] border border-red-500/60 bg-red-950/60 p-3 text-sm text-red-100"
+              className="rounded-md border border-red-500/60 bg-red-950/60 p-3 text-sm text-red-100"
             >
               {activeEdition.status === 'sold_out'
                 ? 'Esta edição está esgotada no momento. Selecione outra edição disponível.'
@@ -281,21 +281,21 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             </div>
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-[12px]">
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
                   data-testid="detail-qty-decrease"
                   aria-label="Diminuir quantidade"
                   disabled={safeQuantity <= 1}
                   onClick={() => setQuantity(Math.max(1, safeQuantity - 1))}
-                  className="flex h-[49.5px] w-[33px] items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
+                  className="flex h-[49.5px] w-8.25 items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
                 >
                   <Minus className="h-4 w-4" aria-hidden="true" />
                 </button>
                 <span
                   data-testid="detail-qty-value"
                   aria-live="polite"
-                  className="min-w-[20px] text-center text-[20px] leading-[28px] text-text-primary"
+                  className="min-w-5 text-center text-[20px] leading-7 text-text-primary"
                 >
                   {safeQuantity}
                 </span>
@@ -305,7 +305,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   aria-label="Aumentar quantidade"
                   disabled={safeQuantity >= maxAllowed}
                   onClick={() => setQuantity(Math.min(maxAllowed, safeQuantity + 1))}
-                  className="flex h-[49.5px] w-[33px] items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
+                  className="flex h-[49.5px] w-8.25 items-center justify-center rounded-[33px] border border-bg-primary bg-accent text-bg-primary shadow disabled:opacity-40 cursor-pointer"
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
                 </button>
@@ -314,13 +314,13 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                 </span>
               </div>
 
-              <div className="flex flex-wrap items-center gap-[8px]">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   data-testid="detail-buy-now"
                   disabled={addItem.isPending}
                   onClick={() => void handleAddToCart(true)}
-                  className="inline-flex h-[40px] w-[130px] items-center justify-center rounded-[6px] bg-accent text-[14px] font-bold leading-[20px] text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+                  className="inline-flex h-10 w-32.5 items-center justify-center rounded-md bg-accent text-[14px] font-bold leading-5 text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
                 >
                   COMPRAR
                 </button>
@@ -331,7 +331,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   aria-label="Adicionar ao carrinho"
                   disabled={addItem.isPending}
                   onClick={() => void handleAddToCart(false)}
-                  className="inline-flex h-[40px] items-center justify-center gap-1.5 rounded-[6px] border border-border-subtle bg-bg-secondary px-3 text-[13px] font-medium text-text-primary hover:border-accent disabled:opacity-50 cursor-pointer"
+                  className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-border-subtle bg-bg-secondary px-3 text-[13px] font-medium text-text-primary hover:border-accent disabled:opacity-50 cursor-pointer"
                 >
                   <ShoppingCart className="h-4 w-4 text-accent-bright" aria-hidden="true" />
                   <span>Carrinho</span>
@@ -342,10 +342,10 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
                   data-testid="detail-favorite-btn"
                   aria-pressed={isFavorite}
                   onClick={handleFavorite}
-                  className="inline-flex h-[40px] min-w-[130px] items-center justify-center gap-[8px] rounded-[6px] border border-accent px-3 text-[14px] font-medium leading-[20px] text-accent-bright hover:bg-accent/15 cursor-pointer"
+                  className="inline-flex h-10 min-w-32.5 items-center justify-center gap-2 rounded-md border border-accent px-3 text-[14px] font-medium leading-5 text-accent-bright hover:bg-accent/15 cursor-pointer"
                 >
                   <Heart
-                    className={`h-[18px] w-[18px] ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
+                    className={`h-4.5 w-4.5 ${isFavorite ? 'fill-accent-bright text-accent-bright' : ''}`}
                     aria-hidden="true"
                   />
                   <span>Favoritar</span>
@@ -357,11 +357,11 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
             </div>
           )}
 
-          <div className="flex flex-col gap-[10px] text-[15px] text-text-muted">
+          <div className="flex flex-col gap-2.5 text-[15px] text-text-muted">
             <p>ID do token: #{tokenNumber}</p>
             <p>Coleção: {nft.collection}</p>
             <p>Atributos: Óculos, Esmeralda, Raro</p>
-            <div className="flex items-center gap-[10px] pt-1 text-text-primary">
+            <div className="flex items-center gap-2.5 pt-1 text-text-primary">
               <span className="font-bold">Compartilhar este NFT:</span>
               <span className="text-xs text-text-secondary">in</span>
               <span className="text-xs text-text-secondary">✉</span>

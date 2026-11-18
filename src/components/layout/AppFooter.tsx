@@ -19,47 +19,47 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
 
   return (
     <footer className="mt-20 text-text-primary">
-      <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-        <div className="bg-bg-secondary p-6 sm:p-[32px]">
+      <div className="mx-auto w-full max-w-300 px-4 sm:px-6 lg:px-0">
+        <div className="bg-bg-secondary p-6 sm:p-8">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
-            <div className="flex flex-col gap-[12px] lg:col-span-2">
-              <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+            <div className="flex flex-col gap-3 lg:col-span-2">
+              <div className="flex h-18.5 w-18.5 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                 W
               </div>
-              <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+              <h2 className="text-[17px] font-bold leading-4 text-text-primary">
                 Segurança da carteira
               </h2>
-              <p className="text-[14px] leading-[22px] text-text-secondary">
+              <p className="text-[14px] leading-5.5 text-text-secondary">
                 Proteja sua carteira e colecione arte digital verificada com confiança.
               </p>
             </div>
 
-            <div className="flex flex-col gap-[12px] lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
-              <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+            <div className="flex flex-col gap-3 lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
+              <div className="flex h-18.5 w-18.5 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                 C
               </div>
-              <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+              <h2 className="text-[17px] font-bold leading-4 text-text-primary">
                 Criadores em destaque
               </h2>
-              <p className="text-[14px] leading-[22px] text-text-secondary">
+              <p className="text-[14px] leading-5.5 text-text-secondary">
                 Conheça artistas, estúdios e comunidades que moldam a cultura digital na rede.
               </p>
             </div>
 
-            <div className="flex flex-col gap-[12px] lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
-              <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
+            <div className="flex flex-col gap-3 lg:col-span-3 lg:border-l lg:border-accent/40 lg:pl-6">
+              <div className="flex h-18.5 w-18.5 items-center justify-center rounded-full bg-accent text-[24px] font-bold text-bg-primary">
                 D
               </div>
-              <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+              <h2 className="text-[17px] font-bold leading-4 text-text-primary">
                 Alertas de lançamentos
               </h2>
-              <p className="text-[14px] leading-[22px] text-text-secondary">
+              <p className="text-[14px] leading-5.5 text-text-secondary">
                 Receba calendários de cunhagem, novidades de listas de acesso e análises do mercado.
               </p>
             </div>
 
-            <div className="flex flex-col gap-[12px] lg:col-span-4 lg:border-l lg:border-accent/40 lg:pl-6">
-              <h2 className="text-[18px] font-bold leading-[22px] text-text-primary">
+            <div className="flex flex-col gap-3 lg:col-span-4 lg:border-l lg:border-accent/40 lg:pl-6">
+              <h2 className="text-[18px] font-bold leading-5.5 text-text-primary">
                 Antecipe-se ao próximo lançamento
               </h2>
               <form
@@ -70,7 +70,7 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
                     setNewsletterEmail('')
                   }
                 }}
-                className="flex h-[40px] w-full overflow-hidden rounded-[6px] bg-surface-dark shadow-[0px_0px_10px_rgba(10,6,4,0.45)]"
+                className="flex h-10 w-full overflow-hidden rounded-md bg-surface-dark shadow-[0px_0px_10px_rgba(10,6,4,0.45)]"
               >
                 <label htmlFor="footer-newsletter-email" className="sr-only">
                   Seu e-mail para receber novidades
@@ -85,12 +85,12 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
                 />
                 <button
                   type="submit"
-                  className="h-[40px] w-[85px] shrink-0 bg-accent text-[18px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                  className="h-10 w-21.25 shrink-0 bg-accent text-[18px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
                 >
                   Enviar
                 </button>
               </form>
-              <p className="text-[13px] leading-[22px] text-text-secondary">
+              <p className="text-[13px] leading-5.5 text-text-secondary">
                 {newsletterSent
                   ? 'Inscrição confirmada! Você receberá os próximos alertas da Kurio.'
                   : 'Receba lançamentos selecionados, histórias de criadores e novidades do mercado.'}
@@ -99,27 +99,27 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-4 bg-surface-dark px-6 py-6 sm:px-[32px] lg:h-[88px] lg:flex-row lg:items-center">
+        <div className="flex flex-col justify-between gap-4 bg-surface-dark px-6 py-6 sm:px-8 lg:h-22 lg:flex-row lg:items-center">
           <span className="text-[14px] font-bold tracking-[1.4px] text-text-primary">KURIO</span>
-          <p className="text-[14px] leading-[22px] text-text-primary">
+          <p className="text-[14px] leading-5.5 text-text-primary">
             Feito para colecionadores,
             <br />
             criadores e cultura
           </p>
           <a
             href="mailto:contato@email.com"
-            className="text-[14px] leading-[22px] text-text-primary hover:text-accent-bright"
+            className="text-[14px] leading-5.5 text-text-primary hover:text-accent-bright"
           >
             contato@email.com
           </a>
-          <span className="text-[14px] leading-[22px] text-text-primary">+55 11 4002 8922</span>
+          <span className="text-[14px] leading-5.5 text-text-primary">+55 11 4002 8922</span>
         </div>
 
-        <div className="bg-bg-secondary p-6 sm:p-[32px]">
+        <div className="bg-bg-secondary p-6 sm:p-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Meu perfil</h2>
-              <ul className="mt-3 space-y-1 text-[14px] leading-[30px] text-text-primary">
+              <h2 className="text-[18px] font-bold leading-4 text-text-primary">Meu perfil</h2>
+              <ul className="mt-3 space-y-1 text-[14px] leading-7.5 text-text-primary">
                 <li>
                   <Link to="/profile" className="hover:text-accent-bright">
                     Meu perfil
@@ -157,8 +157,8 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
             </div>
 
             <div>
-              <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Central de ajuda</h2>
-              <ul className="mt-3 space-y-1 text-[14px] leading-[30px] text-text-primary">
+              <h2 className="text-[18px] font-bold leading-4 text-text-primary">Central de ajuda</h2>
+              <ul className="mt-3 space-y-1 text-[14px] leading-7.5 text-text-primary">
                 <li>
                   <button
                     type="button"
@@ -205,8 +205,8 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
             </div>
 
             <div>
-              <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Coleções</h2>
-              <ul className="mt-3 space-y-1 text-[14px] leading-[30px] text-text-primary">
+              <h2 className="text-[18px] font-bold leading-4 text-text-primary">Coleções</h2>
+              <ul className="mt-3 space-y-1 text-[14px] leading-7.5 text-text-primary">
                 <li>
                   <Link to="/" search={{ category: ['art'] }} className="hover:text-accent-bright">
                     Arte digital
@@ -235,29 +235,29 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
               </ul>
             </div>
 
-            <div className="flex flex-col gap-[28px]">
-              <div className="flex flex-col gap-[16px]">
-                <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Redes sociais</h2>
-                <div className="flex items-center gap-[10px]">
+            <div className="flex flex-col gap-7">
+              <div className="flex flex-col gap-4">
+                <h2 className="text-[18px] font-bold leading-4 text-text-primary">Redes sociais</h2>
+                <div className="flex items-center gap-2.5">
                   {socialItems.map((item) => (
                     <button
                       key={item.label}
                       type="button"
                       aria-label={item.label}
                       onClick={() => onOpenOutOfScope(item.label)}
-                      className="flex h-[30px] w-[30px] items-center justify-center rounded-[4px] border border-accent/40 text-xs font-bold text-accent-bright hover:bg-bg-elevated cursor-pointer"
+                      className="flex h-7.5 w-7.5 items-center justify-center rounded-sm border border-accent/40 text-xs font-bold text-accent-bright hover:bg-bg-elevated cursor-pointer"
                     >
-                      <img src={item.icon} alt="" className="h-[30px] w-[30px]" />
+                      <img src={item.icon} alt="" className="h-7.5 w-7.5" />
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="flex flex-col gap-[12px]">
-                <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">
+              <div className="flex flex-col gap-3">
+                <h2 className="text-[18px] font-bold leading-4 text-text-primary">
                   Carteiras compatíveis
                 </h2>
-                <div className="flex h-[26px] items-center justify-center rounded-[6px] border border-border-soft bg-surface-dark px-2">
+                <div className="flex h-6.5 items-center justify-center rounded-md border border-border-soft bg-surface-dark px-2">
                   <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright">
                     METAMASK • WALLETCONNECT • COINBASE
                   </span>
@@ -267,7 +267,7 @@ export function AppFooter({ onOpenOutOfScope }: AppFooterProps) {
           </div>
         </div>
 
-        <p className="py-3 text-center text-[14px] leading-[30px] text-text-primary">
+        <p className="py-3 text-center text-[14px] leading-7.5 text-text-primary">
           © 2026 Kurio. Propriedade digital para todos.
         </p>
       </div>

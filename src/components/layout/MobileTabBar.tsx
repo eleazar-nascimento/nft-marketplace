@@ -10,7 +10,7 @@ export function MobileTabBar({ pathname, status }: MobileTabBarProps) {
   return (
     <nav
       aria-label="Navegação inferior móvel"
-      className="fixed bottom-0 left-0 right-0 z-30 flex h-[74px] items-center justify-around border-t border-border-subtle bg-bg-secondary/95 px-4 backdrop-blur-md lg:hidden"
+      className="fixed bottom-0 left-0 right-0 z-30 flex h-18.5 items-center justify-around border-t border-border-subtle bg-bg-secondary/95 px-4 backdrop-blur-md lg:hidden"
     >
       <Link
         to="/"
@@ -31,7 +31,7 @@ export function MobileTabBar({ pathname, status }: MobileTabBarProps) {
       <a
         href="#catalogo-section"
         aria-label="Explorar NFTs"
-        className="-mt-7 flex h-[58px] w-[58px] items-center justify-center rounded-full bg-accent text-bg-primary shadow-lg"
+        className="-mt-7 flex h-14.5 w-14.5 items-center justify-center rounded-full bg-accent text-bg-primary shadow-lg"
       >
         <ScanLine className="h-6 w-6" aria-hidden="true" />
       </a>

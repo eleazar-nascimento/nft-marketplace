@@ -34,12 +34,12 @@ export function OrderSummaryPanel({
   onToggleReviewConfirmed,
 }: OrderSummaryPanelProps) {
   return (
-    <div className="flex w-full flex-col gap-[16px] lg:w-[405px] lg:shrink-0">
-      <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">Seus NFTs</h2>
+    <div className="flex w-full flex-col gap-4 lg:w-101.25 lg:shrink-0">
+      <h2 className="text-[17px] font-bold leading-4 text-text-primary">Seus NFTs</h2>
 
       {quoteLoading || !quote ? (
         <div className="space-y-3">
-          <Skeleton className="h-[70px] w-full" />
+          <Skeleton className="h-17.5 w-full" />
           <Skeleton className="h-24 w-full" />
         </div>
       ) : (
@@ -49,33 +49,33 @@ export function OrderSummaryPanel({
             <span className="font-medium">Subtotal</span>
           </div>
 
-          <ul className="flex flex-col gap-[12px]">
+          <ul className="flex flex-col gap-3">
             {quote.lines.map((line) => {
               const tokenNumber = formatTokenNumber(line.nftId)
               return (
                 <li
                   key={line.lineId}
                   data-testid={`checkout-line-${line.nftId}`}
-                  className="flex h-[70px] items-center justify-between bg-bg-secondary pl-[4px] pr-[16px]"
+                  className="flex h-17.5 items-center justify-between bg-bg-secondary pl-1 pr-4"
                 >
-                  <div className="flex items-center gap-[8px]">
+                  <div className="flex items-center gap-2">
                     <img
                       src={line.image.url}
                       alt={line.image.alt}
                       width={66}
                       height={66}
-                      className="h-[66px] w-[66px] rounded-[8px] object-cover"
+                      className="h-16.5 w-16.5 rounded-lg object-cover"
                     />
-                    <div className="flex flex-col gap-[6px]">
-                      <p className="text-[16px] font-bold leading-[16px] text-text-primary">
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-[16px] font-bold leading-4 text-text-primary">
                         {line.name}
                       </p>
-                      <p className="text-[14px] leading-[16px] text-text-muted">
+                      <p className="text-[14px] leading-4 text-text-muted">
                         ID do token: #{tokenNumber}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-[12px]">
+                  <div className="flex items-center gap-3">
                     <span className="text-[14px] text-text-secondary">(x {line.quantity})</span>
                     <span
                       data-testid={`checkout-line-total-${line.nftId}`}
@@ -89,7 +89,7 @@ export function OrderSummaryPanel({
             })}
           </ul>
 
-          <div className="flex flex-col items-center gap-[12px] pt-2">
+          <div className="flex flex-col items-center gap-3 pt-2">
             <p className="text-center text-[14px] text-text-primary">
               Tem um código promocional?{' '}
               <Link to="/cart" className="text-accent-bright hover:underline">
@@ -122,7 +122,7 @@ export function OrderSummaryPanel({
 
             <div className="h-px w-full bg-accent/35" />
 
-            <div className="flex w-full max-w-[321px] items-center justify-between font-bold">
+            <div className="flex w-full max-w-80.25 items-center justify-between font-bold">
               <span className="text-[16px] text-text-primary">Total</span>
               <span data-testid="checkout-total" className="text-[18px] text-accent-bright">
                 {formatEth(quote.totalEth)}
@@ -132,15 +132,15 @@ export function OrderSummaryPanel({
         </>
       )}
 
-      <div className="mt-2 flex flex-col gap-[16px]">
-        <h3 className="text-center text-[17px] font-bold leading-[16px] text-text-primary">
+      <div className="mt-2 flex flex-col gap-4">
+        <h3 className="text-center text-[17px] font-bold leading-4 text-text-primary">
           Carteira e rede
         </h3>
 
-        <div role="radiogroup" aria-label="Selecione a carteira" className="flex flex-col gap-[12px]">
-          <div className="flex h-[45px] items-center gap-[10px] rounded-[3px] border border-border-subtle px-[12px]">
-            <span className="h-[16px] w-[16px] rounded-full border border-accent" />
-            <div className="flex h-[26px] items-center justify-center rounded-[6px] border border-border-soft bg-surface-dark px-2.5">
+        <div role="radiogroup" aria-label="Selecione a carteira" className="flex flex-col gap-3">
+          <div className="flex h-11.25 items-center gap-2.5 rounded-[3px] border border-border-subtle px-3">
+            <span className="h-4 w-4 rounded-full border border-accent" />
+            <div className="flex h-6.5 items-center justify-center rounded-md border border-border-soft bg-surface-dark px-2.5">
               <span className="text-[9px] font-bold tracking-[0.1px] text-accent-bright">
                 METAMASK • WALLETCONNECT • COINBASE
               </span>
@@ -157,13 +157,13 @@ export function OrderSummaryPanel({
                 aria-checked={isSelected}
                 data-testid={`checkout-wallet-${wallet.kind}`}
                 onClick={() => onSelectWallet(wallet)}
-                className={`flex h-[45px] items-center justify-between rounded-[3px] border px-[12px] text-left transition-colors cursor-pointer ${
+                className={`flex h-11.25 items-center justify-between rounded-[3px] border px-3 text-left transition-colors cursor-pointer ${
                   isSelected ? 'border-accent' : 'border-border-subtle hover:border-accent/60'
                 }`}
               >
-                <div className="flex items-center gap-[10px]">
+                <div className="flex items-center gap-2.5">
                   <span
-                    className={`flex h-[16px] w-[16px] items-center justify-center rounded-full border border-accent ${
+                    className={`flex h-4 w-4 items-center justify-center rounded-full border border-accent ${
                       isSelected ? 'bg-accent' : 'bg-transparent'
                     }`}
                   />
@@ -218,7 +218,7 @@ export function OrderSummaryPanel({
             !quote ||
             quote.lines.length === 0
           }
-          className="flex h-[45px] w-full items-center justify-center rounded-[8px] bg-accent px-[16px] py-[12px] text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+          className="flex h-11.25 w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
         >
           {createOrderPending
             ? 'Enviando pedido...'

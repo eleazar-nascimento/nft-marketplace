@@ -12,7 +12,7 @@ export function RelatedNftsSection({ headingId, title, items }: RelatedNftsSecti
   if (items.length === 0) return null
 
   return (
-    <section aria-labelledby={headingId} className="mt-[64px]">
+    <section aria-labelledby={headingId} className="mt-16">
       <h2 id={headingId} className="text-[17px] font-bold text-accent-bright">
         {title}
       </h2>
@@ -25,14 +25,14 @@ export function RelatedNftsSection({ headingId, title, items }: RelatedNftsSecti
             params={{ nftId: item.id }}
             className="group flex flex-col gap-2"
           >
-            <div className="flex aspect-square items-center justify-center rounded-[6px] bg-bg-secondary p-2">
+            <div className="flex aspect-square items-center justify-center rounded-md bg-bg-secondary p-2">
               <img
                 src={item.image.url}
                 alt={item.image.alt}
                 width={190}
                 height={190}
                 loading="lazy"
-                className="h-full w-full rounded-[12px] object-cover transition-transform group-hover:scale-105"
+                className="h-full w-full rounded-xl object-cover transition-transform group-hover:scale-105"
               />
             </div>
             <span className="text-[15px] text-text-primary group-hover:text-accent-bright">

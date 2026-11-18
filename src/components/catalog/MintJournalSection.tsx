@@ -31,8 +31,8 @@ const blogPosts = [
 
 export function MintJournalSection() {
   return (
-    <section aria-labelledby="blog-heading" className="mt-[72px] flex flex-col items-center gap-[40px]">
-      <div className="flex flex-col items-center gap-[12px] text-center">
+    <section aria-labelledby="blog-heading" className="mt-18 flex flex-col items-center gap-10">
+      <div className="flex flex-col items-center gap-3 text-center">
         <h2 id="blog-heading" className="text-[28px] font-bold text-text-primary">
           Diário da Cunhagem
         </h2>
@@ -41,10 +41,10 @@ export function MintJournalSection() {
         </p>
       </div>
 
-      <div className="grid w-full grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {blogPosts.map((post) => (
-          <article key={post.id} className="flex flex-col overflow-hidden rounded-[8px] bg-bg-secondary">
-            <div className="h-[195px] w-full overflow-hidden">
+          <article key={post.id} className="flex flex-col overflow-hidden rounded-lg bg-bg-secondary">
+            <div className="h-48.75 w-full overflow-hidden">
               <img
                 src={post.image}
                 alt={post.title}
@@ -54,11 +54,11 @@ export function MintJournalSection() {
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="flex flex-1 flex-col justify-between gap-[8px] px-[16px] pt-[12px] pb-[16px]">
-              <div className="flex flex-col gap-[8px]">
-                <p className="text-[12px] font-medium leading-[16px] text-text-secondary">{post.meta}</p>
+            <div className="flex flex-1 flex-col justify-between gap-2 px-4 pt-3 pb-4">
+              <div className="flex flex-col gap-2">
+                <p className="text-[12px] font-medium leading-4 text-text-secondary">{post.meta}</p>
                 <h3 className="text-[16px] font-bold leading-snug text-text-primary">{post.title}</h3>
-                <p className="text-[12px] font-medium leading-[16px] text-text-secondary">
+                <p className="text-[12px] font-medium leading-4 text-text-secondary">
                   {post.excerpt}
                 </p>
               </div>

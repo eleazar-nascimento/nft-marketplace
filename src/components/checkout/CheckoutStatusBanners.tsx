@@ -85,7 +85,7 @@ export function CheckoutStatusBanners({
         <div
           role="alert"
           data-testid="checkout-stale-quote-banner"
-          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[6px] border border-amber-500/80 bg-amber-950/80 p-4 text-amber-100"
+          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-md border border-amber-500/80 bg-amber-950/80 p-4 text-amber-100"
         >
           <div className="flex items-start gap-3">
             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />

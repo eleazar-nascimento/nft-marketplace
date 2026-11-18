@@ -35,9 +35,9 @@ export function CartSummaryPanel({
   onProceedToCheckout,
 }: CartSummaryPanelProps) {
   return (
-    <div className="w-full rounded-t-[32px] bg-bg-secondary p-6 lg:w-[332px] lg:rounded-none lg:bg-transparent lg:p-0">
-      <div className="flex flex-col gap-[12px]">
-        <h2 className="text-[18px] font-bold leading-[16px] text-text-primary">Resumo da carteira</h2>
+    <div className="w-full rounded-t-4xl bg-bg-secondary p-6 lg:w-83 lg:rounded-none lg:bg-transparent lg:p-0">
+      <div className="flex flex-col gap-3">
+        <h2 className="text-[18px] font-bold leading-4 text-text-primary">Resumo da carteira</h2>
         <div className="h-px w-full bg-accent/35" />
       </div>
 
@@ -50,7 +50,7 @@ export function CartSummaryPanel({
           data-testid="cart-network-select"
           value={network}
           onChange={(event) => onChangeNetwork(event.target.value as Network)}
-          className="h-[34px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-xs text-text-secondary"
+          className="h-8.5 w-full rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-xs text-text-secondary"
         >
           {networks.map((net) => (
             <option key={net} value={net}>
@@ -60,7 +60,7 @@ export function CartSummaryPanel({
         </select>
       </div>
 
-      <div className="mt-[20px]">
+      <div className="mt-5">
         {couponCode ? (
           <div
             data-testid="active-coupon-pill"
@@ -82,14 +82,14 @@ export function CartSummaryPanel({
             </button>
           </div>
         ) : (
-          <form onSubmit={onApplyCoupon} noValidate className="flex flex-col gap-[8px]">
+          <form onSubmit={onApplyCoupon} noValidate className="flex flex-col gap-2">
             <label
               htmlFor="cart-coupon-input"
-              className="text-[14px] font-bold leading-[16px] text-text-primary"
+              className="text-[14px] font-bold leading-4 text-text-primary"
             >
               Código promocional
             </label>
-            <div className="flex h-[40px] w-full overflow-hidden rounded-[3px] border border-accent">
+            <div className="flex h-10 w-full overflow-hidden rounded-[3px] border border-accent">
               <input
                 id="cart-coupon-input"
                 data-testid="cart-coupon-input"
@@ -98,13 +98,13 @@ export function CartSummaryPanel({
                 aria-invalid={Boolean(couponError)}
                 aria-describedby={couponError ? 'cart-coupon-error' : undefined}
                 onChange={(event) => onChangeCouponInput(event.target.value)}
-                className="flex-1 bg-transparent pl-[8px] pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                className="flex-1 bg-transparent pl-2 pr-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none"
               />
               <button
                 type="submit"
                 data-testid="apply-coupon-btn"
                 disabled={applyCouponPending}
-                className="h-[40px] w-[102px] shrink-0 bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                className="h-10 w-25.5 shrink-0 bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
               >
                 Aplicar
               </button>
@@ -131,10 +131,10 @@ export function CartSummaryPanel({
           <Skeleton className="h-8 w-full" />
         </div>
       ) : (
-        <div className="mt-[24px] flex flex-col gap-[12px]">
+        <div className="mt-6 flex flex-col gap-3">
           <div className="flex items-start justify-between text-text-primary">
             <span className="text-[15px]">Subtotal</span>
-            <span data-testid="quote-subtotal" className="text-[18px] leading-[16px]">
+            <span data-testid="quote-subtotal" className="text-[18px] leading-4">
               {formatEth(quote.subtotalEth)}
             </span>
           </div>
@@ -147,11 +147,11 @@ export function CartSummaryPanel({
           <div className="flex flex-col items-end gap-1">
             <div className="flex w-full items-center justify-between text-text-primary">
               <span className="text-[15px]">Taxa de rede</span>
-              <span data-testid="quote-network-fee" className="text-[18px] leading-[16px]">
+              <span data-testid="quote-network-fee" className="text-[18px] leading-4">
                 {formatEth(quote.networkFeeEth)}
               </span>
             </div>
-            <span className="text-[12px] leading-[16px] text-accent-bright">Taxa estimada</span>
+            <span className="text-[12px] leading-4 text-accent-bright">Taxa estimada</span>
           </div>
           <div className="mt-2 flex items-start justify-between font-bold">
             <span className="text-[16px] text-text-primary">Total</span>
@@ -162,13 +162,13 @@ export function CartSummaryPanel({
         </div>
       )}
 
-      <div className="mt-[24px] flex flex-col items-center gap-[12px]">
+      <div className="mt-6 flex flex-col items-center gap-3">
         <button
           type="button"
           data-testid="proceed-to-checkout-btn"
           disabled={!quote || quote.lines.length === 0}
           onClick={onProceedToCheckout}
-          className="flex h-[40px] w-full items-center justify-center rounded-[3px] bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+          className="flex h-10 w-full items-center justify-center rounded-[3px] bg-accent text-[15px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
         >
           Conectar e finalizar
         </button>

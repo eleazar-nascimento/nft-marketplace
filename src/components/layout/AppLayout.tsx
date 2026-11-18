@@ -34,7 +34,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col bg-bg-primary font-mono text-text-primary">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-[6px] focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-bg-primary"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-bg-primary"
       >
         Pular para o conteúdo principal
       </a>
@@ -55,7 +55,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           data-testid="session-expired-banner"
           className="border-b border-amber-500/60 bg-amber-950/90 px-4 py-3 text-amber-100"
         >
-          <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3">
+          <div className="mx-auto flex max-w-300 flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm">
               <AlertTriangle className="h-4 w-4 shrink-0 text-amber-300" aria-hidden="true" />
               <span>{expiredNotice}</span>
@@ -79,7 +79,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           data-testid="realtime-cart-banner"
           className="border-b border-accent/60 bg-bg-secondary px-4 py-3 text-text-primary"
         >
-          <div className="mx-auto flex max-w-[1200px] flex-col gap-2">
+          <div className="mx-auto flex max-w-300 flex-col gap-2">
             {cartAlerts.map((alert) => (
               <div key={alert.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
                 <div className="flex items-center gap-2">

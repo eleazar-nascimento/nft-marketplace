@@ -105,17 +105,17 @@ function ProfileDetailsSection({
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-[32px]">
-      <h1 className="text-[16px] font-bold leading-[16px] text-text-primary">
+    <div className="flex flex-1 flex-col gap-8">
+      <h1 className="text-[16px] font-bold leading-4 text-text-primary">
         Perfil do colecionador
       </h1>
 
-      <form onSubmit={(event) => void handleProfileSubmit(event)} noValidate className="flex flex-col gap-[24px]">
-        <div className="grid grid-cols-1 gap-x-[28px] gap-y-[20px] sm:grid-cols-2">
-          <div className="flex flex-col gap-[8px]">
+      <form onSubmit={(event) => void handleProfileSubmit(event)} noValidate className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 gap-x-7 gap-y-5 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
             <label htmlFor="profile-name" className="flex items-center text-[15px] text-text-primary">
               <span>Nome de exibição</span>
-              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
             </label>
             <input
               id="profile-name"
@@ -124,7 +124,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(profileErrors.name)}
               aria-describedby={profileErrors.name ? 'profile-name-error' : undefined}
               onChange={(event) => setName(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             {profileErrors.name ? (
               <p
@@ -138,10 +138,10 @@ function ProfileDetailsSection({
             ) : null}
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-2">
             <label htmlFor="profile-username" className="flex items-center text-[15px] text-text-primary">
               <span>Nome de usuário</span>
-              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
             </label>
             <input
               id="profile-username"
@@ -150,7 +150,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(profileErrors.username)}
               aria-describedby={profileErrors.username ? 'profile-username-error' : undefined}
               onChange={(event) => setUsername(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             {profileErrors.username ? (
               <p
@@ -164,10 +164,10 @@ function ProfileDetailsSection({
             ) : null}
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-2">
             <label htmlFor="profile-email" className="flex items-center text-[15px] text-text-primary">
               <span>E-mail</span>
-              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
             </label>
             <input
               id="profile-email"
@@ -177,7 +177,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(profileErrors.email)}
               aria-describedby={profileErrors.email ? 'profile-email-error' : undefined}
               onChange={(event) => setEmail(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             {profileErrors.email ? (
               <p
@@ -191,16 +191,16 @@ function ProfileDetailsSection({
             ) : null}
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-2">
             <label htmlFor="profile-ens-input" className="flex items-center text-[15px] text-text-primary">
               <span>Nome ENS</span>
-              <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+              <span className="ml-1 text-[22px] leading-7.25 text-coral">*</span>
             </label>
-            <div className="flex gap-[10px]">
+            <div className="flex gap-2.5">
               <select
                 aria-label="Sufixo ENS"
                 defaultValue=".eth"
-                className="h-[40px] w-[78px] shrink-0 rounded-[3px] border border-border-subtle bg-bg-primary px-2 text-[15px] text-text-primary focus:border-accent focus:outline-none"
+                className="h-10 w-19.5 shrink-0 rounded-[3px] border border-border-subtle bg-bg-primary px-2 text-[15px] text-text-primary focus:border-accent focus:outline-none"
               >
                 <option value=".eth">.eth</option>
                 <option value=".xyz">.xyz</option>
@@ -209,15 +209,15 @@ function ProfileDetailsSection({
                 id="profile-ens-input"
                 value={ensDomain}
                 onChange={(event) => setEnsDomain(event.target.value)}
-                className="h-[40px] flex-1 rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+                className="h-10 flex-1 rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-2">
             <label htmlFor="profile-website" className="flex items-center text-[15px] text-text-primary">
               <span>Apelido da carteira</span>
-              <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+              <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
             </label>
             <input
               id="profile-website"
@@ -227,7 +227,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(profileErrors.website)}
               aria-describedby={profileErrors.website ? 'profile-website-error' : undefined}
               onChange={(event) => setWebsite(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             {profileErrors.website ? (
               <p
@@ -248,10 +248,10 @@ function ProfileDetailsSection({
             />
           </div>
 
-          <div className="flex flex-col gap-[8px]">
-            <span className="text-[15px] leading-[29px] text-text-primary">Avatar</span>
-            <div className="flex items-center gap-[20px]">
-              <div className="flex h-[50px] w-[50px] shrink-0 items-center justify-center overflow-hidden rounded-full border border-border-subtle bg-bg-elevated">
+          <div className="flex flex-col gap-2">
+            <span className="text-[15px] leading-7.25 text-text-primary">Avatar</span>
+            <div className="flex items-center gap-5">
+              <div className="flex h-12.5 w-12.5 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border-subtle bg-bg-elevated">
                 {profile.avatarUrl ? (
                   <img
                     src={profile.avatarUrl}
@@ -266,13 +266,13 @@ function ProfileDetailsSection({
                 )}
               </div>
 
-              <div className="flex items-center gap-[16px]">
+              <div className="flex items-center gap-4">
                 <button
                   type="button"
                   data-testid="profile-sample-avatar-btn"
                   disabled={avatarPending}
                   onClick={onUseSampleAvatar}
-                  className="inline-flex h-[40px] w-[98px] items-center justify-center rounded-[3px] bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                  className="inline-flex h-10 w-24.5 items-center justify-center rounded-[3px] bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
                 >
                   Alterar
                 </button>
@@ -311,7 +311,7 @@ function ProfileDetailsSection({
             type="submit"
             data-testid="profile-save-btn"
             disabled={updateProfile.isPending}
-            className="inline-flex h-[40px] w-[131px] items-center justify-center rounded-[3px] bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+            className="inline-flex h-10 w-32.75 items-center justify-center rounded-[3px] bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
           >
             {updateProfile.isPending ? 'Salvando...' : 'Salvar'}
           </button>
@@ -321,11 +321,11 @@ function ProfileDetailsSection({
       <form
         onSubmit={(event) => void handlePasswordSubmit(event)}
         noValidate
-        className="flex flex-col gap-[20px]"
+        className="flex flex-col gap-5"
       >
-        <h2 className="text-[16px] font-medium leading-[16px] text-text-primary">Alterar senha</h2>
+        <h2 className="text-[16px] font-medium leading-4 text-text-primary">Alterar senha</h2>
 
-        <div className="flex flex-col gap-[10px] sm:w-[417px]">
+        <div className="flex flex-col gap-2.5 sm:w-104.25">
           <label htmlFor="password-current" className="text-[15px] text-text-primary">
             Senha atual
           </label>
@@ -338,7 +338,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(passwordErrors.currentPassword)}
               aria-describedby={passwordErrors.currentPassword ? 'password-current-error' : undefined}
               onChange={(event) => setCurrentPassword(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent pl-3 pr-10 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent pl-3 pr-10 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             <button
               type="button"
@@ -361,7 +361,7 @@ function ProfileDetailsSection({
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-[10px] sm:w-[417px]">
+        <div className="flex flex-col gap-2.5 sm:w-104.25">
           <label htmlFor="password-new" className="text-[15px] text-text-primary">
             Nova senha
           </label>
@@ -374,7 +374,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(passwordErrors.newPassword)}
               aria-describedby={passwordErrors.newPassword ? 'password-new-error' : undefined}
               onChange={(event) => setNewPassword(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent pl-3 pr-10 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent pl-3 pr-10 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             <button
               type="button"
@@ -397,7 +397,7 @@ function ProfileDetailsSection({
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-[10px] sm:w-[417px]">
+        <div className="flex flex-col gap-2.5 sm:w-104.25">
           <label htmlFor="password-confirm" className="text-[15px] text-text-primary">
             Confirmar nova senha
           </label>
@@ -410,7 +410,7 @@ function ProfileDetailsSection({
               aria-invalid={Boolean(passwordErrors.confirmPassword)}
               aria-describedby={passwordErrors.confirmPassword ? 'password-confirm-error' : undefined}
               onChange={(event) => setConfirmPassword(event.target.value)}
-              className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent pl-3 pr-10 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent pl-3 pr-10 text-[14px] text-text-primary focus:border-accent focus:outline-none"
             />
             <button
               type="button"
@@ -444,7 +444,7 @@ function ProfileDetailsSection({
             type="submit"
             data-testid="password-save-btn"
             disabled={changePassword.isPending}
-            className="inline-flex h-[40px] items-center justify-center rounded-[3px] border border-accent px-5 text-[14px] font-bold text-accent-bright hover:bg-accent/15 disabled:opacity-50 cursor-pointer"
+            className="inline-flex h-10 items-center justify-center rounded-[3px] border border-accent px-5 text-[14px] font-bold text-accent-bright hover:bg-accent/15 disabled:opacity-50 cursor-pointer"
           >
             {changePassword.isPending ? 'Atualizando senha...' : 'Atualizar senha'}
           </button>
@@ -465,7 +465,7 @@ export function ProfilePage() {
 
   if (profileQuery.isLoading) {
     return (
-      <div data-testid="profile-skeleton" className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-0">
+      <div data-testid="profile-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 lg:px-0">
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <Skeleton className="h-96 lg:col-span-3" />
           <Skeleton className="h-96 lg:col-span-9" />
@@ -511,11 +511,11 @@ export function ProfilePage() {
   const orders = ordersQuery.data ?? []
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pt-8 sm:px-6 lg:px-0">
-      <div className="flex flex-col items-start gap-[28px] lg:flex-row">
+    <div className="mx-auto w-full max-w-300 px-4 pt-8 sm:px-6 lg:px-0">
+      <div className="flex flex-col items-start gap-7 lg:flex-row">
         <AccountSidebar activeSection="profile" onLogout={() => void logout()} />
 
-        <div className="flex w-full flex-1 flex-col gap-[32px]">
+        <div className="flex w-full flex-1 flex-col gap-8">
           <ProfileDetailsSection
             key={profile.updatedAt}
             profile={profile}

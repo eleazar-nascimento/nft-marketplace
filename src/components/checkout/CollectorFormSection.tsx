@@ -51,16 +51,16 @@ export function CollectorFormSection({
   const [useAnotherWallet, setUseAnotherWallet] = useState(false)
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-[20px]">
-      <h2 className="text-[17px] font-bold leading-[16px] text-text-primary">
+    <div className="flex w-full flex-1 flex-col gap-5">
+      <h2 className="text-[17px] font-bold leading-4 text-text-primary">
         Perfil do colecionador
       </h2>
 
-      <div className="grid grid-cols-1 gap-x-[24px] gap-y-[16px] sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
         <div className="flex flex-col">
           <label htmlFor="collector-fullName" className="flex items-center text-[15px] text-text-primary">
             <span>Nome de exibição</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <input
             id="collector-fullName"
@@ -69,7 +69,7 @@ export function CollectorFormSection({
             aria-invalid={Boolean(fieldErrors.fullName)}
             aria-describedby={fieldErrors.fullName ? 'err-collector-fullName' : undefined}
             onChange={(event) => onChangeCollectorField('fullName', event.target.value)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
           />
           {fieldErrors.fullName ? (
             <p id="err-collector-fullName" role="alert" className="mt-1 text-xs text-red-400">
@@ -81,27 +81,27 @@ export function CollectorFormSection({
         <div className="flex flex-col">
           <label htmlFor="checkout-username-input" className="flex items-center text-[15px] text-text-primary">
             <span>Nome de usuário</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <input
             id="checkout-username-input"
             value={usernameField}
             onChange={(event) => setUsernameField(event.target.value)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
           />
         </div>
 
         <div className="flex flex-col">
           <label htmlFor="checkout-network-select" className="flex items-center text-[15px] text-text-primary">
             <span>Rede</span>
-            <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-1 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <select
             id="checkout-network-select"
             data-testid="checkout-network-select"
             value={selectedNetwork}
             onChange={(event) => onSelectNetwork(event.target.value as Network)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
           >
             {networks.map((net) => {
               const supported = selectedWallet?.networks.includes(net) ?? true
@@ -117,7 +117,7 @@ export function CollectorFormSection({
         <div className="flex flex-col">
           <label htmlFor="collector-country" className="flex items-center text-[15px] text-text-primary">
             <span>Nome do perfil</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <input
             id="collector-country"
@@ -126,7 +126,7 @@ export function CollectorFormSection({
             aria-invalid={Boolean(fieldErrors.country)}
             aria-describedby={fieldErrors.country ? 'err-collector-country' : undefined}
             onChange={(event) => onChangeCollectorField('country', event.target.value)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
           />
           {fieldErrors.country ? (
             <p id="err-collector-country" role="alert" className="mt-1 text-xs text-red-400">
@@ -138,14 +138,14 @@ export function CollectorFormSection({
         <div className="flex flex-col">
           <label htmlFor="checkout-wallet-address-view" className="flex items-center text-[15px] text-text-primary">
             <span>Endereço da carteira</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <input
             id="checkout-wallet-address-view"
             readOnly
             value={selectedWallet?.address ?? ''}
             placeholder="Endereço 0x da carteira"
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-muted focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-muted focus:outline-none"
           />
         </div>
 
@@ -158,20 +158,20 @@ export function CollectorFormSection({
             value={secondaryEns}
             onChange={(event) => setSecondaryEns(event.target.value)}
             placeholder="ENS ou carteira secundária (opcional)"
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-muted placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-muted placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
         <div className="flex flex-col">
           <label htmlFor="checkout-wallet-select-dropdown" className="flex items-center text-[15px] text-text-primary">
             <span>Tipo de carteira</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <select
             id="checkout-wallet-select-dropdown"
             value={effectiveWalletId}
             onChange={(event) => onSelectWalletId(event.target.value)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-bg-primary px-3 text-[14px] text-text-muted focus:border-accent focus:outline-none"
           >
             {wallets.map((w) => (
               <option key={w.id} value={w.id}>
@@ -184,7 +184,7 @@ export function CollectorFormSection({
         <div className="flex flex-col">
           <label htmlFor="collector-phone" className="flex items-center text-[15px] text-text-primary">
             <span>Código de indicação</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <input
             id="collector-phone"
@@ -193,7 +193,7 @@ export function CollectorFormSection({
             aria-invalid={Boolean(fieldErrors.phone)}
             aria-describedby={fieldErrors.phone ? 'err-collector-phone' : undefined}
             onChange={(event) => onChangeCollectorField('phone', event.target.value)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
           />
           {fieldErrors.phone ? (
             <p id="err-collector-phone" role="alert" className="mt-1 text-xs text-red-400">
@@ -205,7 +205,7 @@ export function CollectorFormSection({
         <div className="flex flex-col">
           <label htmlFor="collector-email" className="flex items-center text-[15px] text-text-primary">
             <span>E-mail</span>
-            <span className="ml-0.5 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <input
             id="collector-email"
@@ -215,7 +215,7 @@ export function CollectorFormSection({
             aria-invalid={Boolean(fieldErrors.email)}
             aria-describedby={fieldErrors.email ? 'err-collector-email' : undefined}
             onChange={(event) => onChangeCollectorField('email', event.target.value)}
-            className="h-[40px] w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-[3px] border border-border-subtle bg-transparent px-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
           />
           {fieldErrors.email ? (
             <p id="err-collector-email" role="alert" className="mt-1 text-xs text-red-400">
@@ -227,12 +227,12 @@ export function CollectorFormSection({
         <div className="flex flex-col">
           <label htmlFor="checkout-ens-select" className="flex items-center text-[15px] text-text-primary">
             <span>Nome ENS</span>
-            <span className="ml-1 text-[22px] leading-[29px] text-coral">*</span>
+            <span className="ml-1 text-[22px] leading-7.25 text-coral">*</span>
           </label>
           <select
             id="checkout-ens-select"
             defaultValue=".eth"
-            className="h-[40px] w-[78px] rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-[15px] text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 w-19.5 rounded-[3px] border border-border-subtle bg-bg-primary px-2.5 text-[15px] text-text-primary focus:border-accent focus:outline-none"
           >
             <option value=".eth">.eth</option>
             <option value=".xyz">.xyz</option>
@@ -243,17 +243,17 @@ export function CollectorFormSection({
       <button
         type="button"
         onClick={() => setUseAnotherWallet((prev) => !prev)}
-        className="inline-flex items-center gap-[8px] text-left text-[15px] text-text-primary cursor-pointer"
+        className="inline-flex items-center gap-2 text-left text-[15px] text-text-primary cursor-pointer"
       >
         <span
-          className={`inline-flex h-[15px] w-[15px] items-center justify-center rounded-full border border-accent ${
+          className={`inline-flex h-3.75 w-3.75 items-center justify-center rounded-full border border-accent ${
             useAnotherWallet ? 'bg-accent' : 'bg-transparent'
           }`}
         />
         <span>Usar outra carteira?</span>
       </button>
 
-      <div className="flex flex-col gap-[12px] sm:w-[350px]">
+      <div className="flex flex-col gap-3 sm:w-87.5">
         <label htmlFor="checkout-collector-note" className="text-[15px] text-text-primary">
           Observação do colecionador (opcional)
         </label>
@@ -261,7 +261,7 @@ export function CollectorFormSection({
           id="checkout-collector-note"
           value={collectorNote}
           onChange={(event) => setCollectorNote(event.target.value)}
-          className="h-[152px] w-full rounded-[3px] border border-border-subtle bg-transparent p-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
+          className="h-38 w-full rounded-[3px] border border-border-subtle bg-transparent p-3 text-[14px] text-text-primary focus:border-accent focus:outline-none"
         />
       </div>
 

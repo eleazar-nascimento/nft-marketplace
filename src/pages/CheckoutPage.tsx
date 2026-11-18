@@ -196,7 +196,7 @@ export function CheckoutPage() {
 
   if (cartQuery.isLoading || walletsQuery.isLoading) {
     return (
-      <div data-testid="checkout-skeleton" className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-0">
+      <div data-testid="checkout-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 lg:px-0">
         <Skeleton className="h-8 w-64" />
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-4 lg:col-span-7">
@@ -228,18 +228,18 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pt-6 sm:px-6 lg:px-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link
             to="/cart"
-            className="inline-flex h-[35px] w-[35px] items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
+            className="inline-flex h-8.75 w-8.75 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated text-text-primary lg:hidden"
             aria-label="Voltar ao carrinho"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </Link>
           <div>
-            <p className="hidden text-[15px] font-bold leading-[16px] text-text-primary lg:block">
+            <p className="hidden text-[15px] font-bold leading-4 text-text-primary lg:block">
               <Link to="/" className="hover:text-accent-bright">
                 Início
               </Link>{' '}
@@ -267,7 +267,7 @@ export function CheckoutPage() {
       <form
         onSubmit={(event) => void handleSubmitOrder(event)}
         noValidate
-        className="mt-8 flex flex-col items-start justify-between gap-[32px] lg:flex-row"
+        className="mt-8 flex flex-col items-start justify-between gap-8 lg:flex-row"
       >
         <CollectorFormSection
           collector={collector}

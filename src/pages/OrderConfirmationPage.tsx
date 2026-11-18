@@ -15,9 +15,9 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
     return (
       <div
         data-testid="confirmation-skeleton"
-        className="mx-auto max-w-[578px] px-4 py-10 sm:px-6"
+        className="mx-auto max-w-144.5 px-4 py-10 sm:px-6"
       >
-        <Skeleton className="h-[640px] w-full" />
+        <Skeleton className="h-160 w-full" />
       </div>
     )
   }
@@ -83,10 +83,10 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
     : order.id
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 lg:px-0">
+    <div className="mx-auto max-w-300 px-4 py-10 sm:px-6 lg:px-0">
       <div
         data-testid="order-confirmation-receipt"
-        className="relative mx-auto w-full max-w-[578px] overflow-hidden bg-bg-secondary shadow-2xl"
+        className="relative mx-auto w-full max-w-144.5 overflow-hidden bg-bg-secondary shadow-2xl"
       >
         <Link
           to="/"
@@ -96,15 +96,15 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
           <X className="h-5 w-5" aria-hidden="true" />
         </Link>
 
-        <div className="flex h-[156px] flex-col items-center justify-center gap-[16px] px-6">
+        <div className="flex h-39 flex-col items-center justify-center gap-4 px-6">
           <img
             src="/images/figma/thank-you.svg"
             alt="Thank You"
             width={80}
             height={80}
-            className="h-[80px] w-[80px] object-contain"
+            className="h-20 w-20 object-contain"
           />
-          <h1 className="text-center text-[16px] font-bold leading-[16px] text-text-secondary">
+          <h1 className="text-center text-[16px] font-bold leading-4 text-text-secondary">
             Seus NFTs agora estão na sua carteira
           </h1>
           <span data-testid="receipt-order-id" className="sr-only">
@@ -114,69 +114,69 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
 
         <div className="h-px w-full bg-accent" />
 
-        <div className="grid grid-cols-2 gap-4 px-6 py-3 text-text-secondary sm:grid-cols-4 sm:px-[36px]">
+        <div className="grid grid-cols-2 gap-4 px-6 py-3 text-text-secondary sm:grid-cols-4 sm:px-9">
           <div className="flex flex-col">
-            <span className="text-[14px] font-bold leading-[16px]">ID da transação</span>
+            <span className="text-[14px] font-bold leading-4">ID da transação</span>
             <span data-testid="receipt-tx-hash" className="text-[15px]">
               {shortTx}
             </span>
           </div>
           <div className="flex flex-col sm:border-l sm:border-accent/40 sm:pl-3">
-            <span className="text-[14px] leading-[16px]">Data</span>
+            <span className="text-[14px] leading-4">Data</span>
             <span className="text-[15px]">29 Jul, 2026</span>
           </div>
           <div className="flex flex-col sm:border-l sm:border-accent/40 sm:pl-3">
-            <span className="text-[14px] leading-[16px]">Total</span>
+            <span className="text-[14px] leading-4">Total</span>
             <span className="text-[15px]">{formatEth(order.totalEth)}</span>
           </div>
           <div className="flex flex-col sm:border-l sm:border-accent/40 sm:pl-3">
-            <span className="text-[14px] font-bold leading-[16px]">Carteira</span>
+            <span className="text-[14px] font-bold leading-4">Carteira</span>
             <span className="text-[15px]">{order.wallet.label || 'MetaMask'}</span>
           </div>
         </div>
 
         <div className="h-px w-full bg-accent" />
 
-        <div className="flex flex-col gap-[16px] px-6 pt-[20px] pb-[36px] sm:px-[44px]">
-          <h2 className="text-[15px] font-bold leading-[16px] text-text-primary">
+        <div className="flex flex-col gap-4 px-6 pt-5 pb-9 sm:px-11">
+          <h2 className="text-[15px] font-bold leading-4 text-text-primary">
             Detalhes da transação
           </h2>
 
           <div className="flex items-center justify-between border-b border-accent/35 pb-3 text-[16px] text-text-primary">
             <span className="font-bold">NFTs</span>
-            <div className="flex items-center gap-[48px]">
+            <div className="flex items-center gap-12">
               <span className="font-bold">Edições</span>
               <span className="font-medium">Subtotal</span>
             </div>
           </div>
 
-          <ul className="flex flex-col gap-[12px]">
+          <ul className="flex flex-col gap-3">
             {order.lines.map((line) => {
               const tokenNumber = formatTokenNumber(line.nftId)
               return (
                 <li
                   key={`${line.nftId}_${line.editionId}`}
                   data-testid={`receipt-line-${line.nftId}`}
-                  className="flex h-[70px] items-center justify-between bg-bg-secondary"
+                  className="flex h-17.5 items-center justify-between bg-bg-secondary"
                 >
-                  <div className="flex items-center gap-[12px]">
+                  <div className="flex items-center gap-3">
                     <img
                       src={line.image.url}
                       alt={line.image.alt}
                       width={70}
                       height={70}
-                      className="h-[70px] w-[70px] rounded-[8px] object-cover"
+                      className="h-17.5 w-17.5 rounded-lg object-cover"
                     />
-                    <div className="flex flex-col gap-[6px]">
-                      <p className="text-[16px] font-bold leading-[16px] text-text-primary">
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-[16px] font-bold leading-4 text-text-primary">
                         {line.name}
                       </p>
-                      <p className="text-[14px] leading-[16px] text-text-muted">
+                      <p className="text-[14px] leading-4 text-text-muted">
                         ID do token: #{tokenNumber}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-[32px] sm:gap-[48px]">
+                  <div className="flex items-center gap-8 sm:gap-12">
                     <span className="text-[14px] text-text-secondary">(x {line.quantity})</span>
                     <span
                       data-testid={`receipt-line-total-${line.nftId}`}
@@ -190,8 +190,8 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
             })}
           </ul>
 
-          <div className="flex flex-col items-end gap-[10px] border-b border-accent/35 pb-4 pt-2">
-            <div className="flex w-full max-w-[321px] flex-col gap-[10px]">
+          <div className="flex flex-col items-end gap-2.5 border-b border-accent/35 pb-4 pt-2">
+            <div className="flex w-full max-w-80.25 flex-col gap-2.5">
               <div className="flex items-center justify-between text-text-primary">
                 <span className="text-[15px]">Subtotal</span>
                 <span data-testid="receipt-subtotal" className="text-[16px]">
@@ -225,7 +225,7 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
             </div>
           </div>
 
-          <p className="text-center text-[14px] leading-[22px] text-text-secondary">
+          <p className="text-center text-[14px] leading-5.5 text-text-secondary">
             Transação confirmada na {networkLabels[order.network]}. A propriedade foi transferida para sua
             carteira conectada e registrada na rede.
           </p>
@@ -233,14 +233,14 @@ export function OrderConfirmationPage({ orderId }: { orderId: string }) {
           <div className="mt-2 flex justify-center">
             <Link
               to="/"
-              className="inline-flex items-center justify-center rounded-[5px] bg-accent px-6 py-[14px] text-[16px] font-bold leading-[16px] text-bg-primary hover:bg-accent-hover"
+              className="inline-flex items-center justify-center rounded-[5px] bg-accent px-6 py-3.5 text-[16px] font-bold leading-4 text-bg-primary hover:bg-accent-hover"
             >
               Ver no Etherscan
             </Link>
           </div>
         </div>
 
-        <div className="h-[10px] w-full bg-accent" />
+        <div className="h-2.5 w-full bg-accent" />
       </div>
     </div>
   )

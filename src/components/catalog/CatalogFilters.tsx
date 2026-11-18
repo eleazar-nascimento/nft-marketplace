@@ -55,10 +55,10 @@ export function CatalogFilters({
   onClearFilters,
 }: CatalogFiltersProps) {
   return (
-    <div className="flex flex-col gap-[36px]">
-      <div className="flex flex-col gap-[12px]">
-        <h3 className="text-[18px] font-bold leading-[16px] text-text-primary">Coleções</h3>
-        <div className="flex flex-col px-[12px]">
+    <div className="flex flex-col gap-9">
+      <div className="flex flex-col gap-3">
+        <h3 className="text-[18px] font-bold leading-4 text-text-primary">Coleções</h3>
+        <div className="flex flex-col px-3">
           {nftCategories.map((cat) => {
             const selected = selectedCategories?.includes(cat) ?? false
             return (
@@ -68,7 +68,7 @@ export function CatalogFilters({
                 data-testid={`${idPrefix}-category-${cat}`}
                 aria-pressed={selected}
                 onClick={() => onToggleCategory(cat)}
-                className={`flex w-full items-center justify-between text-left text-[15px] leading-[40px] transition-colors cursor-pointer ${
+                className={`flex w-full items-center justify-between text-left text-[15px] leading-10 transition-colors cursor-pointer ${
                   selected ? 'font-bold text-accent-bright' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
@@ -80,14 +80,14 @@ export function CatalogFilters({
         </div>
       </div>
 
-      <div className="flex flex-col gap-[12px]">
-        <h3 className="text-[18px] font-bold leading-[16px] text-text-primary">Faixa de preço</h3>
-        <div className="flex flex-col gap-[12px] pl-[12px]">
+      <div className="flex flex-col gap-3">
+        <h3 className="text-[18px] font-bold leading-4 text-text-primary">Faixa de preço</h3>
+        <div className="flex flex-col gap-3 pl-3">
           <div className="flex items-center">
-            <span className="h-[15px] w-[15px] rounded-full bg-accent" />
-            <span className="h-[4px] flex-1 bg-accent" />
-            <span className="h-[15px] w-[15px] rounded-full bg-accent" />
-            <span className="h-[4px] w-12 bg-accent/30" />
+            <span className="h-3.75 w-3.75 rounded-full bg-accent" />
+            <span className="h-1 flex-1 bg-accent" />
+            <span className="h-3.75 w-3.75 rounded-full bg-accent" />
+            <span className="h-1 w-12 bg-accent/30" />
           </div>
 
           <p className="text-[15px] text-text-primary">
@@ -134,7 +134,7 @@ export function CatalogFilters({
               type="button"
               data-testid={`${idPrefix}-apply-price`}
               onClick={onApplyPriceRange}
-              className="inline-flex h-[36px] items-center justify-center rounded-[6px] bg-accent px-[16px] py-[8px] text-[16px] font-bold leading-[20px] text-bg-primary hover:bg-accent-hover cursor-pointer"
+              className="inline-flex h-9 items-center justify-center rounded-md bg-accent px-4 py-2 text-[16px] font-bold leading-5 text-bg-primary hover:bg-accent-hover cursor-pointer"
             >
               Aplicar
             </button>
@@ -142,10 +142,10 @@ export function CatalogFilters({
         </div>
       </div>
 
-      <div className="flex flex-col gap-[12px]">
+      <div className="flex flex-col gap-3">
         <Label
           htmlFor={`${idPrefix}-network-select`}
-          className="text-[18px] font-bold leading-[16px] text-text-primary"
+          className="text-[18px] font-bold leading-4 text-text-primary"
         >
           Rede
         </Label>
@@ -156,7 +156,7 @@ export function CatalogFilters({
           onChange={(event) =>
             onSelectNetwork((event.target.value || undefined) as Network | undefined)
           }
-          className="h-[38px] w-full rounded-[4px] border border-border-subtle bg-bg-primary px-3 text-xs text-text-primary"
+          className="h-9.5 w-full rounded-sm border border-border-subtle bg-bg-primary px-3 text-xs text-text-primary"
         >
           <option value="">Todas as redes</option>
           {networks.map((net) => (
@@ -166,7 +166,7 @@ export function CatalogFilters({
           ))}
         </select>
 
-        <div className="flex flex-col pl-[12px] text-[15px] leading-[40px] text-text-secondary">
+        <div className="flex flex-col pl-3 text-[15px] leading-10 text-text-secondary">
           {networks.map((net) => {
             const active = selectedNetwork === net
             const displayLabel = net === 'base' ? 'Solana' : networkLabels[net]
@@ -187,7 +187,7 @@ export function CatalogFilters({
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-border-subtle pt-3 pl-[12px]">
+      <div className="flex items-center justify-between border-t border-border-subtle pt-3 pl-3">
         <Label htmlFor={`${idPrefix}-only-available`} className="cursor-pointer text-xs text-text-secondary">
           Apenas disponíveis
         </Label>

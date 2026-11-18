@@ -65,7 +65,7 @@ export function RegisterPage() {
       <form
         onSubmit={(event) => void handleSubmit(event)}
         noValidate
-        className="mt-[24px] flex flex-col gap-[12px] px-6 sm:px-[80px]"
+        className="mt-6 flex flex-col gap-3 px-6 sm:px-20"
       >
         <div>
           <label htmlFor="register-name" className="sr-only">
@@ -79,7 +79,7 @@ export function RegisterPage() {
             aria-invalid={Boolean(fieldErrors.name)}
             aria-describedby={fieldErrors.name ? 'register-name-error' : undefined}
             onChange={(event) => setName(event.target.value)}
-            className="h-[40px] w-full rounded-[5px] border border-border-subtle bg-transparent px-[16px] text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
+            className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent px-4 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
           />
           {fieldErrors.name ? (
             <p
@@ -105,7 +105,7 @@ export function RegisterPage() {
             aria-invalid={Boolean(fieldErrors.username)}
             aria-describedby={fieldErrors.username ? 'register-username-error' : undefined}
             onChange={(event) => setUsername(event.target.value)}
-            className="h-[40px] w-full rounded-[5px] border border-border-subtle bg-transparent px-[16px] text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
+            className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent px-4 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
           />
           {fieldErrors.username ? (
             <p
@@ -133,7 +133,7 @@ export function RegisterPage() {
             aria-invalid={Boolean(fieldErrors.email)}
             aria-describedby={fieldErrors.email ? 'register-email-error' : undefined}
             onChange={(event) => setEmail(event.target.value)}
-            className="h-[40px] w-full rounded-[5px] border border-border-subtle bg-transparent px-[16px] text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
+            className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent px-4 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
           />
           {fieldErrors.email ? (
             <p
@@ -162,7 +162,7 @@ export function RegisterPage() {
               aria-invalid={Boolean(fieldErrors.password)}
               aria-describedby={fieldErrors.password ? 'register-password-error' : undefined}
               onChange={(event) => setPassword(event.target.value)}
-              className="h-[40px] w-full rounded-[5px] border border-border-subtle bg-transparent pl-[16px] pr-10 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
+              className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent pl-4 pr-10 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
             />
             <button
               type="button"
@@ -199,7 +199,7 @@ export function RegisterPage() {
             aria-invalid={Boolean(fieldErrors.confirmPassword)}
             aria-describedby={fieldErrors.confirmPassword ? 'register-confirmPassword-error' : undefined}
             onChange={(event) => setConfirmPassword(event.target.value)}
-            className="h-[40px] w-full rounded-[5px] border border-border-subtle bg-transparent px-[16px] text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
+            className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent px-4 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
           />
           {fieldErrors.confirmPassword ? (
             <p
@@ -227,7 +227,7 @@ export function RegisterPage() {
           type="submit"
           data-testid="register-submit"
           disabled={submitting}
-          className="mt-[12px] flex h-[45px] w-full items-center justify-center rounded-[5px] bg-accent text-[16px] font-bold leading-[16px] text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+          className="mt-3 flex h-11.25 w-full items-center justify-center rounded-[5px] bg-accent text-[16px] font-bold leading-4 text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
         >
           {submitting ? 'Criando conta...' : 'Criar conta'}
         </button>
