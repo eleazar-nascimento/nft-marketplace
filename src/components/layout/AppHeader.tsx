@@ -4,7 +4,6 @@ import {
   LogOut,
   Menu,
   Search,
-  ShoppingCart,
   User as UserIcon,
   Wallet as WalletIcon,
 } from 'lucide-react'
@@ -123,12 +122,18 @@ export function AppHeader({
               to="/cart"
               data-testid="nav-cart-link"
               aria-label={`Carrinho com ${itemCount} itens`}
-              className="relative inline-flex h-8 w-8 items-center justify-center text-text-primary hover:text-accent-bright"
+              className="relative inline-flex h-6 w-8 items-center justify-start text-text-primary hover:opacity-85"
             >
-              <ShoppingCart className="h-6 w-6" aria-hidden="true" />
+              <img
+                src="/images/figma/cart-icon.svg"
+                alt=""
+                width={24}
+                height={24}
+                className="h-6 w-6 shrink-0"
+              />
               <span
                 data-testid="nav-cart-count"
-                className="absolute -right-1.5 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium leading-none text-bg-primary"
+                className="absolute left-3.75 -top-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-bg-primary bg-accent px-1 text-[10px] font-medium leading-none text-bg-primary"
               >
                 {itemCount}
               </span>
@@ -202,7 +207,13 @@ export function AppHeader({
               data-testid="mobile-cart-link"
               className="relative inline-flex h-8.75 items-center gap-1.5 rounded-[10px] border border-border-subtle bg-bg-secondary px-3 text-xs font-bold text-text-primary"
             >
-              <ShoppingCart className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+              <img
+                src="/images/figma/cart-icon.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="h-4 w-4 shrink-0"
+              />
               <span className="sr-only">Carrinho: </span>
               <span data-testid="mobile-cart-count">{itemCount}</span>
             </Link>
