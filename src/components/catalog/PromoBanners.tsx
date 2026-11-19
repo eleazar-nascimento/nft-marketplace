@@ -11,9 +11,9 @@ export function PromoBanners() {
           width={280}
           height={250}
           loading="lazy"
-          className="h-55 w-full rounded-xl object-cover sm:h-62.5 sm:w-67.5"
+          className="h-55 w-full shrink-0 rounded-xl object-cover sm:h-62.5 sm:w-52 xl:w-67.5"
         />
-        <div className="flex flex-1 flex-col items-end justify-center gap-3 p-6 text-right">
+        <div className="flex min-w-0 flex-1 flex-col items-end justify-center gap-3 p-5 text-right xl:p-6">
           <h2 className="text-[18px] font-bold leading-6 text-text-primary">
             Lançamentos gênesis
             <br />
@@ -40,9 +40,9 @@ export function PromoBanners() {
           width={280}
           height={250}
           loading="lazy"
-          className="h-55 w-full rounded-xl object-cover sm:h-62.5 sm:w-67.5"
+          className="h-55 w-full shrink-0 rounded-xl object-cover sm:h-62.5 sm:w-52 xl:w-67.5"
         />
-        <div className="flex flex-1 flex-col items-end justify-center gap-3 p-6 text-right">
+        <div className="flex min-w-0 flex-1 flex-col items-end justify-center gap-3 p-5 text-right xl:p-6">
           <h2 className="text-[18px] font-bold leading-6 text-text-primary">
             Arte digital selecionada
             <br />e muito mais

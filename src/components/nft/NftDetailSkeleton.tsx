@@ -4,7 +4,7 @@ export function NftDetailSkeleton() {
   return (
     <div
       data-testid="nft-detail-skeleton"
-      className="mx-auto min-h-220 w-full max-w-300 px-4 pt-6 sm:px-6 lg:px-0"
+      className="mx-auto min-h-220 w-full max-w-300 px-4 pt-6 sm:px-6 xl:px-0"
     >
       <Skeleton className="h-4 w-40 rounded-sm" />
       <div className="mt-4 flex flex-col gap-8 lg:flex-row lg:items-start">

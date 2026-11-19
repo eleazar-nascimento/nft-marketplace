@@ -122,7 +122,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-300 px-0 pt-2 pb-36 sm:px-6 sm:pt-6 lg:px-0 lg:pb-0">
+    <div className="mx-auto w-full max-w-300 px-0 pt-2 pb-36 sm:px-6 sm:pt-6 lg:pb-0 xl:px-0">
       <div className="flex items-center justify-between px-5 py-3 lg:hidden">
         <button
           type="button"

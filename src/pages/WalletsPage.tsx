@@ -443,7 +443,7 @@ export function WalletsPage() {
 
   if (walletsQuery.isLoading) {
     return (
-      <div data-testid="wallets-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 lg:px-0">
+      <div data-testid="wallets-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 xl:px-0">
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
           <Skeleton className="h-96 lg:col-span-3" />
           <Skeleton className="h-96 lg:col-span-9" />
@@ -458,7 +458,7 @@ export function WalletsPage() {
   const secondary = wallets.find((wallet) => wallet.kind === 'secondary')
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-5 pb-6 sm:px-6 lg:px-0 lg:pt-8 lg:pb-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-5 pb-6 sm:px-6 lg:pt-8 lg:pb-0 xl:px-0">
       <div className="flex flex-col items-start gap-7 lg:flex-row">
         <AccountSidebar activeSection="wallets" onLogout={() => void logout()} />
 

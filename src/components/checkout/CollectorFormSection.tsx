@@ -39,7 +39,7 @@ export function CollectorFormSection({
   const [useAnotherWallet, setUseAnotherWallet] = useState(false)
 
   return (
-    <div className="hidden w-full flex-1 flex-col gap-5 lg:flex">
+    <div className="hidden min-w-0 w-full flex-1 flex-col gap-5 lg:flex">
       <h2 className="text-[17px] font-bold leading-4 text-text-primary">
         Perfil do colecionador
       </h2>

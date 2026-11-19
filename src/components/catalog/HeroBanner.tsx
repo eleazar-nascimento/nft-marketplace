@@ -68,21 +68,24 @@ export function HeroBanner() {
         </div>
       </div>
 
-      <div className="hidden h-112.5 w-full items-center pl-10 lg:flex">
-        <div className="flex w-290 items-center justify-between">
-          <div className="flex w-150 flex-col items-end gap-11">
+      <div className="hidden min-h-112.5 w-full items-center lg:flex lg:pl-4 xl:pl-10">
+        <div className="flex w-full items-center justify-between gap-8 xl:w-290">
+          <div className="flex min-w-0 flex-1 max-w-150 flex-col items-end gap-11">
             <div className="flex w-full flex-col items-start gap-8">
               <div className="flex w-full flex-col items-start gap-1">
                 <div className="flex w-full flex-col items-start gap-2 text-text-primary">
                   <p className="w-full text-[14px] font-medium leading-4 tracking-[1.4px]">
                     Bem-vindo à Kurio
                   </p>
-                  <h1 id="hero-heading" className="w-full text-[43px] font-bold leading-[70px]">
+                  <h1
+                    id="hero-heading"
+                    className="w-full text-[34px] font-bold leading-[50px] xl:text-[43px] xl:leading-[70px]"
+                  >
                     <span className="block">SEJA DONO DO FUTURO</span>
                     <span className="block">DA ARTE DIGITAL</span>
                   </h1>
                 </div>
-                <p className="w-139.25 text-[14px] font-normal leading-6 text-text-secondary">
+                <p className="w-full max-w-139.25 text-[14px] font-normal leading-6 text-text-secondary">
                   Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte digital
                   rara, apoie artistas e tenha uma parte da cultura da internet.
                 </p>
@@ -109,7 +112,7 @@ export function HeroBanner() {
             to="/nft/$nftId"
             params={{ nftId: 'nft_001' }}
             data-testid="hero-featured-card"
-            className="relative block h-112.5 w-112.5 shrink-0 overflow-hidden rounded-3xl"
+            className="relative block h-88 w-88 shrink-0 overflow-hidden rounded-3xl xl:h-112.5 xl:w-112.5"
           >
             <img
               src="/images/figma/8f387.jpg"

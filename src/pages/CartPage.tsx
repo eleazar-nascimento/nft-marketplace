@@ -40,7 +40,7 @@ export function CartPage() {
 
   if (cartQuery.isLoading) {
     return (
-      <div data-testid="cart-page-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 lg:px-0">
+      <div data-testid="cart-page-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 xl:px-0">
         <Skeleton className="h-8 w-64" />
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-4 lg:col-span-8">
@@ -108,7 +108,7 @@ export function CartPage() {
   const relatedItems = (relatedQuery.data?.items ?? []).slice(0, 5)
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-300 flex-col overflow-hidden px-4 pt-4 sm:px-6 lg:block lg:h-auto lg:overflow-visible lg:px-0 lg:pt-6">
+    <div className="mx-auto flex h-dvh w-full max-w-300 flex-col overflow-hidden px-4 pt-4 sm:px-6 lg:block lg:h-auto lg:overflow-visible lg:pt-6 xl:px-0">
       <div className="flex shrink-0 items-center justify-between gap-4 pb-3 lg:pb-0">
         <div className="flex flex-1 items-center gap-3 lg:flex-none">
           <button
@@ -169,14 +169,14 @@ export function CartPage() {
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 flex-col justify-between gap-2 lg:mt-6 lg:flex-row lg:items-start lg:gap-10">
-        <div className="min-h-0 flex-1 overflow-y-auto pr-0.5 pb-3 lg:flex-none lg:overflow-visible lg:pr-0 lg:pb-0 lg:w-195.5">
-          <div className="hidden items-center justify-between border-b border-accent/35 pb-3 pr-6 text-[16px] text-text-primary sm:flex">
-            <span className="w-62.5 font-bold">NFTs</span>
-            <span className="w-22.5 font-medium">Preço</span>
-            <span className="w-23.75 font-bold text-center">Edições</span>
-            <span className="w-25 font-medium">Total</span>
-            <span className="w-6" />
+      <div className="flex min-h-0 flex-1 flex-col justify-between gap-2 lg:mt-6 lg:flex-row lg:items-start lg:gap-6 xl:gap-10">
+        <div className="min-h-0 flex-1 overflow-y-auto pr-0.5 pb-3 lg:min-w-0 lg:overflow-visible lg:pr-0 lg:pb-0 xl:flex-none xl:w-195.5">
+          <div className="hidden items-center justify-between gap-2 border-b border-accent/35 pb-3 pr-3 text-[16px] text-text-primary sm:flex xl:gap-0 xl:pr-6">
+            <span className="min-w-0 flex-1 font-bold xl:flex-none xl:w-62.5">NFTs</span>
+            <span className="w-22 shrink-0 font-medium xl:w-22.5">Preço</span>
+            <span className="w-21 shrink-0 text-center font-bold xl:w-23.75">Edições</span>
+            <span className="w-22 shrink-0 font-medium xl:w-25">Total</span>
+            <span className="w-5 shrink-0 xl:w-6" />
           </div>
 
           <div className="flex flex-col gap-2.5 sm:mt-3 sm:gap-3">
@@ -191,9 +191,9 @@ export function CartPage() {
                 <div
                   key={line.id}
                   data-testid={`cart-line-${line.nftId}`}
-                  className="flex items-center justify-between gap-2 rounded-xl bg-bg-secondary p-2 sm:h-17.5 sm:rounded-none sm:p-0 sm:pr-6"
+                  className="flex items-center justify-between gap-2 rounded-xl bg-bg-secondary p-2 sm:h-17.5 sm:rounded-none sm:p-0 sm:pr-3 xl:pr-6"
                 >
-                  <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:flex-none sm:w-62.5 sm:gap-4">
+                  <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3 xl:flex-none xl:w-62.5 xl:gap-4">
                     <Link
                       to="/nft/$nftId"
                       params={{ nftId: line.nftId }}
@@ -240,15 +240,15 @@ export function CartPage() {
                     </div>
                   </div>
 
-                  <div className="flex shrink-0 items-center justify-end gap-1.5 sm:flex-1 sm:justify-between sm:gap-4">
+                  <div className="flex shrink-0 items-center justify-end gap-1.5 sm:gap-2 xl:flex-1 xl:justify-between xl:gap-4">
                     <span
                       data-testid={`cart-line-unit-price-${line.nftId}`}
-                      className="hidden text-[16px] font-bold leading-4 text-text-secondary sm:inline sm:w-22.5"
+                      className="hidden text-[16px] font-bold leading-4 text-text-secondary sm:inline sm:w-22 xl:w-22.5"
                     >
                       {formatEth(line.unitPriceEth)}
                     </span>
 
-                    <div className="flex items-center justify-center gap-1.5 sm:w-23.75 sm:gap-3">
+                    <div className="flex items-center justify-center gap-1.5 sm:w-21 sm:gap-2 xl:w-23.75 xl:gap-3">
                       <button
                         type="button"
                         data-testid={`cart-qty-decrease-${line.nftId}`}
@@ -283,7 +283,7 @@ export function CartPage() {
 
                     <span
                       data-testid={`cart-line-total-${line.nftId}`}
-                      className="hidden text-[16px] font-bold leading-4 text-accent-bright sm:inline sm:w-25"
+                      className="hidden text-[16px] font-bold leading-4 text-accent-bright sm:inline sm:w-22 xl:w-25"
                     >
                       {formatEth(mulEth(line.unitPriceEth, line.quantity))}
                     </span>
@@ -294,7 +294,7 @@ export function CartPage() {
                       aria-label={`Remover ${line.name} do carrinho`}
                       disabled={removeItem.isPending}
                       onClick={() => removeItem.mutate(line.id)}
-                      className="inline-flex h-6 w-5 items-center justify-center text-text-secondary hover:text-red-400 sm:w-6 cursor-pointer"
+                      className="inline-flex h-6 w-5 items-center justify-center text-text-secondary hover:text-red-400 xl:w-6 cursor-pointer"
                     >
                       <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
                     </button>

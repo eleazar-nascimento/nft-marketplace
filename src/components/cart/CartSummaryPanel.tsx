@@ -35,7 +35,7 @@ export function CartSummaryPanel({
   onProceedToCheckout,
 }: CartSummaryPanelProps) {
   return (
-    <div className="-mx-4 w-[calc(100%+2rem)] shrink-0 rounded-t-4xl border-t border-border-subtle/70 bg-bg-secondary px-5 pt-4 pb-5 sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-6 lg:mx-0 lg:w-83 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0">
+    <div className="-mx-4 w-[calc(100%+2rem)] shrink-0 rounded-t-4xl border-t border-border-subtle/70 bg-bg-secondary px-5 pt-4 pb-5 sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-6 lg:mx-0 lg:w-78 lg:rounded-none lg:border-t-0 lg:bg-transparent lg:p-0 xl:w-83">
       <div className="hidden flex-col gap-3 lg:flex">
         <h2 className="text-[18px] font-bold leading-4 text-text-primary">Resumo da carteira</h2>
         <div className="h-px w-full bg-accent/35" />
@@ -98,13 +98,13 @@ export function CartSummaryPanel({
                 aria-invalid={Boolean(couponError)}
                 aria-describedby={couponError ? 'cart-coupon-error' : undefined}
                 onChange={(event) => onChangeCouponInput(event.target.value)}
-                className="flex-1 bg-transparent pl-4 pr-2 text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none lg:pl-2 lg:text-[12px]"
+                className="min-w-0 flex-1 bg-transparent pl-4 pr-2 text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none lg:pl-2 lg:text-[12px]"
               />
               <button
                 type="submit"
                 data-testid="apply-coupon-btn"
                 disabled={applyCouponPending}
-                className="h-12.5 w-24.25 shrink-0 rounded-[40px] bg-[linear-gradient(96deg,rgba(210,138,76,0.54)_0.94%,rgb(210,138,76)_105.02%)] text-[15px] font-bold leading-4 text-text-primary hover:opacity-95 lg:h-10 lg:w-25.5 lg:rounded-none lg:bg-accent lg:bg-none lg:text-bg-primary lg:hover:bg-accent-hover cursor-pointer"
+                className="h-12.5 w-24.25 shrink-0 rounded-[40px] bg-[linear-gradient(96deg,rgba(210,138,76,0.54)_0.94%,rgb(210,138,76)_105.02%)] text-[15px] font-bold leading-4 text-text-primary hover:opacity-95 lg:h-10 lg:w-23 lg:rounded-none lg:bg-accent lg:bg-none lg:text-bg-primary lg:hover:bg-accent-hover xl:w-25.5 cursor-pointer"
               >
                 Aplicar
               </button>

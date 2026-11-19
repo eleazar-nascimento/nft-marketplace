@@ -197,7 +197,7 @@ export function CheckoutPage() {
 
   if (cartQuery.isLoading || walletsQuery.isLoading) {
     return (
-      <div data-testid="checkout-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 lg:px-0">
+      <div data-testid="checkout-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 xl:px-0">
         <Skeleton className="h-8 w-64" />
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-4 lg:col-span-7">
@@ -229,7 +229,7 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-300 flex-col overflow-hidden px-4 pt-4 sm:px-6 lg:block lg:h-auto lg:overflow-visible lg:px-0 lg:pt-6">
+    <div className="mx-auto flex h-dvh w-full max-w-300 flex-col overflow-hidden px-4 pt-4 sm:px-6 lg:block lg:h-auto lg:overflow-visible lg:pt-6 xl:px-0">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 pb-3 lg:pb-0">
         <div className="flex flex-1 items-center gap-3 lg:flex-none">
           <button

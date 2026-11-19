@@ -16,7 +16,7 @@ export function FavoritesPage() {
   return (
     <div
       data-testid="favorites-page"
-      className="mx-auto w-full max-w-300 px-4 pt-6 pb-6 sm:px-6 lg:px-0 lg:pt-8 lg:pb-12"
+      className="mx-auto w-full max-w-300 px-4 pt-6 pb-6 sm:px-6 lg:pt-8 lg:pb-12 xl:px-0"
     >
       <div className="mb-6 flex items-center justify-between gap-4 border-b border-border-subtle pb-4">
         <div className="flex items-center gap-2.5">
