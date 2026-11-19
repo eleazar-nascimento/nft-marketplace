@@ -45,6 +45,7 @@ export function AppHeader({
   const isHomeActive = !isMarketActive
   const showHeaderDivider =
     pathname === '/' ||
+    pathname.startsWith('/favorites') ||
     pathname.startsWith('/profile') ||
     pathname.startsWith('/wallets') ||
     pathname.startsWith('/login') ||

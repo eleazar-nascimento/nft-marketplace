@@ -11,7 +11,7 @@ import { useCart } from '@/state/queries'
 import { useRealtime } from '@/state/realtime'
 import { useSession } from '@/state/session'
 
-export function ScenarioToolbar() {
+export function ScenarioToolbar({ fullWidth = false }: { fullWidth?: boolean }) {
   const queryClient = useQueryClient()
   const { stats, reconnectNow } = useRealtime()
   const { data: cart } = useCart()
@@ -123,19 +123,32 @@ export function ScenarioToolbar() {
       <DialogTrigger asChild>
         <button
           type="button"
-          data-testid="scenario-toolbar-trigger"
-          className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-bg-secondary px-3 py-1.5 text-xs font-mono text-text-secondary hover:bg-bg-elevated hover:text-white cursor-pointer"
+          data-testid={fullWidth ? 'mobile-scenario-toolbar-trigger' : 'scenario-toolbar-trigger'}
+          className={
+            fullWidth
+              ? 'flex w-full items-center justify-between rounded-lg border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-sm font-bold text-text-primary hover:border-accent cursor-pointer'
+              : 'inline-flex items-center gap-2 rounded-full border border-border-subtle bg-bg-secondary px-3 py-1.5 text-xs font-mono text-text-secondary hover:bg-bg-elevated hover:text-white cursor-pointer'
+          }
         >
-          <SlidersHorizontal className="h-3.5 w-3.5 text-accent-bright" aria-hidden="true" />
-          <span className="sr-only">Painel de simulação, </span>
-          <span className="hidden sm:inline">Cenário:</span>
-          <span className="font-semibold text-white" data-testid="active-scenario-label">
-            {preset}
+          <span className="flex items-center gap-2.5">
+            <SlidersHorizontal
+              className={fullWidth ? 'h-4 w-4 text-accent-bright' : 'h-3.5 w-3.5 text-accent-bright'}
+              aria-hidden="true"
+            />
+            <span className="sr-only">Painel de simulação, </span>
+            <span className={fullWidth ? '' : 'hidden sm:inline'}>
+              {fullWidth ? 'Cenário' : 'Cenário:'}
+            </span>
           </span>
-          <span
-            aria-hidden="true"
-            className={`h-2 w-2 rounded-full ${stats.connected ? 'bg-emerald-400' : 'bg-amber-400'}`}
-          />
+          <span className="flex items-center gap-2">
+            <span className="font-semibold text-white" data-testid="active-scenario-label">
+              {preset}
+            </span>
+            <span
+              aria-hidden="true"
+              className={`h-2 w-2 rounded-full ${stats.connected ? 'bg-emerald-400' : 'bg-amber-400'}`}
+            />
+          </span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl" closeLabel="Fechar painel de simulação">

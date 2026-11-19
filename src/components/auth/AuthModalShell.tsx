@@ -21,6 +21,7 @@ function getSafeCloseDestination(): string {
     !candidate.startsWith('/checkout') &&
     !candidate.startsWith('/profile') &&
     !candidate.startsWith('/wallets') &&
+    !candidate.startsWith('/favorites') &&
     !candidate.startsWith('/orders')
   ) {
     consumeReturnTo()

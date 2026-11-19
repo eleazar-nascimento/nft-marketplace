@@ -22,6 +22,7 @@ import {
 import { readStoredSession, saveReturnTo } from '@/lib/storage'
 import { CartPage } from '@/pages/CartPage'
 import { CheckoutPage } from '@/pages/CheckoutPage'
+import { FavoritesPage } from '@/pages/FavoritesPage'
 import { HomePage, type HomeSearchState } from '@/pages/HomePage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NftDetailPage } from '@/pages/NftDetailPage'
@@ -245,6 +246,17 @@ const walletsRoute = createRoute({
   ),
 })
 
+const favoritesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/favorites',
+  beforeLoad: requireAuthBeforeLoad,
+  component: () => (
+    <ProtectedRoute>
+      <FavoritesPage />
+    </ProtectedRoute>
+  ),
+})
+
 const catchAllRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '$',
@@ -261,6 +273,7 @@ const routeTree = rootRoute.addChildren([
   orderConfirmationRoute,
   profileRoute,
   walletsRoute,
+  favoritesRoute,
   catchAllRoute,
 ])
 

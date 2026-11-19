@@ -32,6 +32,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const hideHeaderAndFooterOnMobile =
     isMobileFocusedFlow ||
     pathname === '/' ||
+    pathname.startsWith('/favorites') ||
     pathname.startsWith('/profile') ||
     pathname.startsWith('/wallets')
   const showMobileTabBar = !isMobileFocusedFlow

@@ -80,7 +80,21 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
           </span>
         ) : null}
 
-        <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5">
+        <button
+          type="button"
+          onClick={handleFavorite}
+          data-testid={`mobile-favorite-btn-${nft.id}`}
+          aria-pressed={isFavorite}
+          aria-label={isFavorite ? `Remover ${nft.name} dos favoritos` : `Favoritar ${nft.name}`}
+          className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-accent/60 bg-bg-primary/80 text-accent-bright backdrop-blur-xs lg:hidden cursor-pointer"
+        >
+          <Heart
+            className={`h-4 w-4 ${isFavorite ? 'fill-accent-bright text-accent-bright' : 'text-accent-bright'}`}
+            aria-hidden="true"
+          />
+        </button>
+
+        <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2.5 lg:flex">
           <button
             type="button"
             onClick={handleQuickAddToCart}

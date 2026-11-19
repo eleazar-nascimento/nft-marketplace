@@ -8,7 +8,7 @@ interface MobileTabBarProps {
 
 export function MobileTabBar({ pathname, status, itemCount }: MobileTabBarProps) {
   const isHome = pathname === '/'
-  const isFavorites = pathname.startsWith('/profile')
+  const isFavorites = pathname.startsWith('/favorites')
   const isCart = pathname.startsWith('/cart')
   const isAccount = pathname.startsWith('/profile') || pathname.startsWith('/login')
 
@@ -46,7 +46,7 @@ export function MobileTabBar({ pathname, status, itemCount }: MobileTabBarProps)
         </Link>
 
         <Link
-          to="/profile"
+          to="/favorites"
           aria-label="Favoritos"
           className={`flex h-11 w-11 items-center justify-center rounded-full ${
             isFavorites ? 'text-accent-bright' : 'text-[#C5A78C]'

@@ -12,6 +12,7 @@ import { CatalogFilters } from '@/components/catalog/CatalogFilters'
 import { HeroBanner } from '@/components/catalog/HeroBanner'
 import { MintJournalSection } from '@/components/catalog/MintJournalSection'
 import { PromoBanners } from '@/components/catalog/PromoBanners'
+import { ScenarioToolbar } from '@/components/layout/ScenarioToolbar'
 import { NftCard, NftCardSkeleton } from '@/components/nft/NftCard'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -190,6 +191,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                   <Wallet className="h-4 w-4 text-accent-bright" aria-hidden="true" />
                   <span>Carteira</span>
                 </Link>
+                <ScenarioToolbar fullWidth />
               </div>
             </nav>
 
