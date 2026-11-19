@@ -8,7 +8,6 @@ test.describe('Autenticação, Sessão e Favoritos', () => {
     await resetSimulation(page, 'fast')
 
     await page.goto('/register')
-    await page.getByTestId('register-name').fill('Ana Duplicada')
     await page.getByTestId('register-username').fill('ana_dup')
     await page.getByTestId('register-email').fill('ana@nft.dev')
     await page.getByTestId('register-password').fill('Senha@123')
@@ -19,7 +18,7 @@ test.describe('Autenticação, Sessão e Favoritos', () => {
     await page.getByTestId('register-email').fill('clara@nft.dev')
     await page.getByTestId('register-username').fill('clara_mendes')
     await page.getByTestId('register-submit').click()
-    await expect(page.getByTestId('nav-user-name')).toHaveText('Ana Duplicada')
+    await expect(page.getByTestId('nav-user-name')).toHaveText('clara_mendes')
 
     await page.getByTestId('nav-logout-button').click()
     await expect(page.getByTestId('nav-login-link')).toBeVisible()

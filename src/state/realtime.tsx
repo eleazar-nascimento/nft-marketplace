@@ -307,6 +307,30 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       })
 
       if (order.status === 'confirmed') {
+        const purchasedByEdition = new Map(order.lines.map((line) => [line.editionId, line.quantity]))
+        const purchasedNftIds = new Set(order.lines.map((line) => line.nftId))
+        queryClient.setQueryData<Cart | undefined>(queryKeys.cart.byScope(activeUserId), (cached) => {
+          if (!cached) return cached
+          const remainingLines = cached.lines
+            .map((line) => {
+              const purchasedQty = purchasedByEdition.get(line.editionId) ?? 0
+              if (purchasedQty <= 0) return line
+              const nextQty = line.quantity - purchasedQty
+              return nextQty > 0 ? { ...line, quantity: nextQty } : null
+            })
+            .filter((line): line is Cart['lines'][number] => line !== null)
+          return {
+            ...cached,
+            version: cached.version + 1,
+            updatedAt: order.updatedAt,
+            itemCount: remainingLines.reduce((sum, line) => sum + line.quantity, 0),
+            couponCode: remainingLines.length === 0 ? null : cached.couponCode,
+            lines: remainingLines,
+          }
+        })
+        setCartAlerts((prev) =>
+          prev.filter((item) => !(item.scope === activeUserId && purchasedNftIds.has(item.nftId))),
+        )
         void queryClient.invalidateQueries({ queryKey: queryKeys.cart.byScope(activeUserId) })
         void queryClient.invalidateQueries({ queryKey: queryKeys.quote.allByScope(activeUserId) })
         void queryClient.invalidateQueries({ queryKey: queryKeys.nfts.all })
@@ -344,6 +368,24 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       socketRef.current = null
     }
   }, [notify, queryClient, refreshSession])
+
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
+      if (event.type !== 'updated') return
+      const queryKey = event.query.queryKey
+      if (queryKey[0] !== 'cart' || typeof queryKey[1] !== 'string') return
+      if (event.query.state.status !== 'success') return
+      const cartData = event.query.state.data as Cart | undefined
+      if (!cartData) return
+      const cartScope = queryKey[1]
+      const cartNftIds = new Set(cartData.lines.map((line) => line.nftId))
+      setCartAlerts((prev) => {
+        const next = prev.filter((item) => item.scope !== cartScope || cartNftIds.has(item.nftId))
+        return next.length === prev.length ? prev : next
+      })
+    })
+    return unsubscribe
+  }, [queryClient])
 
   const reconnectNow = useCallback(() => {
     const socket = socketRef.current

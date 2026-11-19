@@ -6,7 +6,6 @@ import { fingerprint } from '../lib/crypto'
 import { createId, randomHex } from '../lib/random'
 import { scenario } from '../scenarios'
 import { applyPurchase, getOrCreateCart } from './cart'
-import { touchNft } from './catalog'
 import { errors, MockApiError } from './errors'
 import { toOrder, toQuote } from './mappers'
 import { computeQuote } from './quote'
@@ -48,18 +47,26 @@ export function settleOrderIfDue(order: OrderRecord, force = false): boolean {
       order.status = 'confirmed'
       order.txHash = txHash
       order.explorerUrl = `${explorerBases[order.network]}${txHash}`
+      const updatedNftIds: string[] = []
       for (const line of order.lines) {
         const nft = store.data.nfts.find((candidate) => candidate.id === line.nftId)
         const edition = nft?.editions.find((candidate) => candidate.id === line.editionId)
         if (nft && edition) {
           edition.available = Math.max(0, edition.available - line.quantity)
-          touchNft(nft)
+          nft.version += 1
+          updatedNftIds.push(nft.id)
         }
       }
       applyPurchase(
         order.cartId,
         order.lines.map((line) => ({ editionId: line.editionId, quantity: line.quantity })),
       )
+      store.save()
+      store.emit({ type: 'order.updated', orderId: order.id, userId: order.userId })
+      for (const nftId of updatedNftIds) {
+        store.emit({ type: 'nft.updated', nftId })
+      }
+      return true
     }
   } else {
     order.status = 'declined'

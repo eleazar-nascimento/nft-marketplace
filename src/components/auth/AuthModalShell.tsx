@@ -72,9 +72,9 @@ export function AuthModalShell({
             handleClose()
           }
         }}
-        className="flex min-h-[calc(100dvh-160px)] flex-col items-center justify-center bg-bg-primary px-5 py-8 sm:fixed sm:inset-0 sm:z-50 sm:min-h-0 sm:overflow-y-auto sm:bg-black/75 sm:p-4 sm:backdrop-blur-xs"
+        className="flex min-h-dvh flex-col items-center justify-start bg-bg-primary px-5 py-8 sm:fixed sm:inset-0 sm:z-50 sm:min-h-0 sm:overflow-y-auto sm:bg-black/75 sm:p-4 sm:backdrop-blur-xs"
       >
-        <div className="relative w-full max-w-125 overflow-hidden bg-bg-primary sm:my-auto sm:rounded-lg sm:border sm:border-border-subtle sm:bg-bg-secondary sm:pt-12 sm:shadow-2xl">
+        <div className="relative my-auto w-full max-w-100 overflow-hidden bg-bg-primary sm:max-w-125 sm:rounded-lg sm:border sm:border-border-subtle sm:bg-bg-secondary sm:pt-12 sm:shadow-2xl">
           <button
             type="button"
             onClick={handleClose}
@@ -84,7 +84,7 @@ export function AuthModalShell({
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
 
-          <div className="mb-8 flex justify-center sm:hidden">
+          <div className="mb-10 flex justify-center sm:hidden">
             <Link to="/" className="text-[24px] font-bold tracking-[3px] text-text-primary">
               KURIO
             </Link>
@@ -148,7 +148,14 @@ export function AuthModalShell({
                 onClick={onGoogleClick}
                 className="flex h-10 w-full items-center justify-center gap-3 rounded-lg border border-border-subtle text-[13px] font-medium text-text-secondary hover:border-accent sm:rounded-[5px] cursor-pointer"
               >
-                <span className="font-bold text-text-primary">G</span>
+                <img
+                  src="/images/figma/auth-google.svg"
+                  alt=""
+                  width={18}
+                  height={18}
+                  aria-hidden="true"
+                  className="h-4.5 w-4.5 shrink-0"
+                />
                 <span>Continuar com Google</span>
               </button>
               <button
@@ -156,7 +163,14 @@ export function AuthModalShell({
                 onClick={onFacebookClick}
                 className="flex h-10 w-full items-center justify-center gap-3 rounded-lg border border-border-subtle text-[13px] font-medium text-text-secondary hover:border-accent sm:rounded-[5px] cursor-pointer"
               >
-                <span className="font-bold text-[#3b5999]">f</span>
+                <img
+                  src="/images/figma/auth-facebook.svg"
+                  alt=""
+                  width={18}
+                  height={18}
+                  aria-hidden="true"
+                  className="h-4.5 w-4.5 shrink-0"
+                />
                 <span>Continuar com Facebook</span>
               </button>
             </div>

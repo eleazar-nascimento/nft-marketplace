@@ -1,5 +1,15 @@
 import { Link } from '@tanstack/react-router'
-import { AlertCircle, ChevronRight, Filter, Search, SlidersHorizontal, X } from 'lucide-react'
+import {
+  AlertCircle,
+  ChevronRight,
+  Filter,
+  Search,
+  ShoppingCart,
+  SlidersHorizontal,
+  User,
+  Wallet,
+  X,
+} from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { CatalogFilters } from '@/components/catalog/CatalogFilters'
 import { HeroBanner } from '@/components/catalog/HeroBanner'
@@ -20,7 +30,7 @@ import {
   type NftListQuery,
   type NftSort,
 } from '@/contracts'
-import { useFavorites, useNftsList } from '@/state/queries'
+import { useCart, useFavorites, useNftsList } from '@/state/queries'
 
 export interface HomeSearchState {
   q?: string
@@ -60,6 +70,8 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
 
   const catalogQuery = useNftsList(queryParams)
   const favoritesQuery = useFavorites()
+  const cartQuery = useCart()
+  const cartItemCount = cartQuery.data?.itemCount ?? 0
   const favoriteSet = new Set(favoritesQuery.data?.nftIds ?? [])
 
   const handleSearchSubmit = (event: FormEvent) => {
@@ -125,28 +137,100 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
           />
           <input
             type="search"
+            data-testid="mobile-search-input"
             aria-label="Explorar coleções"
             placeholder="Explorar coleções"
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
-            className="h-11.25 w-full rounded-[10px] bg-bg-secondary pl-10 pr-4 text-[14px] font-bold text-text-primary placeholder:text-text-muted focus:outline-none"
+            className="h-11.25 w-full rounded-[10px] bg-bg-secondary pl-10 pr-9 text-[14px] font-bold text-text-primary placeholder:text-text-muted focus:outline-none"
           />
+          {searchInput ? (
+            <button
+              type="button"
+              aria-label="Limpar busca"
+              onClick={() => {
+                setSearchInput('')
+                onUpdateSearch({ q: undefined }, true)
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary cursor-pointer"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          ) : null}
         </form>
         <Dialog open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
           <button
             type="button"
             data-testid="mobile-filters-trigger"
-            aria-label="Abrir filtros"
+            aria-label="Abrir navegação e filtros"
             onClick={() => setMobileFiltersOpen(true)}
             className="flex h-11.25 w-11.25 shrink-0 items-center justify-center rounded-[14px] bg-linear-to-br from-accent/60 to-accent text-bg-primary cursor-pointer"
           >
             <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
           </button>
-          <DrawerContent closeLabel="Fechar filtros">
+          <DrawerContent closeLabel="Fechar painel">
+            <nav aria-label="Acesso rápido" className="mb-6 border-b border-border-subtle pb-5 pr-10">
+              <p className="mb-3 text-xs font-bold uppercase tracking-wider text-text-muted">
+                Minha conta
+              </p>
+              <div className="flex flex-col gap-2">
+                <Link
+                  to="/cart"
+                  data-testid="mobile-drawer-cart-link"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex items-center justify-between rounded-lg border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-sm font-bold text-text-primary hover:border-accent"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <ShoppingCart className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+                    <span>Carrinho</span>
+                  </span>
+                  <span className="rounded-full bg-accent px-2 py-0.5 text-xs text-bg-primary">
+                    {cartItemCount}
+                  </span>
+                </Link>
+                <Link
+                  to="/profile"
+                  data-testid="mobile-drawer-profile-link"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex items-center gap-2.5 rounded-lg border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-sm font-bold text-text-primary hover:border-accent"
+                >
+                  <User className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+                  <span>Perfil</span>
+                </Link>
+                <Link
+                  to="/wallets"
+                  data-testid="mobile-drawer-wallets-link"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex items-center gap-2.5 rounded-lg border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-sm font-bold text-text-primary hover:border-accent"
+                >
+                  <Wallet className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+                  <span>Carteira</span>
+                </Link>
+              </div>
+            </nav>
+
             <DialogTitle className="flex items-center gap-2 font-mono text-text-primary">
               <Filter className="h-5 w-5 text-accent-bright" aria-hidden="true" />
               Filtros
             </DialogTitle>
+            <div className="mt-5 flex flex-col gap-2">
+              <Label htmlFor="mobile-sort-select" className="text-xs font-bold uppercase tracking-wider text-text-muted">
+                Ordenar por
+              </Label>
+              <select
+                id="mobile-sort-select"
+                data-testid="mobile-sort-select"
+                value={search.sort ?? 'recent'}
+                onChange={(event) => onUpdateSearch({ sort: event.target.value as NftSort }, true)}
+                className="h-10 w-full rounded-lg border border-border-subtle bg-bg-secondary px-3 text-sm text-text-primary focus:border-accent focus:outline-none cursor-pointer"
+              >
+                {nftSorts.map((sortKey) => (
+                  <option key={sortKey} value={sortKey} className="bg-bg-secondary text-text-primary">
+                    {nftSortLabels[sortKey]}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="mt-6">
               <CatalogFilters
                 idPrefix="mobile"
@@ -174,12 +258,12 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
 
       <HeroBanner />
 
-      <section id="catalogo-section" aria-labelledby="catalog-heading" className="mt-11.5">
+      <section id="catalogo-section" aria-labelledby="catalog-heading" className="mt-6 lg:mt-11.5">
         <h2 id="catalog-heading" className="sr-only">
           Catálogo de NFTs
         </h2>
 
-        <form onSubmit={handleSearchSubmit} className="mb-6 flex gap-2" role="search">
+        <form onSubmit={handleSearchSubmit} className="mb-6 hidden gap-2 lg:flex" role="search">
           <div className="relative flex-1">
             <Label htmlFor="catalog-search-input" className="sr-only">
               Buscar por nome, coleção ou artista
@@ -263,21 +347,21 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
           </aside>
 
           <div className="flex min-w-0 flex-1 flex-col">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-3">
-              <div className="flex items-center gap-5 text-[15px] font-medium leading-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-1 lg:border-b lg:border-border-subtle lg:pb-3">
+              <div className="flex w-full items-center justify-between gap-3 text-[13px] font-medium leading-4 whitespace-nowrap sm:text-[15px] lg:w-auto lg:justify-start lg:gap-5">
                 <button
                   type="button"
                   onClick={() => {
                     setActiveFeedTab('all')
                     onUpdateSearch({ sort: 'recent' }, true)
                   }}
-                  className={`relative pb-3 cursor-pointer ${
+                  className={`relative pb-2 lg:pb-3 cursor-pointer ${
                     activeFeedTab === 'all' ? 'font-bold text-accent-bright' : 'text-text-primary hover:text-accent-bright'
                   }`}
                 >
                   Todos os NFTs
                   {activeFeedTab === 'all' ? (
-                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent lg:-bottom-3" />
                   ) : null}
                 </button>
                 <button
@@ -286,13 +370,13 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                     setActiveFeedTab('new')
                     onUpdateSearch({ sort: 'recent' }, true)
                   }}
-                  className={`relative pb-3 cursor-pointer ${
+                  className={`relative pb-2 lg:pb-3 cursor-pointer ${
                     activeFeedTab === 'new' ? 'font-bold text-accent-bright' : 'text-text-primary hover:text-accent-bright'
                   }`}
                 >
                   Novos lançamentos
                   {activeFeedTab === 'new' ? (
-                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent lg:-bottom-3" />
                   ) : null}
                 </button>
                 <button
@@ -301,18 +385,18 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                     setActiveFeedTab('trending')
                     onUpdateSearch({ sort: 'popular' }, true)
                   }}
-                  className={`relative pb-3 cursor-pointer ${
+                  className={`relative pb-2 lg:pb-3 cursor-pointer ${
                     activeFeedTab === 'trending' ? 'font-bold text-accent-bright' : 'text-text-primary hover:text-accent-bright'
                   }`}
                 >
                   Em alta
                   {activeFeedTab === 'trending' ? (
-                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent lg:-bottom-3" />
                   ) : null}
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="hidden items-center gap-2 lg:flex">
                 <Label htmlFor="catalog-sort-select" className="text-[15px] text-text-primary">
                   Ordenar por:
                 </Label>
@@ -332,7 +416,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
               </div>
             </div>
 
-            <div className="mt-3 mb-4 flex flex-wrap items-center justify-between gap-2 text-xs text-text-secondary">
+            <div className="sr-only lg:not-sr-only lg:mt-3 lg:mb-4 lg:flex lg:flex-wrap lg:items-center lg:justify-between lg:gap-2 lg:text-xs lg:text-text-secondary">
               <span data-testid="catalog-results-summary" aria-live="polite">
                 {catalogQuery.isLoading
                   ? 'Carregando catálogo...'
@@ -350,7 +434,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
             {catalogQuery.isLoading ? (
               <div
                 data-testid="catalog-skeleton-grid"
-                className="grid grid-cols-2 gap-6 lg:grid-cols-3 lg:gap-x-8.5 lg:gap-y-14"
+                className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 pb-8 lg:mt-0 lg:grid-cols-3 lg:gap-x-8.5 lg:gap-y-14 lg:pb-0"
               >
                 {Array.from({ length: 9 }, (_, index) => (
                   <NftCardSkeleton key={index} />
@@ -402,7 +486,7 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
               <>
                 <div
                   data-testid="catalog-grid"
-                  className="grid grid-cols-2 gap-5 lg:grid-cols-3 lg:gap-x-8.5 lg:gap-y-14"
+                  className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 pb-8 lg:mt-0 lg:grid-cols-3 lg:gap-x-8.5 lg:gap-y-14 lg:pb-0"
                 >
                   {catalogQuery.data.items.map((nft, index) => (
                     <NftCard
@@ -489,8 +573,10 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
         </div>
       </section>
 
-      <PromoBanners />
-      <MintJournalSection />
+      <div className="hidden lg:block">
+        <PromoBanners />
+        <MintJournalSection />
+      </div>
     </div>
   )
 }

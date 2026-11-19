@@ -47,7 +47,7 @@ export async function register(input: RegisterRequest): Promise<{ session: Sessi
   const timestamp = nowIso()
   const user: UserRecord = {
     id: createId('usr'),
-    name: input.name.trim(),
+    name: (input.name?.trim() || input.username).trim(),
     username: input.username,
     email: input.email.trim().toLowerCase(),
     passwordHash: hash,

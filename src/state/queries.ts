@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   cartApi,
   favoritesApi,
@@ -331,6 +331,11 @@ export function useCreateOrder() {
       if (user) {
         queryClient.setQueryData(queryKeys.orders.detail(user.id, order.id), order)
         void queryClient.invalidateQueries({ queryKey: queryKeys.orders.list(user.id) })
+        if (order.status === 'confirmed') {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.cart.byScope(scope) })
+          void queryClient.invalidateQueries({ queryKey: queryKeys.quote.allByScope(scope) })
+          void queryClient.invalidateQueries({ queryKey: queryKeys.nfts.all })
+        }
       }
     },
     onError: (error) => {
@@ -346,9 +351,11 @@ export function useCreateOrder() {
 }
 
 export function useOrder(orderId: string | null) {
-  const { user, status } = useSession()
+  const queryClient = useQueryClient()
+  const { user, scope, status } = useSession()
   const { recordResourceVersion } = useRealtime()
   const userId = user?.id ?? ''
+  const prevStatusRef = useRef<Order['status'] | undefined>(undefined)
 
   const query = useQuery({
     queryKey: queryKeys.orders.detail(userId, orderId ?? ''),
@@ -362,10 +369,17 @@ export function useOrder(orderId: string | null) {
   })
 
   useEffect(() => {
+    const nextStatus = query.data?.status
     if (query.data) {
       recordResourceVersion('order', query.data.id, query.data.version)
+      if (prevStatusRef.current && prevStatusRef.current !== 'confirmed' && nextStatus === 'confirmed') {
+        void queryClient.invalidateQueries({ queryKey: queryKeys.cart.byScope(scope) })
+        void queryClient.invalidateQueries({ queryKey: queryKeys.quote.allByScope(scope) })
+        void queryClient.invalidateQueries({ queryKey: queryKeys.nfts.all })
+      }
     }
-  }, [query.data, recordResourceVersion])
+    prevStatusRef.current = nextStatus
+  }, [query.data, queryClient, recordResourceVersion, scope])
 
   return query
 }

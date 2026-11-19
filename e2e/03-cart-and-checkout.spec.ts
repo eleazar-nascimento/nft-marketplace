@@ -63,6 +63,7 @@ test.describe('Carrinho, Pagamento e Confirmação', () => {
 
     await expect(page).toHaveURL(/\/orders\/ord_[a-f0-9]+\/confirmation/)
     await expect(page.getByTestId('order-confirmation-receipt')).toBeVisible()
+    await expect(page.getByTestId('realtime-cart-banner')).toHaveCount(0)
 
     const totalBeforeMutation = await page.getByTestId('receipt-total').textContent()
 
@@ -116,5 +117,6 @@ test.describe('Carrinho, Pagamento e Confirmação', () => {
     await page.getByTestId('checkout-submit-btn').click()
     await expect(page).toHaveURL(/\/orders\/ord_[a-f0-9]+\/confirmation/)
     await expect(page.getByTestId('order-confirmation-receipt')).toBeVisible()
+    await expect(page.getByTestId('realtime-cart-banner')).toHaveCount(0)
   })
 })

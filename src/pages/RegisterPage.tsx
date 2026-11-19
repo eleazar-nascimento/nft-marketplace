@@ -12,12 +12,12 @@ export function RegisterPage() {
   const { register } = useSession()
   const navigate = useNavigate()
 
-  const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -27,7 +27,6 @@ export function RegisterPage() {
     setFormError(null)
 
     const parsed = registerRequestSchema.safeParse({
-      name: name || username,
       username,
       email,
       password,
@@ -67,32 +66,6 @@ export function RegisterPage() {
         noValidate
         className="mt-6 flex flex-col gap-3 sm:px-20"
       >
-        <div>
-          <label htmlFor="register-name" className="sr-only">
-            Nome de exibição
-          </label>
-          <input
-            id="register-name"
-            data-testid="register-name"
-            placeholder="Nome de exibição"
-            value={name}
-            aria-invalid={Boolean(fieldErrors.name)}
-            aria-describedby={fieldErrors.name ? 'register-name-error' : undefined}
-            onChange={(event) => setName(event.target.value)}
-            className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent px-4 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
-          />
-          {fieldErrors.name ? (
-            <p
-              id="register-name-error"
-              role="alert"
-              data-testid="register-name-error"
-              className="mt-1 text-xs text-red-400"
-            >
-              {fieldErrors.name}
-            </p>
-          ) : null}
-        </div>
-
         <div>
           <label htmlFor="register-username" className="sr-only">
             Nome de usuário
@@ -189,18 +162,28 @@ export function RegisterPage() {
           <label htmlFor="register-confirmPassword" className="sr-only">
             Confirmar senha
           </label>
-          <input
-            id="register-confirmPassword"
-            data-testid="register-confirmPassword"
-            type={showPassword ? 'text' : 'password'}
-            autoComplete="new-password"
-            placeholder="Confirmar senha"
-            value={confirmPassword}
-            aria-invalid={Boolean(fieldErrors.confirmPassword)}
-            aria-describedby={fieldErrors.confirmPassword ? 'register-confirmPassword-error' : undefined}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent px-4 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
-          />
+          <div className="relative">
+            <input
+              id="register-confirmPassword"
+              data-testid="register-confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              placeholder="Confirmar senha"
+              value={confirmPassword}
+              aria-invalid={Boolean(fieldErrors.confirmPassword)}
+              aria-describedby={fieldErrors.confirmPassword ? 'register-confirmPassword-error' : undefined}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              className="h-10 w-full rounded-[5px] border border-border-subtle bg-transparent pl-4 pr-10 text-[14px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-red-500"
+            />
+            <button
+              type="button"
+              aria-label={showConfirmPassword ? 'Ocultar confirmação de senha' : 'Mostrar confirmação de senha'}
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer"
+            >
+              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
           {fieldErrors.confirmPassword ? (
             <p
               id="register-confirmPassword-error"

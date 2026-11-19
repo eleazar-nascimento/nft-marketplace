@@ -29,6 +29,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     pathname.startsWith('/checkout') ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/register')
+  const hideHeaderAndFooterOnMobile = isMobileFocusedFlow || pathname === '/'
   const showMobileTabBar = !isMobileFocusedFlow
 
   const handleGoToLogin = () => {
@@ -52,7 +53,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         itemCount={itemCount}
         pathname={pathname}
         currentFullPath={currentFullPath}
-        hideOnMobile={isMobileFocusedFlow}
+        hideOnMobile={hideHeaderAndFooterOnMobile}
         onLogout={() => void logout()}
         onOpenOutOfScope={setOutOfScopeFeature}
       />
@@ -119,7 +120,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <AppFooter hideOnMobile={isMobileFocusedFlow} onOpenOutOfScope={setOutOfScopeFeature} />
+      <AppFooter hideOnMobile={hideHeaderAndFooterOnMobile} onOpenOutOfScope={setOutOfScopeFeature} />
       {showMobileTabBar ? <MobileTabBar pathname={pathname} status={status} /> : null}
 
       <OutOfScopeDialog featureName={outOfScopeFeature} onClose={() => setOutOfScopeFeature(null)} />

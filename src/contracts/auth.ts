@@ -26,7 +26,7 @@ export type LoginRequest = z.infer<typeof loginRequestSchema>
 
 export const registerRequestSchema = z
   .object({
-    name: z.string().trim().min(2, 'Informe seu nome').max(60, 'Use no máximo 60 caracteres'),
+    name: z.string().trim().min(2, 'Informe seu nome').max(60, 'Use no máximo 60 caracteres').optional(),
     username: usernameSchema,
     email: emailSchema,
     password: passwordSchema,

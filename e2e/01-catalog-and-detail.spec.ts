@@ -28,11 +28,22 @@ test.describe('Catálogo e Detalhe do NFT', () => {
     await expect(page).toHaveURL(/category=.*art/)
     await expect(page).toHaveURL(/network=ethereum/)
 
-    await page.getByTestId('catalog-sort-select').selectOption('price_asc')
+    if (await mobileTrigger.isVisible()) {
+      await mobileTrigger.click()
+      await page.getByTestId('mobile-sort-select').selectOption('price_asc')
+      await page.keyboard.press('Escape')
+    } else {
+      await page.getByTestId('catalog-sort-select').selectOption('price_asc')
+    }
     await expect(page).toHaveURL(/sort=price_asc/)
 
-    await page.getByTestId('catalog-search-input').fill('Emerald')
-    await page.getByTestId('catalog-search-submit').click()
+    if (await mobileTrigger.isVisible()) {
+      await page.getByTestId('mobile-search-input').fill('Emerald')
+      await page.getByTestId('mobile-search-input').press('Enter')
+    } else {
+      await page.getByTestId('catalog-search-input').fill('Emerald')
+      await page.getByTestId('catalog-search-submit').click()
+    }
     await expect(page).toHaveURL(/q=Emerald/)
     await expect(page.getByTestId('catalog-grid').getByTestId('nft-card-nft_001')).toBeVisible()
 

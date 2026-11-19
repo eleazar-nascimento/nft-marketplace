@@ -47,7 +47,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
   return (
     <article
       data-testid={`nft-card-${nft.id}`}
-      className="group flex w-full flex-col gap-2.5 sm:gap-3"
+      className="group flex w-full flex-col gap-2.5 even:translate-y-7 sm:gap-3 lg:even:translate-y-0"
     >
       <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-bg-secondary p-1.5 sm:aspect-auto sm:h-75 sm:rounded-md sm:p-1">
         <span
@@ -148,7 +148,7 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
         <Link
           to="/nft/$nftId"
           params={{ nftId: nft.id }}
-          className="text-[16px] font-normal leading-4 text-text-primary hover:text-accent-bright"
+          className="text-[14px] font-normal leading-4 text-text-primary hover:text-accent-bright sm:text-[16px]"
         >
           {nft.name}
         </Link>
@@ -156,12 +156,14 @@ export function NftCard({ nft, isFavorite, priority = false }: NftCardProps) {
         <div className="flex items-center gap-3 leading-4">
           <span
             data-testid={`nft-price-${nft.id}`}
-            className="text-[18px] font-bold text-accent-bright"
+            className="text-[15px] font-bold text-accent-bright sm:text-[18px]"
           >
             {formatEth(nft.priceFromEth)}
           </span>
           {showOriginalPrice ? (
-            <span className="text-[18px] font-normal text-text-muted line-through">2.29 ETH</span>
+            <span className="text-[14px] font-normal text-text-muted line-through sm:text-[18px]">
+              2.29 ETH
+            </span>
           ) : null}
         </div>
       </div>
