@@ -19,7 +19,8 @@ export const updateAvatarSchema = z.object({
   dataUrl: z
     .string()
     .regex(/^data:image\/(png|jpeg|webp);base64,/, 'Envie uma imagem PNG, JPEG ou WEBP')
-    .max(Math.ceil((MAX_AVATAR_BYTES * 4) / 3) + 64, 'A imagem deve ter até 1 MB'),
+    .max(Math.ceil((MAX_AVATAR_BYTES * 4) / 3) + 64, 'A imagem deve ter até 1 MB')
+    .nullable(),
 })
 
 export type UpdateAvatarRequest = z.infer<typeof updateAvatarSchema>

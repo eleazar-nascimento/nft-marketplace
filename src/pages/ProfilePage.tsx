@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Eye, EyeOff, Image as ImageIcon } from 'lucide-react'
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { AppApiError } from '@/api/client'
 import { AccountSidebar } from '@/components/account/AccountSidebar'
 import { Badge } from '@/components/ui/badge'
@@ -22,22 +22,20 @@ import {
 } from '@/state/queries'
 import { useSession } from '@/state/session'
 
-const presetSampleDataUrl =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
-
 function ProfileDetailsSection({
   profile,
   avatarError,
   onAvatarFileChange,
-  onUseSampleAvatar,
+  onRemoveAvatar,
   avatarPending,
 }: {
   profile: Profile
   avatarError: string | null
   onAvatarFileChange: (event: ChangeEvent<HTMLInputElement>) => void
-  onUseSampleAvatar: () => void
+  onRemoveAvatar: () => void
   avatarPending: boolean
 }) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { updateProfile, changePassword } = useProfileMutations()
   const [name, setName] = useState(profile.name)
   const [username, setUsername] = useState(profile.username)
@@ -262,30 +260,60 @@ function ProfileDetailsSection({
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <ImageIcon className="h-6 w-6 text-accent-bright" aria-hidden="true" />
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                    data-testid="profile-avatar-placeholder"
+                    className="h-6 w-6 text-accent"
+                  >
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="4.5"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    />
+                    <circle cx="8.5" cy="8.5" r="1.6" stroke="currentColor" strokeWidth="1.6" />
+                    <path
+                      d="M3.5 16.5C6.5 16.5 8.5 14 11 14C13.5 14 14.5 12 17.5 12C19.5 12 20.5 13 21 13.8"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 )}
               </div>
 
               <div className="flex items-center gap-4">
                 <button
                   type="button"
-                  data-testid="profile-sample-avatar-btn"
+                  data-testid="profile-change-avatar-btn"
                   disabled={avatarPending}
-                  onClick={onUseSampleAvatar}
-                  className="inline-flex h-10 w-24.5 items-center justify-center rounded-[3px] bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover cursor-pointer"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex h-10 w-24.5 items-center justify-center rounded-[3px] bg-accent text-[14px] font-bold text-bg-primary hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
                 >
-                  Alterar
+                  {avatarPending ? 'Enviando...' : 'Alterar'}
                 </button>
-                <label
-                  htmlFor="profile-avatar-input"
-                  className="text-[14px] text-text-primary hover:text-accent-bright cursor-pointer"
+                <button
+                  type="button"
+                  data-testid="profile-remove-avatar-btn"
+                  disabled={avatarPending || !profile.avatarUrl}
+                  onClick={onRemoveAvatar}
+                  className="text-[14px] text-text-primary hover:text-accent-bright disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 >
                   Remover
-                </label>
+                </button>
                 <input
+                  ref={fileInputRef}
                   id="profile-avatar-input"
                   data-testid="profile-avatar-input"
                   type="file"
+                  aria-label="Selecionar imagem de avatar"
                   accept="image/png,image/jpeg,image/webp"
                   onChange={onAvatarFileChange}
                   className="sr-only"
@@ -465,7 +493,7 @@ export function ProfilePage() {
 
   if (profileQuery.isLoading) {
     return (
-      <div data-testid="profile-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 lg:px-0">
+      <div data-testid="profile-skeleton" className="mx-auto max-w-300 px-4 py-8 sm:px-6 xl:px-0">
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <Skeleton className="h-96 lg:col-span-3" />
           <Skeleton className="h-96 lg:col-span-9" />
@@ -479,6 +507,7 @@ export function ProfilePage() {
 
   const handleAvatarFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
+    event.target.value = ''
     if (!file) return
     if (file.size > MAX_AVATAR_BYTES) {
       setAvatarError('A imagem deve ter no máximo 1 MB.')
@@ -502,16 +531,20 @@ export function ProfilePage() {
     reader.readAsDataURL(file)
   }
 
-  const handleUseGeneratedAvatar = async () => {
+  const handleRemoveAvatar = async () => {
     setAvatarError(null)
-    await updateAvatar.mutateAsync({ dataUrl: presetSampleDataUrl })
+    try {
+      await updateAvatar.mutateAsync({ dataUrl: null })
+    } catch (error) {
+      setAvatarError(error instanceof Error ? error.message : 'Falha ao remover avatar.')
+    }
   }
 
   const favoriteIds = favoritesQuery.data?.nftIds ?? []
   const orders = ordersQuery.data ?? []
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-5 pb-6 sm:px-6 lg:px-0 lg:pt-8 lg:pb-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-5 pb-6 sm:px-6 lg:pt-8 lg:pb-0 xl:px-0">
       <div className="flex flex-col items-start gap-7 lg:flex-row">
         <AccountSidebar activeSection="profile" onLogout={() => void logout()} />
 
@@ -521,7 +554,7 @@ export function ProfilePage() {
             profile={profile}
             avatarError={avatarError}
             onAvatarFileChange={handleAvatarFileChange}
-            onUseSampleAvatar={() => void handleUseGeneratedAvatar()}
+            onRemoveAvatar={() => void handleRemoveAvatar()}
             avatarPending={updateAvatar.isPending}
           />
 

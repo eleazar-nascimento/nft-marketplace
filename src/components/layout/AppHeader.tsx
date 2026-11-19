@@ -54,7 +54,7 @@ export function AppHeader({
     <header
       className={`sticky top-0 z-40 bg-bg-primary/95 backdrop-blur-md ${hideOnMobile ? 'hidden lg:block' : ''}`}
     >
-      <div className="mx-auto w-full max-w-300 px-4 pt-5 sm:px-6 lg:px-0">
+      <div className="mx-auto w-full max-w-300 px-4 pt-5 sm:px-6 xl:px-0">
         <div className="flex items-start justify-between gap-4 pb-4">
           <div className="flex items-center gap-4">
             <Link
@@ -153,10 +153,11 @@ export function AppHeader({
                   {user.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
-                      alt=""
+                      alt={`Avatar de ${user.name}`}
                       width={20}
                       height={20}
-                      className="h-5 w-5 rounded-full object-cover"
+                      data-testid="header-user-avatar"
+                      className="h-5 w-5 rounded-full object-cover ring-1 ring-accent/40"
                     />
                   ) : (
                     <UserIcon className="h-3.5 w-3.5 text-accent-bright" aria-hidden="true" />

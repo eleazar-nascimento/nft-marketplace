@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   User as UserIcon,
 } from 'lucide-react'
+import { useSession } from '@/state/session'
 
 interface AccountSidebarProps {
   activeSection: 'profile' | 'wallets'
@@ -16,13 +17,35 @@ interface AccountSidebarProps {
 }
 
 export function AccountSidebar({ activeSection, onLogout }: AccountSidebarProps) {
+  const { user } = useSession()
   const isProfile = activeSection === 'profile'
   const isWallets = activeSection === 'wallets'
 
   return (
     <aside className="w-full shrink-0 bg-bg-secondary py-2 lg:w-77.5">
-      <div className="p-2.5">
-        <h2 className="text-[18px] font-bold leading-4 text-text-primary">Meu perfil</h2>
+      <div className="flex items-center justify-between gap-3 p-2.5">
+        <div className="flex min-w-0 items-center gap-2.5">
+          {user?.avatarUrl ? (
+            <img
+              src={user.avatarUrl}
+              alt={`Avatar de ${user.name}`}
+              width={32}
+              height={32}
+              data-testid="sidebar-user-avatar"
+              className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-accent/40"
+            />
+          ) : (
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-bg-elevated">
+              <UserIcon className="h-4 w-4 text-accent-bright" aria-hidden="true" />
+            </span>
+          )}
+          <div className="min-w-0">
+            <h2 className="text-[18px] font-bold leading-4 text-text-primary">Meu perfil</h2>
+            {user ? (
+              <p className="mt-1 truncate text-xs text-text-secondary">{user.name}</p>
+            ) : null}
+          </div>
+        </div>
       </div>
 
       <Link

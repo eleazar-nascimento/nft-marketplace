@@ -437,7 +437,7 @@ export function useProfileMutations() {
       updateSessionUser({ avatarUrl: profile.avatarUrl })
       notify({
         tone: 'success',
-        title: 'Avatar atualizado',
+        title: profile.avatarUrl ? 'Avatar atualizado' : 'Avatar removido',
       })
     },
   })

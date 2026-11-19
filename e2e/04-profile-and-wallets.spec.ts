@@ -18,7 +18,31 @@ test.describe('Perfil e Carteiras', () => {
     await page.getByTestId('profile-save-btn').click()
     await expect(page.getByTestId('nav-user-name')).toHaveText('Ana Colecionadora')
 
-    await page.getByTestId('profile-sample-avatar-btn').click()
+    const samplePngBase64 =
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+    const fileChooserPromise = page.waitForEvent('filechooser')
+    await page.getByTestId('profile-change-avatar-btn').click()
+    const fileChooser = await fileChooserPromise
+    await fileChooser.setFiles({
+      name: 'avatar.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(samplePngBase64, 'base64'),
+    })
+    await expect(page.getByTestId('profile-avatar-img')).toHaveAttribute('src', /^data:image\/png;base64,/)
+    await expect(page.getByTestId('header-user-avatar')).toHaveAttribute('src', /^data:image\/png;base64,/)
+
+    await page.getByTestId('profile-remove-avatar-btn').click()
+    await expect(page.getByTestId('profile-avatar-placeholder')).toBeVisible()
+    await expect(page.getByTestId('header-user-avatar')).toHaveCount(0)
+
+    const restoreChooserPromise = page.waitForEvent('filechooser')
+    await page.getByTestId('profile-change-avatar-btn').click()
+    const restoreChooser = await restoreChooserPromise
+    await restoreChooser.setFiles({
+      name: 'avatar.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(samplePngBase64, 'base64'),
+    })
     await expect(page.getByTestId('profile-avatar-img')).toHaveAttribute('src', /^data:image\/png;base64,/)
 
     await page.getByTestId('password-current').fill('SenhaErrada1')

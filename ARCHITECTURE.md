@@ -58,7 +58,7 @@ Todas as chamadas passam pela instância `httpClient` (`Axios`) em `src/api/clie
 | | `GET /api/orders/:orderId` | Consulta estado (`pending`, `confirmed`, `declined`) e recibo imutável (`403 FORBIDDEN` para outro usuário) |
 | **Perfil** | `GET /api/profile` | Consulta dados do perfil do colecionador |
 | | `PUT /api/profile` | Atualiza nome, username, e-mail, bio e website (`409` em conflito de e-mail/username) |
-| | `PUT /api/profile/avatar` | Atualiza avatar validando formato (`PNG`, `JPEG`, `WEBP`) e limite de `1 MB` |
+| | `PUT /api/profile/avatar` | Atualiza ou remove (`dataUrl: null`) o avatar validando formato (`PNG`, `JPEG`, `WEBP`) e limite de `1 MB`, refletindo no cabeçalho e menu lateral |
 | | `PUT /api/profile/password` | Altera senha validando a senha atual |
 | **Carteiras** | `GET /api/wallets` | Lista carteiras principal/secundária do usuário e estado da conexão ativa |
 | | `POST /api/wallets` | Cadastra carteira principal ou secundária (`409 CONFLICT` em endereço duplicado) |
@@ -121,5 +121,5 @@ Ao reconectar após queda de conexão, o cliente reenvia `session.identify` com 
 - **Desvios Funcionais Pontuais em Relação ao Figma**:
   - Inclusão da barra `ScenarioToolbar` no header desktop (`scenario-toolbar-trigger`) e no drawer da home mobile (`mobile-scenario-toolbar-trigger`) para alternância e reset determinístico dos cenários de avaliação (`default`, `fast`, `slow`, `server-error`, `empty`, `payment-decline`, `session-expired`, etc.) sem interferir no fluxo normal do usuário.
   - Adição de seletor de rede no carrinho (para cálculo dinâmico de taxa na cotação), botão dedicado `Carrinho` ao lado de `COMPRAR` no detalhe do NFT (permitindo adicionar sem redirecionar), checkbox explícito de revisão no checkout, botões de preenchimento rápido das contas fictícias (`Ana Souza` e `Bruno Lima`) na tela de login e toggle `Igual à carteira principal` + preenchimento rápido em `/wallets`.
-  - Fluxo mobile alinhado aos protótipos: barra de navegação inferior fixa com recorte, gradiente `#D28A4C66` → `#D28A4C` no botão central e contador condicional no carrinho; botão de favoritar direto no topo dos cards em telas menores; rota autenticada dedicada `/favorites` (`FavoritesPage`); e cadastro com 4 campos (`Nome de usuário`, `E-mail`, `Senha`, `Confirmar senha`) usando `username` como fallback inicial de exibição.
+  - Fluxo mobile alinhado aos protótipos: barra de navegação inferior fixa com recorte, gradiente `#D28A4C66` → `#D28A4C` no botão central e contador condicional no carrinho; botão de favoritar direto no topo dos cards em telas menores; rota autenticada dedicada `/favorites` (`FavoritesPage`); upload e remoção de avatar em `/profile` com exibição ao lado do nome no header e no `AccountSidebar`; e cadastro com 4 campos (`Nome de usuário`, `E-mail`, `Senha`, `Confirmar senha`) usando `username` como fallback inicial de exibição.
 - **Movimento Reduzido**: O efeito shimmer dos skeletons (`.skeleton-shimmer`) e as transições respeitam `@media (prefers-reduced-motion: reduce)`.
