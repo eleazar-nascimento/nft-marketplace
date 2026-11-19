@@ -5,7 +5,6 @@ import {
   Menu,
   Search,
   User as UserIcon,
-  Wallet as WalletIcon,
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -146,14 +145,6 @@ export function AppHeader({
 
             {status === 'authenticated' && user ? (
               <div className="flex items-center gap-2">
-                <Link
-                  to="/wallets"
-                  data-testid="nav-wallets-link"
-                  className="inline-flex h-8.75 items-center gap-1.5 rounded-md border border-border-subtle bg-bg-secondary px-3 text-xs font-medium text-text-secondary hover:border-accent hover:text-text-primary"
-                >
-                  <WalletIcon className="h-3.5 w-3.5 text-accent-bright" aria-hidden="true" />
-                  <span>Carteiras</span>
-                </Link>
                 <Link
                   to="/profile"
                   data-testid="nav-profile-link"

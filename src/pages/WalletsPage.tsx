@@ -1,5 +1,5 @@
 import { CheckCircle2, Plug, Unplug } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { AppApiError } from '@/api/client'
 import { AccountSidebar } from '@/components/account/AccountSidebar'
 import { Badge } from '@/components/ui/badge'
@@ -16,12 +16,14 @@ import {
   type WalletProvider,
 } from '@/contracts'
 import { zodIssuesToFieldErrors } from '@/lib/validation'
+import { useNotifications } from '@/state/notifications'
 import { useWalletMutations, useWallets } from '@/state/queries'
 import { useSession } from '@/state/session'
 
 interface WalletFormSectionProps {
   kind: WalletKind
   existing: Wallet | undefined
+  primaryWallet?: Wallet
   isConnected: boolean
   connectedNetwork: Network | null
 }
@@ -29,11 +31,14 @@ interface WalletFormSectionProps {
 function WalletFormSection({
   kind,
   existing,
+  primaryWallet,
   isConnected,
   connectedNetwork,
 }: WalletFormSectionProps) {
   const { user } = useSession()
+  const { notify } = useNotifications()
   const { upsertWallet, connectWallet, disconnectWallet } = useWalletMutations()
+  const addressInputRef = useRef<HTMLInputElement | null>(null)
 
   const defaultLabel = kind === 'primary' ? 'Carteira principal' : 'Carteira secundária'
   const [displayName, setDisplayName] = useState(user?.name ?? 'Ana Souza')
@@ -45,6 +50,7 @@ function WalletFormSection({
   const [referralCode, setReferralCode] = useState('KURIO2026')
   const [emailField, setEmailField] = useState(user?.email ?? 'ana@nft.dev')
   const [ensName, setEnsName] = useState('kurio')
+  const [sameAsPrimary, setSameAsPrimary] = useState(false)
   const [selectedNetworks, setSelectedNetworks] = useState<Network[]>(
     existing?.networks ?? ['ethereum'],
   )
@@ -93,6 +99,38 @@ function WalletFormSection({
       ? '0x8f3a21c6b4e9d7a05f1c2b3d4e5f60718293a4b5'
       : '0x4b7e91d0c3a2f8e5162738495a6b7c8d9e0f1a2b'
 
+  const handleToggleSameAsPrimary = () => {
+    const next = !sameAsPrimary
+    setSameAsPrimary(next)
+    setFieldErrors({})
+    if (next && primaryWallet) {
+      setProvider(primaryWallet.provider)
+      setSelectedNetworks([...primaryWallet.networks])
+      if (!label.trim()) setLabel('Carteira secundária')
+      if (!address.trim()) setAddress(sampleAddress)
+      notify({
+        tone: 'info',
+        title: 'Configuração copiada da carteira principal',
+        description: 'Provedor e redes habilitadas sincronizados com a carteira principal.',
+      })
+    } else if (!next) {
+      setProvider('metamask')
+      setSelectedNetworks(['ethereum'])
+    }
+  }
+
+  const handleQuickFill = () => {
+    setAddress(sampleAddress)
+    if (!label.trim()) setLabel(defaultLabel)
+    setFieldErrors({})
+    addressInputRef.current?.focus()
+    notify({
+      tone: 'info',
+      title: 'Endereço de carteira preenchido',
+      description: 'Revise as redes habilitadas e clique em Salvar carteira.',
+    })
+  }
+
   return (
     <div data-testid={`wallet-card-${kind}`} className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -100,17 +138,35 @@ function WalletFormSection({
           <h2 className="text-[17px] font-bold leading-4 text-text-primary">
             {kind === 'primary' ? 'Carteira principal' : 'Carteira secundária'}
           </h2>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             {isConnected && connectedNetwork ? (
               <Badge variant="success" data-testid={`wallet-connected-badge-${kind}`}>
                 <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Conectada (
                 {networkLabels[connectedNetwork]})
               </Badge>
             ) : null}
+            {kind === 'secondary' ? (
+              <button
+                type="button"
+                role="switch"
+                aria-checked={sameAsPrimary}
+                data-testid="wallet-same-as-primary"
+                onClick={handleToggleSameAsPrimary}
+                className="inline-flex items-center gap-2 text-[14px] text-text-primary hover:text-accent-bright cursor-pointer"
+              >
+                <span
+                  aria-hidden="true"
+                  className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-accent"
+                >
+                  {sameAsPrimary ? <span className="h-2 w-2 rounded-full bg-accent" /> : null}
+                </span>
+                <span>Igual à carteira principal</span>
+              </button>
+            ) : null}
             <button
               type="button"
               data-testid={`wallet-fill-sample-${kind}`}
-              onClick={() => setAddress(sampleAddress)}
+              onClick={handleQuickFill}
               className="text-[16px] font-medium leading-4 text-accent-bright hover:underline cursor-pointer"
             >
               Adicionar
@@ -223,6 +279,7 @@ function WalletFormSection({
               <span className="ml-0.5 text-[22px] leading-7.25 text-coral">*</span>
             </label>
             <input
+              ref={addressInputRef}
               id={`wallet-address-${kind}`}
               data-testid={`wallet-address-${kind}`}
               placeholder="Endereço 0x da carteira"
@@ -420,6 +477,7 @@ export function WalletsPage() {
             key={secondary?.updatedAt ?? 'secondary-new'}
             kind="secondary"
             existing={secondary}
+            primaryWallet={primary}
             isConnected={Boolean(secondary && connection?.walletId === secondary.id)}
             connectedNetwork={
               secondary && connection?.walletId === secondary.id ? connection.network : null
