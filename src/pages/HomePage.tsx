@@ -5,7 +5,6 @@ import {
   Filter,
   Search,
   ShoppingCart,
-  SlidersHorizontal,
   User,
   Wallet,
   X,
@@ -164,9 +163,21 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
             data-testid="mobile-filters-trigger"
             aria-label="Abrir navegação e filtros"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex h-11.25 w-11.25 shrink-0 items-center justify-center rounded-[14px] bg-linear-to-br from-accent/60 to-accent text-bg-primary cursor-pointer"
+            className="flex h-11.25 w-11.25 shrink-0 items-center justify-center rounded-[14px] bg-[linear-gradient(180deg,#D28A4C66_0%,#D28A4C_100%)] text-bg-primary cursor-pointer"
           >
-            <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              className="h-5 w-5"
+            >
+              <circle cx="6.5" cy="7.5" r="2.75" stroke="currentColor" strokeWidth="2.2" />
+              <line x1="12.5" y1="7.5" x2="20" y2="7.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+              <line x1="4" y1="16.5" x2="11.5" y2="16.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+              <circle cx="17.5" cy="16.5" r="2.75" stroke="currentColor" strokeWidth="2.2" />
+            </svg>
           </button>
           <DrawerContent closeLabel="Fechar painel">
             <nav aria-label="Acesso rápido" className="mb-6 border-b border-border-subtle pb-5 pr-10">
