@@ -55,7 +55,7 @@ As senhas nunca são armazenadas em texto puro (são derivadas com `PBKDF2-SHA25
 
 ## 5. Seleção e Reset de Cenários (MSW + Socket.IO)
 
-No cabeçalho da aplicação, clique no botão **Cenário** (`data-testid="scenario-toolbar-trigger"`) para abrir o **Painel de Simulação (MSW + Socket.IO)**, ou passe `?__scenario=<preset>` na URL.
+No cabeçalho desktop (`data-testid="scenario-toolbar-trigger"`) ou no drawer de navegação/filtros da página inicial mobile (`data-testid="mobile-scenario-toolbar-trigger"`), clique no botão **Cenário** para abrir o **Painel de Simulação (MSW + Socket.IO)**, ou passe `?__scenario=<preset>` na URL.
 
 ### Presets Disponíveis
 
@@ -105,8 +105,8 @@ Ambiente: macOS (`arm64`), Node `v22.19.0`, Lighthouse `13.6.0`, Chromium Headle
 
 | Página | Perfil | Performance | Accessibility | Best Practices | SEO | LCP | CLS | TBT |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Início (`/`) | Mobile | **90** | **100** | **100** | **100** | 2.883 ms | 0 | 259 ms |
-| Início (`/`) | Desktop | **99** | **100** | **100** | **100** | 823 ms | 0,0002 | 0 ms |
-| Detalhe (`/nft/nft_001`) | Mobile | **93** | **100** | **100** | **100** | 2.826 ms | 0,0176 | 198 ms |
-| Detalhe (`/nft/nft_001`) | Desktop | **100** | **100** | **100** | **100** | 797 ms | 0 | 0 ms |
+| Início (`/`) | Mobile | **93** | **100** | **100** | **100** | 2.902 ms | 0,001 | 161 ms |
+| Início (`/`) | Desktop | **99** | **100** | **100** | **100** | 857 ms | 0,0002 | 0 ms |
+| Detalhe (`/nft/nft_001`) | Mobile | **95** | **100** | **100** | **100** | 2.802 ms | 0 | 133 ms |
+| Detalhe (`/nft/nft_001`) | Desktop | **100** | **100** | **100** | **100** | 770 ms | 0 | 0 ms |
 | **Meta do Desafio** | — | **≥ 90** | **≥ 95** | **≥ 95** | **≥ 90** | — | — | — |
