@@ -4,8 +4,6 @@ import {
   ChevronRight,
   Filter,
   Search,
-  ShoppingCart,
-  User,
   Wallet,
   X,
 } from 'lucide-react'
@@ -29,7 +27,7 @@ import {
   type NftListQuery,
   type NftSort,
 } from '@/contracts'
-import { useCart, useFavorites, useNftsList } from '@/state/queries'
+import { useFavorites, useNftsList } from '@/state/queries'
 
 export interface HomeSearchState {
   q?: string
@@ -69,8 +67,6 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
 
   const catalogQuery = useNftsList(queryParams)
   const favoritesQuery = useFavorites()
-  const cartQuery = useCart()
-  const cartItemCount = cartQuery.data?.itemCount ?? 0
   const favoriteSet = new Set(favoritesQuery.data?.nftIds ?? [])
 
   const handleSearchSubmit = (event: FormEvent) => {
@@ -185,29 +181,6 @@ export function HomePage({ search, onUpdateSearch, onResetFilters }: HomePagePro
                 Minha conta
               </p>
               <div className="flex flex-col gap-2">
-                <Link
-                  to="/cart"
-                  data-testid="mobile-drawer-cart-link"
-                  onClick={() => setMobileFiltersOpen(false)}
-                  className="flex items-center justify-between rounded-lg border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-sm font-bold text-text-primary hover:border-accent"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <ShoppingCart className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-                    <span>Carrinho</span>
-                  </span>
-                  <span className="rounded-full bg-accent px-2 py-0.5 text-xs text-bg-primary">
-                    {cartItemCount}
-                  </span>
-                </Link>
-                <Link
-                  to="/profile"
-                  data-testid="mobile-drawer-profile-link"
-                  onClick={() => setMobileFiltersOpen(false)}
-                  className="flex items-center gap-2.5 rounded-lg border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-sm font-bold text-text-primary hover:border-accent"
-                >
-                  <User className="h-4 w-4 text-accent-bright" aria-hidden="true" />
-                  <span>Perfil</span>
-                </Link>
                 <Link
                   to="/wallets"
                   data-testid="mobile-drawer-wallets-link"

@@ -3,9 +3,10 @@ import { Link } from '@tanstack/react-router'
 interface MobileTabBarProps {
   pathname: string
   status: 'checking' | 'authenticated' | 'anonymous'
+  itemCount: number
 }
 
-export function MobileTabBar({ pathname, status }: MobileTabBarProps) {
+export function MobileTabBar({ pathname, status, itemCount }: MobileTabBarProps) {
   const isHome = pathname === '/'
   const isFavorites = pathname.startsWith('/profile')
   const isCart = pathname.startsWith('/cart')
@@ -98,6 +99,14 @@ export function MobileTabBar({ pathname, status }: MobileTabBarProps) {
             <circle cx="9" cy="19.5" r="1.75" fill="currentColor" />
             <circle cx="18" cy="19.5" r="1.75" fill="currentColor" />
           </svg>
+          {itemCount > 0 ? (
+            <span
+              data-testid="mobile-tab-cart-count"
+              className="absolute right-0 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold leading-none text-bg-primary"
+            >
+              {itemCount}
+            </span>
+          ) : null}
         </Link>
 
         <Link

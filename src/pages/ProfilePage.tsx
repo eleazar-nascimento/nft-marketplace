@@ -511,7 +511,7 @@ export function ProfilePage() {
   const orders = ordersQuery.data ?? []
 
   return (
-    <div className="mx-auto w-full max-w-300 px-4 pt-8 sm:px-6 lg:px-0">
+    <div className="mx-auto w-full max-w-300 px-4 pt-5 pb-6 sm:px-6 lg:px-0 lg:pt-8 lg:pb-0">
       <div className="flex flex-col items-start gap-7 lg:flex-row">
         <AccountSidebar activeSection="profile" onLogout={() => void logout()} />
 
